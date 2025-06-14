@@ -161,7 +161,9 @@ export const objectBrowserWSMiddleware = (objectsWS: WebSocket | undefined): Mid
         if (objectsWS && objectsWS.readyState === 1) {
           try {
             const newRequestID = currentRequestID + 1;
-            const dataPayload = (action as { payload: { path: string; bucketName: string; rewindMode: boolean; date: string; } }).payload;
+            const dataPayload = (
+              action as { payload: { path: string; bucketName: string; rewindMode: boolean; date: string } }
+            ).payload;
 
             dispatch(resetMessages());
             dispatch(errorInConnection(false));

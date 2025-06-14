@@ -31,7 +31,7 @@ const BucketListItem = ({ bucket }: IBucketListItem) => {
     <MenuItem
       name={bucket.name}
       icon={<BucketsIcon />}
-      onClick={() => navigate(`/browser/${bucket.name}`)}
+      onClick={() => void navigate(`/browser/${bucket.name}`)}
       id={`manageBucket-${bucket.name}`}
     />
   );

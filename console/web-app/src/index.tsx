@@ -17,11 +17,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
 
 import MainRouter from './MainRouter';
 import { store } from './store';
 import StyleHandler from './StyleHandler';
-import { ThemeProvider } from 'styled-components';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 

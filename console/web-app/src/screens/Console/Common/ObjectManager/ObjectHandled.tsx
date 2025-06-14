@@ -16,7 +16,7 @@
 
 import clsx from 'clsx';
 import get from 'lodash/get';
-import { Box, CancelledIcon, DisabledIcon, DownloadStatIcon, EnabledIcon, Tooltip,UploadStatIcon } from 'mds';
+import { Box, CancelledIcon, DisabledIcon, DownloadStatIcon, EnabledIcon, Tooltip, UploadStatIcon } from 'mds';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 

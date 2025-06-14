@@ -1,4 +1,4 @@
-import { Api, ApiError,FullRequestParams, HttpResponse } from './consoleApi';
+import { Api, ApiError, FullRequestParams, HttpResponse } from './consoleApi';
 
 export const api = new Api();
 api.baseUrl = `${new URL(document.baseURI).pathname}api/v1`;

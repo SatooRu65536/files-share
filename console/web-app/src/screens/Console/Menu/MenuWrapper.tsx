@@ -64,7 +64,7 @@ const MenuWrapper = () => {
             name={'License'}
             icon={<LicenseIcon />}
             path={IAM_PAGES.LICENSE}
-            onClick={() => navigate(IAM_PAGES.LICENSE)}
+            onClick={() => void navigate(IAM_PAGES.LICENSE)}
             badge={!getLicenseConsent()}
           />
         </Fragment>
