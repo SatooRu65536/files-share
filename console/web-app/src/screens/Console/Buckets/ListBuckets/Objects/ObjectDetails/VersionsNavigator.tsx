@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
-import get from "lodash/get";
-import { useSelector } from "react-redux";
+import { api } from 'api';
+import { BucketObject } from 'api/consoleApi';
+import { errorToHandler } from 'api/errors';
+import get from 'lodash/get';
 import {
   breakPoints,
   Button,
@@ -28,33 +29,28 @@ import {
   Select,
   SelectMultipleIcon,
   VersionsIcon,
-} from "mds";
-import ShareFile from "./ShareFile";
+} from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { List, ListRowProps } from 'react-virtualized';
 
-import { niceBytesInt } from "../../../../../../common/utils";
-import RestoreFileVersion from "./RestoreFileVersion";
-
-import { AppState, useAppDispatch } from "../../../../../../store";
-import FileVersionItem from "./FileVersionItem";
-import PreviewFileModal from "../Preview/PreviewFileModal";
-import DeleteNonCurrent from "../ListObjects/DeleteNonCurrent";
-import BrowserBreadcrumbs from "../../../../ObjectBrowser/BrowserBreadcrumbs";
-import DeleteSelectedVersions from "./DeleteSelectedVersions";
-import {
-  selDistSet,
-  setErrorSnackMessage,
-} from "../../../../../../systemSlice";
+import { niceBytesInt } from '../../../../../../common/utils';
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { selDistSet, setErrorSnackMessage } from '../../../../../../systemSlice';
+import TooltipWrapper from '../../../../Common/TooltipWrapper/TooltipWrapper';
+import BrowserBreadcrumbs from '../../../../ObjectBrowser/BrowserBreadcrumbs';
 import {
   setLoadingObjectInfo,
   setLoadingVersions,
   setSelectedVersion,
-} from "../../../../ObjectBrowser/objectBrowserSlice";
-import { List, ListRowProps } from "react-virtualized";
-import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
-import { downloadObject } from "../../../../ObjectBrowser/utils";
-import { BucketObject } from "api/consoleApi";
-import { api } from "api";
-import { errorToHandler } from "api/errors";
+} from '../../../../ObjectBrowser/objectBrowserSlice';
+import { downloadObject } from '../../../../ObjectBrowser/utils';
+import DeleteNonCurrent from '../ListObjects/DeleteNonCurrent';
+import PreviewFileModal from '../Preview/PreviewFileModal';
+import DeleteSelectedVersions from './DeleteSelectedVersions';
+import FileVersionItem from './FileVersionItem';
+import RestoreFileVersion from './RestoreFileVersion';
+import ShareFile from './ShareFile';
 
 interface IVersionsNavigatorProps {
   internalPaths: string;
@@ -63,31 +59,22 @@ interface IVersionsNavigatorProps {
 
 const emptyFile: BucketObject = {
   is_latest: true,
-  last_modified: "",
-  legal_hold_status: "",
-  name: "",
-  retention_mode: "",
-  retention_until_date: "",
+  last_modified: '',
+  legal_hold_status: '',
+  name: '',
+  retention_mode: '',
+  retention_until_date: '',
   size: 0,
   tags: {},
   version_id: undefined,
 };
 
-const VersionsNavigator = ({
-  internalPaths,
-  bucketName,
-}: IVersionsNavigatorProps) => {
+const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProps) => {
   const dispatch = useAppDispatch();
 
-  const searchVersions = useSelector(
-    (state: AppState) => state.objectBrowser.searchVersions,
-  );
-  const loadingVersions = useSelector(
-    (state: AppState) => state.objectBrowser.loadingVersions,
-  );
-  const selectedVersion = useSelector(
-    (state: AppState) => state.objectBrowser.selectedVersion,
-  );
+  const searchVersions = useSelector((state: AppState) => state.objectBrowser.searchVersions);
+  const loadingVersions = useSelector((state: AppState) => state.objectBrowser.loadingVersions);
+  const selectedVersion = useSelector((state: AppState) => state.objectBrowser.selectedVersion);
 
   const distributedSetup = useSelector(selDistSet);
   const [shareFileModalOpen, setShareFileModalOpen] = useState<boolean>(false);
@@ -95,13 +82,10 @@ const VersionsNavigator = ({
   const [objectToShare, setObjectToShare] = useState<BucketObject | null>(null);
   const [versions, setVersions] = useState<BucketObject[]>([]);
   const [restoreVersionOpen, setRestoreVersionOpen] = useState<boolean>(false);
-  const [restoreVersion, setRestoreVersion] = useState<BucketObject | null>(
-    null,
-  );
-  const [sortValue, setSortValue] = useState<string>("date");
+  const [restoreVersion, setRestoreVersion] = useState<BucketObject | null>(null);
+  const [sortValue, setSortValue] = useState<string>('date');
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-  const [deleteNonCurrentOpen, setDeleteNonCurrentOpen] =
-    useState<boolean>(false);
+  const [deleteNonCurrentOpen, setDeleteNonCurrentOpen] = useState<boolean>(false);
   const [selectEnabled, setSelectEnabled] = useState<boolean>(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [delSelectedVOpen, setDelSelectedVOpen] = useState<boolean>(false);
@@ -109,7 +93,7 @@ const VersionsNavigator = ({
   // calculate object name to display
   let objectNameArray: string[] = [];
   if (actualInfo && actualInfo.name) {
-    objectNameArray = actualInfo.name.split("/");
+    objectNameArray = actualInfo.name.split('/');
   }
 
   useEffect(() => {
@@ -119,25 +103,20 @@ const VersionsNavigator = ({
   }, [loadingVersions, actualInfo, dispatch]);
 
   useEffect(() => {
-    if (loadingVersions && internalPaths !== "") {
+    if (loadingVersions && internalPaths !== '') {
       api.buckets
         .listObjects(bucketName, {
           prefix: internalPaths,
           with_versions: distributedSetup,
         })
         .then((res) => {
-          const result = get(res.data, "objects", []);
+          const result = get(res.data, 'objects', []);
 
           // Filter the results prefixes as API can return more files than expected.
-          const filteredPrefixes = result.filter(
-            (item: BucketObject) => item.name === internalPaths,
-          );
+          const filteredPrefixes = result.filter((item: BucketObject) => item.name === internalPaths);
 
           if (distributedSetup) {
-            setActualInfo(
-              filteredPrefixes.find((el: BucketObject) => el.is_latest) ||
-                emptyFile,
-            );
+            setActualInfo(filteredPrefixes.find((el: BucketObject) => el.is_latest) || emptyFile);
             setVersions(filteredPrefixes);
           } else {
             setActualInfo(filteredPrefixes[0]);
@@ -183,7 +162,7 @@ const VersionsNavigator = ({
   };
 
   const onGlobalClick = (item: BucketObject) => {
-    dispatch(setSelectedVersion(item.version_id || ""));
+    dispatch(setSelectedVersion(item.version_id || ''));
   };
 
   const filteredRecords = versions.filter((version) => {
@@ -208,7 +187,7 @@ const VersionsNavigator = ({
 
     if (reloadAfterDelete) {
       dispatch(setLoadingVersions(true));
-      dispatch(setSelectedVersion(""));
+      dispatch(setSelectedVersion(''));
       dispatch(setLoadingObjectInfo(true));
     }
   };
@@ -218,7 +197,7 @@ const VersionsNavigator = ({
 
     if (reloadOnComplete) {
       dispatch(setLoadingVersions(true));
-      dispatch(setSelectedVersion(""));
+      dispatch(setSelectedVersion(''));
       dispatch(setLoadingObjectInfo(true));
       setSelectedItems([]);
     }
@@ -233,7 +212,7 @@ const VersionsNavigator = ({
 
   filteredRecords.sort((a, b) => {
     switch (sortValue) {
-      case "size":
+      case 'size':
         if (a.size && b.size) {
           if (a.size < b.size) {
             return -1;
@@ -245,8 +224,8 @@ const VersionsNavigator = ({
         }
         return 0;
       default:
-        const dateA = new Date(a.last_modified || "").getTime();
-        const dateB = new Date(b.last_modified || "").getTime();
+        const dateA = new Date(a.last_modified || '').getTime();
+        const dateB = new Date(b.last_modified || '').getTime();
 
         if (dateA < dateB) {
           return 1;
@@ -260,9 +239,7 @@ const VersionsNavigator = ({
 
   const onCheckVersion = (selectedVersion: string) => {
     if (selectedItems.includes(selectedVersion)) {
-      const filteredItems = selectedItems.filter(
-        (element) => element !== selectedVersion,
-      );
+      const filteredItems = selectedItems.filter((element) => element !== selectedVersion);
 
       setSelectedItems(filteredItems);
 
@@ -276,10 +253,10 @@ const VersionsNavigator = ({
   };
 
   const rowRenderer = ({
-    key, // Unique key within array of rows
-    index, // Index of row within collection
-    isScrolling, // The List is currently being scrolled
-    isVisible, // This row is visible within the List (eg it is not an overscanned row)
+    index, // Unique key within array of rows
+    isScrolling, // Index of row within collection
+    isVisible, // The List is currently being scrolled
+    key, // This row is visible within the List (eg it is not an overscanned row)
     style, // Style object to be applied to row (to position it)
   }: ListRowProps) => {
     const versOrd = versions.length - index;
@@ -287,7 +264,7 @@ const VersionsNavigator = ({
       <FileVersionItem
         style={style}
         key={key}
-        fileName={actualInfo?.name || ""}
+        fileName={actualInfo?.name || ''}
         versionInfo={filteredRecords[index]}
         index={versOrd}
         onDownload={onDownloadItem}
@@ -298,9 +275,7 @@ const VersionsNavigator = ({
         isSelected={selectedVersion === filteredRecords[index].version_id}
         checkable={selectEnabled}
         onCheck={onCheckVersion}
-        isChecked={selectedItems.includes(
-          filteredRecords[index].version_id || "",
-        )}
+        isChecked={selectedItems.includes(filteredRecords[index].version_id || '')}
       />
     );
   };
@@ -320,7 +295,7 @@ const VersionsNavigator = ({
           restoreOpen={restoreVersionOpen}
           bucketName={bucketName}
           versionToRestore={restoreVersion}
-          objectPath={actualInfo.name || ""}
+          objectPath={actualInfo.name || ''}
           onCloseAndUpdate={closeRestoreModal}
         />
       )}
@@ -329,14 +304,11 @@ const VersionsNavigator = ({
           open={previewOpen}
           bucketName={bucketName}
           actualInfo={{
-            name: actualInfo.name || "",
-            version_id:
-              objectToShare && objectToShare.version_id
-                ? objectToShare.version_id
-                : "null",
+            name: actualInfo.name || '',
+            version_id: objectToShare && objectToShare.version_id ? objectToShare.version_id : 'null',
             size: objectToShare && objectToShare.size ? objectToShare.size : 0,
-            content_type: "",
-            last_modified: actualInfo.last_modified || "",
+            content_type: '',
+            last_modified: actualInfo.last_modified || '',
           }}
           onClosePreview={() => {
             setPreviewOpen(false);
@@ -363,9 +335,9 @@ const VersionsNavigator = ({
       <Grid
         container
         sx={{
-          width: "100%",
+          width: '100%',
           padding: 10,
-          "@media (max-width: 799px)": {
+          '@media (max-width: 799px)': {
             minHeight: 800,
           },
         }}
@@ -379,26 +351,22 @@ const VersionsNavigator = ({
         {actualInfo && (
           <Fragment>
             <Grid item xs={12}>
-              <BrowserBreadcrumbs
-                bucketName={bucketName}
-                internalPaths={internalPaths}
-                hidePathButton={true}
-              />
+              <BrowserBreadcrumbs bucketName={bucketName} internalPaths={internalPaths} hidePathButton={true} />
             </Grid>
             <Grid
               item
               xs={12}
               sx={{
-                position: "relative",
-                "& .detailsSpacer": {
+                position: 'relative',
+                '& .detailsSpacer': {
                   marginRight: 18,
-                  "@media (max-width: 600px)": {
+                  '@media (max-width: 600px)': {
                     marginRight: 0,
                   },
                 },
                 [`@media (max-width: ${breakPoints.md}px)`]: {
-                  "&::before": {
-                    display: "none",
+                  '&::before': {
+                    display: 'none',
                   },
                 },
               }}
@@ -407,81 +375,79 @@ const VersionsNavigator = ({
                 icon={
                   <span
                     style={{
-                      display: "block",
-                      marginTop: "-10px",
+                      display: 'block',
+                      marginTop: '-10px',
                     }}
                   >
                     <VersionsIcon style={{ width: 20, height: 20 }} />
                   </span>
                 }
                 title={`${
-                  objectNameArray.length > 0
-                    ? objectNameArray[objectNameArray.length - 1]
-                    : actualInfo.name
+                  objectNameArray.length > 0 ? objectNameArray[objectNameArray.length - 1] : actualInfo.name
                 } Versions`}
                 subTitle={
                   <Fragment>
-                    <span className={"detailsSpacer"}>
+                    <span className={'detailsSpacer'}>
                       <strong>
                         {versions.length} Version
-                        {versions.length === 1 ? "" : "s"}&nbsp;&nbsp;&nbsp;
+                        {versions.length === 1 ? '' : 's'}&nbsp;&nbsp;&nbsp;
                       </strong>
                     </span>
-                    <span className={"detailsSpacer"}>
+                    <span className={'detailsSpacer'}>
                       <strong>{niceBytesInt(totalSpace)}</strong>
                     </span>
                   </Fragment>
                 }
                 actions={
                   <Fragment>
-                    <TooltipWrapper tooltip={"Select Multiple Versions"}>
+                    <TooltipWrapper tooltip={'Select Multiple Versions'}>
                       <Button
-                        id={"select-multiple-versions"}
+                        id={'select-multiple-versions'}
                         onClick={() => {
                           setSelectEnabled(!selectEnabled);
                         }}
                         icon={<SelectMultipleIcon />}
-                        variant={selectEnabled ? "callAction" : "regular"}
+                        variant={selectEnabled ? 'callAction' : 'regular'}
                         style={{ marginRight: 8 }}
                       />
                     </TooltipWrapper>
                     {selectEnabled && (
-                      <TooltipWrapper tooltip={"Delete Selected Versions"}>
+                      <TooltipWrapper tooltip={'Delete Selected Versions'}>
                         <Button
-                          id={"delete-multiple-versions"}
+                          id={'delete-multiple-versions'}
                           onClick={() => {
                             setDelSelectedVOpen(true);
                           }}
                           icon={<DeleteIcon />}
-                          variant={"secondary"}
+                          variant={'secondary'}
                           style={{ marginRight: 8 }}
                           disabled={selectedItems.length === 0}
                         />
                       </TooltipWrapper>
                     )}
-                    <TooltipWrapper tooltip={"Delete Non Current Versions"}>
+                    <TooltipWrapper tooltip={'Delete Non Current Versions'}>
                       <Button
-                        id={"delete-non-current"}
+                        id={'delete-non-current'}
                         onClick={() => {
                           setDeleteNonCurrentOpen(true);
                         }}
                         icon={<DeleteNonCurrentIcon />}
-                        variant={"secondary"}
+                        variant={'secondary'}
                         style={{ marginRight: 15 }}
                         disabled={versions.length <= 1}
                       />
                     </TooltipWrapper>
                     <Select
-                      id={"sort-by"}
+                      id={'sort-by'}
                       options={[
-                        { label: "Date", value: "date" },
+                        { label: 'Date', value: 'date' },
                         {
-                          label: "Size",
-                          value: "size",
+                          label: 'Size',
+                          value: 'size',
                         },
                       ]}
                       value={sortValue}
-                      label={"Sort by"}
+                      label={'Sort by'}
                       onChange={(newValue) => {
                         setSortValue(newValue);
                       }}
@@ -497,22 +463,22 @@ const VersionsNavigator = ({
               xs={12}
               sx={{
                 flexGrow: 1,
-                height: "calc(100% - 120px)",
-                overflow: "auto",
+                height: 'calc(100% - 120px)',
+                overflow: 'auto',
                 [`@media (max-width: ${breakPoints.md}px)`]: {
                   height: 600,
                 },
               }}
             >
-              {actualInfo.version_id && actualInfo.version_id !== "null" && (
+              {actualInfo.version_id && actualInfo.version_id !== 'null' && (
                 // @ts-ignore
                 <List
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   containerStyle={{
-                    width: "100%",
-                    maxWidth: "100%",
+                    width: '100%',
+                    maxWidth: '100%',
                   }}
                   width={1}
                   height={800}

@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 export enum loginStrategyType {
-  unknown = "unknown",
-  form = "form",
-  redirect = "redirect",
-  serviceAccount = "service-account",
-  redirectServiceAccount = "redirect-service-account",
+  unknown = 'unknown',
+  form = 'form',
+  redirect = 'redirect',
+  serviceAccount = 'service-account',
+  redirectServiceAccount = 'redirect-service-account',
 }

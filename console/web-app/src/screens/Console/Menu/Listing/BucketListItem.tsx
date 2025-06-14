@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { BucketsIcon, MenuItem } from "mds";
-import { Bucket } from "../../../../api/consoleApi";
+import { BucketsIcon, MenuItem } from 'mds';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { Bucket } from '../../../../api/consoleApi';
 
 interface IBucketListItem {
   bucket: Bucket;

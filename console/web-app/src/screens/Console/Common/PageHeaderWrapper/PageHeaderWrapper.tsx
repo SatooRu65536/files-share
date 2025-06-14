@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import { PageHeader } from "mds";
-import ObjectManagerButton from "../ObjectManager/ObjectManagerButton";
-import DarkModeActivator from "../DarkModeActivator/DarkModeActivator";
+import { PageHeader } from 'mds';
+import React, { Fragment } from 'react';
+
+import DarkModeActivator from '../DarkModeActivator/DarkModeActivator';
+import ObjectManagerButton from '../ObjectManager/ObjectManagerButton';
 
 interface IPageHeaderWrapper {
   label: React.ReactNode;
@@ -25,11 +26,7 @@ interface IPageHeaderWrapper {
   actions?: React.ReactNode;
 }
 
-const PageHeaderWrapper = ({
-  label,
-  actions,
-  middleComponent,
-}: IPageHeaderWrapper) => {
+const PageHeaderWrapper = ({ actions, label, middleComponent }: IPageHeaderWrapper) => {
   return (
     <PageHeader
       label={label}

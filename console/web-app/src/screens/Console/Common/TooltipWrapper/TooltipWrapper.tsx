@@ -14,27 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { cloneElement } from "react";
-import { Tooltip } from "mds";
+import { Tooltip } from 'mds';
+import React, { cloneElement } from 'react';
 
 interface ITooltipWrapperProps {
   tooltip: string;
   children: any;
   errorProps?: any;
-  placement?: "bottom" | "left" | "right" | "top";
+  placement?: 'bottom' | 'left' | 'right' | 'top';
 }
 
-const TooltipWrapper = ({
-  tooltip,
-  children,
-  errorProps = null,
-  placement,
-}: ITooltipWrapperProps) => {
+const TooltipWrapper = ({ children, errorProps = null, placement, tooltip }: ITooltipWrapperProps) => {
   return (
     <Tooltip tooltip={tooltip} placement={placement}>
-      <span>
-        {errorProps ? cloneElement(children, { ...errorProps }) : children}
-      </span>
+      <span>{errorProps ? cloneElement(children, { ...errorProps }) : children}</span>
     </Tooltip>
   );
 };

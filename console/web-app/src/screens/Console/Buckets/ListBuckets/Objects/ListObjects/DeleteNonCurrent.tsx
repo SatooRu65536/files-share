@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
+import { api } from 'api';
+import { errorToHandler } from 'api/errors';
+import { ConfirmDeleteIcon, Grid, InputBox,Switch } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { ConfirmDeleteIcon, Switch, Grid, InputBox } from "mds";
-import ConfirmDialog from "../../../../Common/ModalWrapper/ConfirmDialog";
-import { setErrorSnackMessage } from "../../../../../../systemSlice";
-import { AppState, useAppDispatch } from "../../../../../../store";
-import { hasPermission } from "../../../../../../common/SecureComponent";
-import { IAM_SCOPES } from "../../../../../../common/SecureComponent/permissions";
-import { useSelector } from "react-redux";
-import { api } from "api";
-import { errorToHandler } from "api/errors";
+import { hasPermission } from '../../../../../../common/SecureComponent';
+import { IAM_SCOPES } from '../../../../../../common/SecureComponent/permissions';
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { setErrorSnackMessage } from '../../../../../../systemSlice';
+import ConfirmDialog from '../../../../Common/ModalWrapper/ConfirmDialog';
 
 interface IDeleteNonCurrentProps {
   closeDeleteModalAndRefresh: (refresh: boolean) => void;
@@ -41,18 +41,14 @@ const DeleteNonCurrentVersions = ({
 }: IDeleteNonCurrentProps) => {
   const dispatch = useAppDispatch();
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
-  const [typeConfirm, setTypeConfirm] = useState<string>("");
+  const [typeConfirm, setTypeConfirm] = useState<string>('');
   const [bypassGovernance, setBypassGovernance] = useState<boolean>(false);
 
-  const retentionConfig = useSelector(
-    (state: AppState) => state.objectBrowser.retentionConfig,
-  );
+  const retentionConfig = useSelector((state: AppState) => state.objectBrowser.retentionConfig);
 
   const canBypass =
-    hasPermission(
-      [selectedBucket],
-      [IAM_SCOPES.S3_BYPASS_GOVERNANCE_RETENTION],
-    ) && retentionConfig?.mode === "governance";
+    hasPermission([selectedBucket], [IAM_SCOPES.S3_BYPASS_GOVERNANCE_RETENTION]) &&
+    retentionConfig?.mode === 'governance';
 
   useEffect(() => {
     if (deleteLoading) {
@@ -70,14 +66,7 @@ const DeleteNonCurrentVersions = ({
           setDeleteLoading(false);
         });
     }
-  }, [
-    deleteLoading,
-    closeDeleteModalAndRefresh,
-    dispatch,
-    selectedObject,
-    selectedBucket,
-    bypassGovernance,
-  ]);
+  }, [deleteLoading, closeDeleteModalAndRefresh, dispatch, selectedObject, selectedBucket, bypassGovernance]);
 
   if (!selectedObject) {
     return null;
@@ -89,19 +78,18 @@ const DeleteNonCurrentVersions = ({
   return (
     <ConfirmDialog
       title={`Delete Non-Current versions`}
-      confirmText={"Delete"}
+      confirmText={'Delete'}
       isOpen={deleteOpen}
       titleIcon={<ConfirmDeleteIcon />}
       isLoading={deleteLoading}
       onConfirm={onConfirmDelete}
       onClose={() => closeDeleteModalAndRefresh(false)}
       confirmButtonProps={{
-        disabled: typeConfirm !== "YES, PROCEED" || deleteLoading,
+        disabled: typeConfirm !== 'YES, PROCEED' || deleteLoading,
       }}
       confirmationContent={
         <Fragment>
-          Are you sure you want to delete all the non-current versions for:{" "}
-          <b>{selectedObject}</b>? <br />
+          Are you sure you want to delete all the non-current versions for: <b>{selectedObject}</b>? <br />
           {canBypass && (
             <Fragment>
               <div
@@ -110,10 +98,10 @@ const DeleteNonCurrentVersions = ({
                 }}
               >
                 <Switch
-                  label={"Bypass Governance Mode"}
-                  indicatorLabels={["Yes", "No"]}
+                  label={'Bypass Governance Mode'}
+                  indicatorLabels={['Yes', 'No']}
                   checked={bypassGovernance}
-                  value={"bypass_governance"}
+                  value={'bypass_governance'}
                   id="bypass_governance"
                   name="bypass_governance"
                   onChange={(e) => {

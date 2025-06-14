@@ -14,28 +14,29 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import { DocItem } from "./HelpMenu.types";
-import MoreLink from "../../common/MoreLink";
-import placeholderImg from "../../placeholderimage.png";
+import React, { Fragment } from 'react';
+
+import MoreLink from '../../common/MoreLink';
+import placeholderImg from '../../placeholderimage.png';
+import { DocItem } from './HelpMenu.types';
 
 interface IHelpItemProps {
   item: DocItem;
   displayImage?: boolean;
 }
 
-const HelpItem = ({ item, displayImage = true }: IHelpItemProps) => {
+const HelpItem = ({ displayImage = true, item }: IHelpItemProps) => {
   return (
     <Fragment>
       <div
         style={{
-          display: "flex",
-          flexDirection: "row",
+          display: 'flex',
+          flexDirection: 'row',
         }}
       >
         {displayImage && (
           <div style={{ paddingLeft: 16 }}>
-            <a href={item.url} target={"_blank"}>
+            <a href={item.url} target={'_blank'} rel="noreferrer">
               <img
                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
                 alt={item.title}
@@ -43,37 +44,37 @@ const HelpItem = ({ item, displayImage = true }: IHelpItemProps) => {
                   width: 208,
                   height: 116,
                   backgroundImage: `url(${item.img}), url(${placeholderImg})`,
-                  backgroundPosition: "center center",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: 'center center',
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
                 }}
               />
             </a>
           </div>
         )}
-        <div style={{ flexGrow: 1, flexBasis: "auto", paddingLeft: 16 }}>
+        <div style={{ flexGrow: 1, flexBasis: 'auto', paddingLeft: 16 }}>
           <div
             style={{
-              width: "100%",
-              font: "normal normal bold 16px/28px Inter",
-              whiteSpace: "pre-wrap",
+              width: '100%',
+              font: 'normal normal bold 16px/28px Inter',
+              whiteSpace: 'pre-wrap',
             }}
           >
             {item.title}
           </div>
           <div
             style={{
-              width: "100%",
-              whiteSpace: "pre-line",
-              lineHeight: "1.5em",
-              height: "3em",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
+              width: '100%',
+              whiteSpace: 'pre-line',
+              lineHeight: '1.5em',
+              height: '3em',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             {item.body}
           </div>
-          <MoreLink text={"Learn more"} link={item.url} color={"#3874A6"} />
+          <MoreLink text={'Learn more'} link={item.url} color={'#3874A6'} />
         </div>
       </div>
     </Fragment>

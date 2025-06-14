@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { Box } from "mds";
+import { Box } from 'mds';
+import React from 'react';
 
 export default function Copyright() {
   return (
-    <Box className={"muted"} sx={{ textAlign: "center" }}>
-      {"Copyright © "}
+    <Box className={'muted'} sx={{ textAlign: 'center' }}>
+      {'Copyright © '}
       <a href="https://min.io/?ref=con">MinIO</a> {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Box>
   );
 }

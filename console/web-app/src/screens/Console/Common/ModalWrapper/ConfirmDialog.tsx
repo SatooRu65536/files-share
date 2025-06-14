@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { Box, Button, ModalBox } from "mds";
+import { Box, Button, ModalBox } from 'mds';
+import React from 'react';
 
 interface ButtonProps {
   label?: string;
-  variant?: "regular" | "callAction" | "secondary";
+  variant?: 'regular' | 'callAction' | 'secondary';
   icon?: React.ReactNode;
-  iconLocation?: "start" | "end";
+  iconLocation?: 'start' | 'end';
   fullWidth?: boolean;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -37,42 +37,34 @@ type ConfirmDialogProps = {
   confirmationContent: React.ReactNode | React.ReactNode[];
   cancelText?: string;
   confirmText?: string;
-  confirmButtonProps?: ButtonProps &
-    React.ButtonHTMLAttributes<HTMLButtonElement>;
-  cancelButtonProps?: ButtonProps &
-    React.ButtonHTMLAttributes<HTMLButtonElement>;
+  confirmButtonProps?: ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+  cancelButtonProps?: ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
   titleIcon?: React.ReactNode;
   confirmationButtonSimple?: boolean;
 };
 
 const ConfirmDialog = ({
-  isOpen = false,
-  onClose,
-  onCancel,
-  onConfirm,
-  title = "",
-  isLoading,
-  confirmationContent,
-  cancelText = "Cancel",
-  confirmText = "Confirm",
-  confirmButtonProps = undefined,
   cancelButtonProps = undefined,
-  titleIcon = null,
+  cancelText = 'Cancel',
+  confirmButtonProps = undefined,
+  confirmText = 'Confirm',
   confirmationButtonSimple = false,
+  confirmationContent,
+  isLoading,
+  isOpen = false,
+  onCancel,
+  onClose,
+  onConfirm,
+  title = '',
+  titleIcon = null,
 }: ConfirmDialogProps) => {
   return (
-    <ModalBox
-      title={title}
-      titleIcon={titleIcon}
-      onClose={onClose}
-      open={isOpen}
-      customMaxWidth={510}
-    >
+    <ModalBox title={title} titleIcon={titleIcon} onClose={onClose} open={isOpen} customMaxWidth={510}>
       <Box>{confirmationContent}</Box>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "flex-end",
+          display: 'flex',
+          justifyContent: 'flex-end',
           gap: 10,
           marginTop: 20,
         }}
@@ -83,16 +75,16 @@ const ConfirmDialog = ({
           type="button"
           {...cancelButtonProps}
           variant="regular"
-          id={"confirm-cancel"}
+          id={'confirm-cancel'}
           label={cancelText}
         />
 
         <Button
-          id={"confirm-ok"}
+          id={'confirm-ok'}
           onClick={onConfirm}
           label={confirmText}
           disabled={isLoading}
-          variant={"secondary"}
+          variant={'secondary'}
           {...confirmButtonProps}
         />
       </Box>

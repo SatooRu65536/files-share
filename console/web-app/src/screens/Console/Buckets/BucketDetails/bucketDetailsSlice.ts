@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppState } from "../../../../store";
-import { Bucket } from "api/consoleApi";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Bucket } from 'api/consoleApi';
+
+import { AppState } from '../../../../store';
 
 interface BucketDetailsState {
   selectedTab: string;
@@ -25,13 +26,13 @@ interface BucketDetailsState {
 }
 
 const initialState: BucketDetailsState = {
-  selectedTab: "summary",
+  selectedTab: 'summary',
   loadingBucket: false,
   bucketInfo: null,
 };
 
 const bucketDetailsSlice = createSlice({
-  name: "bucketDetails",
+  name: 'bucketDetails',
   initialState,
   reducers: {
     setBucketDetailsTab: (state, action: PayloadAction<string>) => {
@@ -46,12 +47,9 @@ const bucketDetailsSlice = createSlice({
   },
 });
 
-export const { setBucketInfo, setBucketDetailsLoad } =
-  bucketDetailsSlice.actions;
+export const { setBucketDetailsLoad, setBucketInfo } = bucketDetailsSlice.actions;
 
-export const selBucketDetailsLoading = (state: AppState) =>
-  state.bucketDetails.loadingBucket;
-export const selBucketDetailsInfo = (state: AppState) =>
-  state.bucketDetails.bucketInfo;
+export const selBucketDetailsLoading = (state: AppState) => state.bucketDetails.loadingBucket;
+export const selBucketDetailsInfo = (state: AppState) => state.bucketDetails.bucketInfo;
 
 export default bucketDetailsSlice.reducer;

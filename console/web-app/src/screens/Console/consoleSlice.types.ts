@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 export enum SessionCallStates {
-  Initial = "initial",
-  Loading = "loading",
-  Done = "done",
+  Initial = 'initial',
+  Loading = 'loading',
+  Done = 'done',
 }

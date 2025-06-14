@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { ProgressBar, ProgressBarProps } from "mds";
+import { ProgressBar, ProgressBarProps } from 'mds';
+import React from 'react';
 
 interface IProgressBarWrapper {
   value: number;
@@ -28,20 +28,18 @@ interface IProgressBarWrapper {
   notificationLabel?: string;
 }
 
-function LinearProgressWithLabel(
-  props: { error: boolean; cancelled: boolean } & ProgressBarProps,
-) {
-  let label = "";
+function LinearProgressWithLabel(props: { error: boolean; cancelled: boolean } & ProgressBarProps) {
+  let label = '';
 
   if (props.error) {
-    label = `Error: ${props.notificationLabel || ""}`;
+    label = `Error: ${props.notificationLabel || ''}`;
   } else if (props.cancelled) {
     label = `Cancelled`;
   }
 
   return (
     <ProgressBar
-      variant={"determinate"}
+      variant={'determinate'}
       value={props.value}
       color={props.color}
       progressLabel
@@ -51,45 +49,36 @@ function LinearProgressWithLabel(
 }
 
 const ProgressBarWrapper = ({
-  value,
-  ready,
-  indeterminate,
-  withLabel,
-  size = "regular",
-  error,
   cancelled,
+  error,
+  indeterminate,
   notificationLabel,
+  ready,
+  size = 'regular',
+  value,
+  withLabel,
 }: IProgressBarWrapper) => {
   let color: any;
   if (error) {
-    color = "red";
+    color = 'red';
   } else if (cancelled) {
-    color = "orange";
+    color = 'orange';
   } else if (value === 100 && ready) {
-    color = "green";
+    color = 'green';
   } else {
-    color = "blue";
+    color = 'blue';
   }
   const propsComponent: ProgressBarProps = {
-    variant:
-      indeterminate && !ready && !cancelled ? "indeterminate" : "determinate",
+    variant: indeterminate && !ready && !cancelled ? 'indeterminate' : 'determinate',
     value: ready && !error ? 100 : value,
     color: color,
-    notificationLabel: notificationLabel || "",
+    notificationLabel: notificationLabel || '',
   };
   if (withLabel) {
-    return (
-      <LinearProgressWithLabel
-        {...propsComponent}
-        error={!!error}
-        cancelled={!!cancelled}
-      />
-    );
+    return <LinearProgressWithLabel {...propsComponent} error={!!error} cancelled={!!cancelled} />;
   }
-  if (size === "small") {
-    return (
-      <ProgressBar {...propsComponent} sx={{ height: 6, borderRadius: 6 }} />
-    );
+  if (size === 'small') {
+    return <ProgressBar {...propsComponent} sx={{ height: 6, borderRadius: 6 }} />;
   }
 
   return <ProgressBar {...propsComponent} />;

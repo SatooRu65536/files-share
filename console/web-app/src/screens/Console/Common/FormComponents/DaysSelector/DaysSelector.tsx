@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useEffect, useState } from "react";
-import { DateTime } from "luxon";
-import { Box, InputBox, InputLabel, LinkIcon } from "mds";
+import { DateTime } from 'luxon';
+import { Box, InputBox, InputLabel, LinkIcon } from 'mds';
+import React, { useEffect, useState } from 'react';
 
 const DAY_SECONDS = 86400;
 const HOUR_SECONDS = 3600;
@@ -39,13 +39,7 @@ const calculateNewTime = (days: number, hours: number, minutes: number) => {
     .toISO(); // Lump days into hours to avoid daylight savings causing issues
 };
 
-const DaysSelector = ({
-  id,
-  label,
-  maxSeconds,
-  entity,
-  onChange,
-}: IDaysSelector) => {
+const DaysSelector = ({ entity, id, label, maxSeconds, onChange }: IDaysSelector) => {
   const maxDays = Math.floor(maxSeconds / DAY_SECONDS);
   const maxHours = Math.floor((maxSeconds % DAY_SECONDS) / HOUR_SECONDS);
   const maxMinutes = Math.floor((maxSeconds % HOUR_SECONDS) / HOUR_MINUTES);
@@ -64,25 +58,17 @@ const DaysSelector = ({
   }, [maxDays, maxHours, maxMinutes]);
 
   useEffect(() => {
-    if (
-      !isNaN(selectedHours) &&
-      !isNaN(selectedDays) &&
-      !isNaN(selectedMinutes)
-    ) {
-      setDateSelected(
-        calculateNewTime(selectedDays, selectedHours, selectedMinutes),
-      );
+    if (!isNaN(selectedHours) && !isNaN(selectedDays) && !isNaN(selectedMinutes)) {
+      setDateSelected(calculateNewTime(selectedDays, selectedHours, selectedMinutes));
     }
   }, [selectedDays, selectedHours, selectedMinutes]);
 
   useEffect(() => {
     if (validDate && dateSelected) {
-      const formattedDate = DateTime.fromISO(dateSelected).toFormat(
-        "yyyy-MM-dd HH:mm:ss",
-      );
-      onChange(formattedDate.split(" ").join("T"), true);
+      const formattedDate = DateTime.fromISO(dateSelected).toFormat('yyyy-MM-dd HH:mm:ss');
+      onChange(formattedDate.split(' ').join('T'), true);
     } else {
-      onChange("0000-00-00", false);
+      onChange('0000-00-00', false);
     }
   }, [dateSelected, onChange, validDate]);
 
@@ -90,12 +76,7 @@ const DaysSelector = ({
   useEffect(() => {
     let valid = true;
 
-    if (
-      selectedDays < 0 ||
-      selectedDays > 7 ||
-      selectedDays > maxDays ||
-      isNaN(selectedDays)
-    ) {
+    if (selectedDays < 0 || selectedDays > 7 || selectedDays > maxDays || isNaN(selectedDays)) {
       valid = false;
     }
 
@@ -124,23 +105,14 @@ const DaysSelector = ({
     }
 
     setValidDate(valid);
-  }, [
-    dateSelected,
-    maxDays,
-    maxHours,
-    maxMinutes,
-    onChange,
-    selectedDays,
-    selectedHours,
-    selectedMinutes,
-  ]);
+  }, [dateSelected, maxDays, maxHours, maxMinutes, onChange, selectedDays, selectedHours, selectedMinutes]);
 
   const extraStyles = {
-    "& .textBoxContainer": {
+    '& .textBoxContainer': {
       minWidth: 0,
     },
-    "& input": {
-      textAlign: "center" as const,
+    '& input': {
+      textAlign: 'center' as const,
       paddingRight: 10,
       paddingLeft: 10,
       width: 40,
@@ -148,11 +120,11 @@ const DaysSelector = ({
   };
 
   return (
-    <Box className={"inputItem"}>
+    <Box className={'inputItem'}>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
           marginBottom: 5,
         }}
       >
@@ -160,13 +132,13 @@ const DaysSelector = ({
       </Box>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-evenly",
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-evenly',
           gap: 10,
-          "& .reverseInput": {
-            flexFlow: "row-reverse",
-            "& > label": {
+          '& .reverseInput': {
+            flexFlow: 'row-reverse',
+            '& > label': {
               fontWeight: 400,
               marginLeft: 15,
               marginRight: 25,
@@ -228,54 +200,48 @@ const DaysSelector = ({
       </Box>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
           marginTop: 25,
           marginLeft: 10,
           marginBottom: 15,
-          "& .validityText": {
+          '& .validityText': {
             fontSize: 14,
             marginTop: 15,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            "@media (max-width: 900px)": {
-              flexFlow: "column",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            '@media (max-width: 900px)': {
+              flexFlow: 'column',
             },
-            "& > .min-icon": {
-              color: "#5E5E5E",
+            '& > .min-icon': {
+              color: '#5E5E5E',
               width: 15,
               height: 15,
               marginRight: 10,
             },
           },
-          "& .validTill": {
-            fontWeight: "bold",
+          '& .validTill': {
+            fontWeight: 'bold',
             marginLeft: 15,
           },
-          "& .invalidDurationText": {
+          '& .invalidDurationText': {
             marginTop: 15,
-            display: "flex",
-            color: "red",
+            display: 'flex',
+            color: 'red',
             fontSize: 11,
           },
         }}
       >
         {validDate && dateSelected ? (
-          <div className={"validityText"}>
+          <div className={'validityText'}>
             <LinkIcon />
-            <div>{entity} will be available until:</div>{" "}
-            <div className={"validTill"}>
-              {DateTime.fromISO(dateSelected).toFormat(
-                "MM/dd/yyyy HH:mm:ss ZZZZ",
-              )}
-            </div>
+            <div>{entity} will be available until:</div>{' '}
+            <div className={'validTill'}>{DateTime.fromISO(dateSelected).toFormat('MM/dd/yyyy HH:mm:ss ZZZZ')}</div>
           </div>
         ) : (
-          <div className={"invalidDurationText"}>
-            Please select a valid duration.
-          </div>
+          <div className={'invalidDurationText'}>Please select a valid duration.</div>
         )}
       </Box>
     </Box>

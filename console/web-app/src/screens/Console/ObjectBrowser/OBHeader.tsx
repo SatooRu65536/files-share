@@ -14,21 +14,22 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect } from "react";
-import { IAM_SCOPES } from "../../../common/SecureComponent/permissions";
-import { SecureComponent } from "../../../common/SecureComponent";
-import { Grid } from "mds";
-import AutoColorIcon from "../Common/Components/AutoColorIcon";
-import { useSelector } from "react-redux";
-import { selFeatures } from "../consoleSlice";
-import SearchBox from "../Common/SearchBox";
-import { setSearchVersions } from "./objectBrowserSlice";
-import { AppState, useAppDispatch } from "../../../store";
-import FilterObjectsSB from "./FilterObjectsSB";
-import PageHeaderWrapper from "../Common/PageHeaderWrapper/PageHeaderWrapper";
-import ObjectManagerButton from "../Common/ObjectManager/ObjectManagerButton";
-import HelpMenu from "../HelpMenu";
-import { setHelpName } from "../../../systemSlice";
+import { Grid } from 'mds';
+import React, { Fragment, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
+import { SecureComponent } from '../../../common/SecureComponent';
+import { IAM_SCOPES } from '../../../common/SecureComponent/permissions';
+import { AppState, useAppDispatch } from '../../../store';
+import { setHelpName } from '../../../systemSlice';
+import AutoColorIcon from '../Common/Components/AutoColorIcon';
+import ObjectManagerButton from '../Common/ObjectManager/ObjectManagerButton';
+import PageHeaderWrapper from '../Common/PageHeaderWrapper/PageHeaderWrapper';
+import SearchBox from '../Common/SearchBox';
+import { selFeatures } from '../consoleSlice';
+import HelpMenu from '../HelpMenu';
+import FilterObjectsSB from './FilterObjectsSB';
+import { setSearchVersions } from './objectBrowserSlice';
 
 interface IOBHeader {
   bucketName: string;
@@ -38,17 +39,11 @@ const OBHeader = ({ bucketName }: IOBHeader) => {
   const dispatch = useAppDispatch();
   const features = useSelector(selFeatures);
 
-  const versionsMode = useSelector(
-    (state: AppState) => state.objectBrowser.versionsMode,
-  );
-  const versionedFile = useSelector(
-    (state: AppState) => state.objectBrowser.versionedFile,
-  );
-  const searchVersions = useSelector(
-    (state: AppState) => state.objectBrowser.searchVersions,
-  );
+  const versionsMode = useSelector((state: AppState) => state.objectBrowser.versionsMode);
+  const versionedFile = useSelector((state: AppState) => state.objectBrowser.versionedFile);
+  const searchVersions = useSelector((state: AppState) => state.objectBrowser.searchVersions);
 
-  const obOnly = !!features?.includes("object-browser-only");
+  const obOnly = !!features?.includes('object-browser-only');
 
   const searchBar = (
     <Fragment>
@@ -75,7 +70,7 @@ const OBHeader = ({ bucketName }: IOBHeader) => {
   );
 
   useEffect(() => {
-    dispatch(setHelpName("object_browser"));
+    dispatch(setHelpName('object_browser'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,7 +78,7 @@ const OBHeader = ({ bucketName }: IOBHeader) => {
     <Fragment>
       {!obOnly ? (
         <PageHeaderWrapper
-          label={"Object Browser"}
+          label={'Object Browser'}
           actions={
             <Fragment>
               <HelpMenu />
@@ -95,7 +90,7 @@ const OBHeader = ({ bucketName }: IOBHeader) => {
         <Grid
           container
           sx={{
-            padding: "20px 32px 0",
+            padding: '20px 32px 0',
           }}
         >
           <Grid>
@@ -105,7 +100,7 @@ const OBHeader = ({ bucketName }: IOBHeader) => {
             item
             xs
             sx={{
-              display: "flex",
+              display: 'flex',
               gap: 10,
             }}
           >

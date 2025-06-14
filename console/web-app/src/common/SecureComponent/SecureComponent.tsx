@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { cloneElement } from "react";
-import hasPermission from "./accessControl";
+import React, { cloneElement } from 'react';
+
+import hasPermission from './accessControl';
 
 interface ISecureComponentProps {
   errorProps?: any;
@@ -28,21 +29,16 @@ interface ISecureComponentProps {
 }
 
 const SecureComponent = ({
-  children,
   RenderError = () => <></>,
+  children,
+  containsResource = false,
   errorProps = null,
   matchAll = false,
-  scopes = [],
   resource,
-  containsResource = false,
+  scopes = [],
 }: ISecureComponentProps) => {
-  const permissionGranted = hasPermission(
-    resource,
-    scopes,
-    matchAll,
-    containsResource,
-  );
-  if (!permissionGranted && !errorProps) return <RenderError />;
+  const permissionGranted = hasPermission(resource, scopes, matchAll, containsResource);
+  if (!permissionGranted && !errorProps) {return <RenderError />;}
   if (!permissionGranted && errorProps) {
     return Array.isArray(children) ? (
       <>{children.map((child) => cloneElement(child, { ...errorProps }))}</>

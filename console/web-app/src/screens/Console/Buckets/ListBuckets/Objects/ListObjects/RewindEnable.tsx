@@ -14,25 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useEffect, useState } from "react";
-import { DateTime } from "luxon";
-import {
-  Button,
-  DateTimeInput,
-  FormLayout,
-  Grid,
-  ProgressBar,
-  Switch,
-} from "mds";
-import { useSelector } from "react-redux";
-import ModalWrapper from "../../../../Common/ModalWrapper/ModalWrapper";
-import { AppState, useAppDispatch } from "../../../../../../store";
-import {
-  resetRewind,
-  setReloadObjectsList,
-  setRewindEnable,
-} from "../../../../ObjectBrowser/objectBrowserSlice";
-import { modalStyleUtils } from "../../../../Common/FormComponents/common/styleLibrary";
+import { DateTime } from 'luxon';
+import { Button, DateTimeInput, FormLayout, Grid, ProgressBar, Switch } from 'mds';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { modalStyleUtils } from '../../../../Common/FormComponents/common/styleLibrary';
+import ModalWrapper from '../../../../Common/ModalWrapper/ModalWrapper';
+import { resetRewind, setReloadObjectsList, setRewindEnable } from '../../../../ObjectBrowser/objectBrowserSlice';
 
 interface IRewindEnable {
   closeModalAndRefresh: () => void;
@@ -40,32 +30,20 @@ interface IRewindEnable {
   bucketName: string;
 }
 
-const RewindEnable = ({
-  closeModalAndRefresh,
-  open,
-  bucketName,
-}: IRewindEnable) => {
+const RewindEnable = ({ bucketName, closeModalAndRefresh, open }: IRewindEnable) => {
   const dispatch = useAppDispatch();
 
-  const rewindEnabled = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.rewindEnabled,
-  );
-  const dateRewind = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.dateToRewind,
-  );
+  const rewindEnabled = useSelector((state: AppState) => state.objectBrowser.rewind.rewindEnabled);
+  const dateRewind = useSelector((state: AppState) => state.objectBrowser.rewind.dateToRewind);
 
   const [rewindEnabling, setRewindEnabling] = useState<boolean>(false);
   const [rewindEnableButton, setRewindEnableButton] = useState<boolean>(true);
-  const [dateSelected, setDateSelected] = useState<DateTime>(
-    DateTime.fromJSDate(new Date()),
-  );
+  const [dateSelected, setDateSelected] = useState<DateTime>(DateTime.fromJSDate(new Date()));
 
   useEffect(() => {
     if (rewindEnabled) {
       setRewindEnableButton(true);
-      setDateSelected(
-        DateTime.fromISO(dateRewind || DateTime.now().toISO() || ""),
-      );
+      setDateSelected(DateTime.fromISO(dateRewind || DateTime.now().toISO() || ''));
     }
   }, [rewindEnabled, dateRewind]);
 
@@ -101,7 +79,7 @@ const RewindEnable = ({
           onChange={(dateTime) => (dateTime ? setDateSelected(dateTime) : null)}
           id="rewind-selector"
           label="Rewind to"
-          timeFormat={"24h"}
+          timeFormat={'24h'}
           secondsSelector={false}
           disabled={!rewindEnableButton}
         />
@@ -115,8 +93,8 @@ const RewindEnable = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setRewindEnableButton(e.target.checked);
             }}
-            label={"Current Status"}
-            indicatorLabels={["Enabled", "Disabled"]}
+            label={'Current Status'}
+            indicatorLabels={['Enabled', 'Disabled']}
           />
         )}
         <Grid item xs={12} sx={modalStyleUtils.modalButtonBar}>
@@ -125,12 +103,8 @@ const RewindEnable = ({
             variant="callAction"
             disabled={rewindEnabling || (!dateSelected && rewindEnableButton)}
             onClick={rewindApply}
-            id={"rewind-apply-button"}
-            label={
-              !rewindEnableButton && rewindEnabled
-                ? "Show Current Data"
-                : "Show Rewind Data"
-            }
+            id={'rewind-apply-button'}
+            label={!rewindEnableButton && rewindEnabled ? 'Show Current Data' : 'Show Rewind Data'}
           />
         </Grid>
 

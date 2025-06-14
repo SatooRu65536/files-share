@@ -14,33 +14,27 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
-import { Box, BucketsIcon, HelpBox, MenuDivider, MenuSectionHeader } from "mds";
-import { AppState, useAppDispatch } from "../../../../store";
-import { Bucket } from "../../../../api/consoleApi";
-import { api } from "../../../../api";
-import {
-  setBucketLoadListing,
-  setErrorSnackMessage,
-} from "../../../../systemSlice";
-import { errorToHandler } from "../../../../api/errors";
-import BucketListItem from "./BucketListItem";
-import VirtualizedList from "../../Common/VirtualizedList/VirtualizedList";
-import get from "lodash/get";
-import { useTheme } from "styled-components";
-import BucketFiltering from "./BucketFiltering";
-import { useSelector } from "react-redux";
+import get from 'lodash/get';
+import { Box, BucketsIcon, HelpBox, MenuDivider, MenuSectionHeader } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useTheme } from 'styled-components';
+
+import { api } from '../../../../api';
+import { Bucket } from '../../../../api/consoleApi';
+import { errorToHandler } from '../../../../api/errors';
+import { AppState, useAppDispatch } from '../../../../store';
+import { setBucketLoadListing, setErrorSnackMessage } from '../../../../systemSlice';
+import VirtualizedList from '../../Common/VirtualizedList/VirtualizedList';
+import BucketFiltering from './BucketFiltering';
+import BucketListItem from './BucketListItem';
 
 const ListBuckets = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
 
-  const filterBuckets = useSelector(
-    (state: AppState) => state.system.filterBucketList,
-  );
-  const loadingBuckets = useSelector(
-    (state: AppState) => state.system.loadBucketsListing,
-  );
+  const filterBuckets = useSelector((state: AppState) => state.system.filterBucketList);
+  const loadingBuckets = useSelector((state: AppState) => state.system.loadBucketsListing);
 
   const [records, setRecords] = useState<Bucket[]>([]);
 
@@ -63,7 +57,7 @@ const ListBuckets = () => {
   }, [loadingBuckets, dispatch]);
 
   const filteredRecords = records.filter((b: Bucket) => {
-    if (filterBuckets === "") {
+    if (filterBuckets === '') {
       return true;
     } else {
       return b.name.indexOf(filterBuckets) >= 0;
@@ -84,36 +78,36 @@ const ListBuckets = () => {
         <Fragment>
           <Box
             sx={{
-              display: "block",
-              "& .menuHeader": {
+              display: 'block',
+              '& .menuHeader': {
                 marginTop: 10,
               },
-              "& .labelContainer": {
-                textAlign: "left",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+              '& .labelContainer': {
+                textAlign: 'left',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
                 flexGrow: 1,
                 width: 150,
               },
             }}
           >
             <BucketFiltering />
-            <MenuSectionHeader label={"Buckets"} />
+            <MenuSectionHeader label={'Buckets'} />
             {filteredRecords.length > 0 && (
               <Box
                 sx={{
-                  display: "block",
-                  height: "calc(100vh - 380px)",
-                  "& .bucketsListing": {
-                    "&::-webkit-scrollbar": {
+                  display: 'block',
+                  height: 'calc(100vh - 380px)',
+                  '& .bucketsListing': {
+                    '&::-webkit-scrollbar': {
                       width: 5,
                     },
-                    "&::-webkit-scrollbar-thumb": {
-                      backgroundColor: get(theme, "bulletColor", "#2781B0"),
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: get(theme, 'bulletColor', '#2781B0'),
                     },
-                    "&::-webkit-scrollbar-thumb:hover": {
-                      backgroundColor: "#fff",
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#fff',
                     },
                   },
                 }}
@@ -125,24 +119,20 @@ const ListBuckets = () => {
                 />
               </Box>
             )}
-            {filteredRecords.length === 0 && filterBuckets !== "" && (
+            {filteredRecords.length === 0 && filterBuckets !== '' && (
               <Box
                 sx={{
-                  "& .helpbox-container": {
-                    backgroundColor: "transparent",
-                    color: get(theme, "menu.vertical.textColor", "#FFF"),
+                  '& .helpbox-container': {
+                    backgroundColor: 'transparent',
+                    color: get(theme, 'menu.vertical.textColor', '#FFF'),
                     border: 0,
                   },
                 }}
               >
                 <HelpBox
                   iconComponent={<BucketsIcon />}
-                  title={"No Results"}
-                  help={
-                    <Box sx={{ textAlign: "center" }}>
-                      No buckets match the filtering condition
-                    </Box>
-                  }
+                  title={'No Results'}
+                  help={<Box sx={{ textAlign: 'center' }}>No buckets match the filtering condition</Box>}
                 />
               </Box>
             )}

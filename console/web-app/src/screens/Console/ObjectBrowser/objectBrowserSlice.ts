@@ -14,23 +14,21 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IFileItem, ObjectBrowserState } from "./types";
-import {
-  BucketObjectItem,
-  IRestoreLocalObjectList,
-} from "../Buckets/ListBuckets/Objects/ListObjects/types";
-import { BucketVersioningResponse } from "api/consoleApi";
-import { AppState } from "store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { BucketVersioningResponse } from 'api/consoleApi';
+import { AppState } from 'store';
+
+import { BucketObjectItem, IRestoreLocalObjectList } from '../Buckets/ListBuckets/Objects/ListObjects/types';
+import { IFileItem, ObjectBrowserState } from './types';
 
 const defaultRewind = {
   rewindEnabled: false,
-  bucketToRewind: "",
+  bucketToRewind: '',
   dateToRewind: null,
 };
 
 const initialState: ObjectBrowserState = {
-  selectedBucket: "",
+  selectedBucket: '',
   versionsMode: false,
   reloadObjectsList: false,
   requestInProgress: true,
@@ -49,10 +47,10 @@ const initialState: ObjectBrowserState = {
     currentDownloads: [],
     currentUploads: [],
   },
-  searchObjects: "",
-  versionedFile: "",
-  searchVersions: "",
-  selectedVersion: "",
+  searchObjects: '',
+  versionedFile: '',
+  searchVersions: '',
+  selectedVersion: '',
   showDeleted: false,
   selectedInternalPaths: null,
   simplePath: null,
@@ -78,7 +76,7 @@ const initialState: ObjectBrowserState = {
 };
 
 const objectBrowserSlice = createSlice({
-  name: "objectBrowser",
+  name: 'objectBrowser',
   initialState,
   reducers: {
     setRewindEnable: (
@@ -95,7 +93,7 @@ const objectBrowserSlice = createSlice({
     },
     resetRewind: (state) => {
       state.rewind.rewindEnabled = false;
-      state.rewind.bucketToRewind = "";
+      state.rewind.bucketToRewind = '';
       state.rewind.dateToRewind = null;
     },
     setVersionsModeEnabled: (
@@ -105,14 +103,14 @@ const objectBrowserSlice = createSlice({
         objectName?: string;
       }>,
     ) => {
-      let objN = "";
+      let objN = '';
       if (action.payload.objectName) {
         objN = action.payload.objectName;
       }
-      const objectN = !action.payload.status ? "" : objN;
+      const objectN = !action.payload.status ? '' : objN;
       state.versionsMode = action.payload.status;
       state.versionedFile = objectN;
-      state.selectedVersion = "";
+      state.selectedVersion = '';
     },
     setNewObject: (state, action: PayloadAction<IFileItem>) => {
       state.objectManager.objectsToManage.push(action.payload);
@@ -133,8 +131,7 @@ const objectBrowserSlice = createSlice({
         return;
       }
 
-      state.objectManager.objectsToManage[itemUpdate].percentage =
-        action.payload.progress;
+      state.objectManager.objectsToManage[itemUpdate].percentage = action.payload.progress;
       state.objectManager.objectsToManage[itemUpdate].waitingForFile = false;
     },
     completeObject: (state, action: PayloadAction<string>) => {
@@ -147,26 +144,20 @@ const objectBrowserSlice = createSlice({
       }
 
       state.objectManager.objectsToManage[objectToComplete].percentage = 100;
-      state.objectManager.objectsToManage[objectToComplete].waitingForFile =
-        false;
+      state.objectManager.objectsToManage[objectToComplete].waitingForFile = false;
       state.objectManager.objectsToManage[objectToComplete].done = true;
 
       // We cancel from in-progress lists
       const type = state.objectManager.objectsToManage[objectToComplete].type;
       const ID = state.objectManager.objectsToManage[objectToComplete].ID;
 
-      if (type === "download") {
-        state.objectManager.currentDownloads =
-          state.objectManager.currentDownloads.filter((item) => item !== ID);
-      } else if (type === "upload") {
-        state.objectManager.currentUploads =
-          state.objectManager.currentUploads.filter((item) => item !== ID);
+      if (type === 'download') {
+        state.objectManager.currentDownloads = state.objectManager.currentDownloads.filter((item) => item !== ID);
+      } else if (type === 'upload') {
+        state.objectManager.currentUploads = state.objectManager.currentUploads.filter((item) => item !== ID);
       }
     },
-    failObject: (
-      state,
-      action: PayloadAction<{ instanceID: string; msg: string }>,
-    ) => {
+    failObject: (state, action: PayloadAction<{ instanceID: string; msg: string }>) => {
       const objectToFail = state.objectManager.objectsToManage.findIndex(
         (item) => item.instanceID === action.payload.instanceID,
       );
@@ -174,19 +165,16 @@ const objectBrowserSlice = createSlice({
       state.objectManager.objectsToManage[objectToFail].failed = true;
       state.objectManager.objectsToManage[objectToFail].waitingForFile = false;
       state.objectManager.objectsToManage[objectToFail].done = true;
-      state.objectManager.objectsToManage[objectToFail].errorMessage =
-        action.payload.msg;
+      state.objectManager.objectsToManage[objectToFail].errorMessage = action.payload.msg;
 
       // We cancel from in-progress lists
       const type = state.objectManager.objectsToManage[objectToFail].type;
       const ID = state.objectManager.objectsToManage[objectToFail].ID;
 
-      if (type === "download") {
-        state.objectManager.currentDownloads =
-          state.objectManager.currentDownloads.filter((item) => item !== ID);
-      } else if (type === "upload") {
-        state.objectManager.currentUploads =
-          state.objectManager.currentUploads.filter((item) => item !== ID);
+      if (type === 'download') {
+        state.objectManager.currentDownloads = state.objectManager.currentDownloads.filter((item) => item !== ID);
+      } else if (type === 'upload') {
+        state.objectManager.currentUploads = state.objectManager.currentUploads.filter((item) => item !== ID);
       }
     },
     cancelObjectInList: (state, action: PayloadAction<string>) => {
@@ -206,30 +194,22 @@ const objectBrowserSlice = createSlice({
       const type = state.objectManager.objectsToManage[objectToCancel].type;
       const ID = state.objectManager.objectsToManage[objectToCancel].ID;
 
-      if (type === "download") {
-        state.objectManager.currentDownloads =
-          state.objectManager.currentDownloads.filter((item) => item !== ID);
-      } else if (type === "upload") {
-        state.objectManager.currentUploads =
-          state.objectManager.currentUploads.filter((item) => item !== ID);
+      if (type === 'download') {
+        state.objectManager.currentDownloads = state.objectManager.currentDownloads.filter((item) => item !== ID);
+      } else if (type === 'upload') {
+        state.objectManager.currentUploads = state.objectManager.currentUploads.filter((item) => item !== ID);
       }
     },
     deleteFromList: (state, action: PayloadAction<string>) => {
-      const notObject = state.objectManager.objectsToManage.filter(
-        (element) => element.instanceID !== action.payload,
-      );
+      const notObject = state.objectManager.objectsToManage.filter((element) => element.instanceID !== action.payload);
 
       state.objectManager.objectsToManage = notObject;
-      state.objectManager.managerOpen =
-        notObject.length === 0 ? false : state.objectManager.managerOpen;
+      state.objectManager.managerOpen = notObject.length === 0 ? false : state.objectManager.managerOpen;
     },
     cleanList: (state) => {
-      const nonCompletedList = state.objectManager.objectsToManage.filter(
-        (item) => item.percentage !== 100,
-      );
+      const nonCompletedList = state.objectManager.objectsToManage.filter((item) => item.percentage !== 100);
       state.objectManager.objectsToManage = nonCompletedList;
-      state.objectManager.managerOpen =
-        nonCompletedList.length === 0 ? false : state.objectManager.managerOpen;
+      state.objectManager.managerOpen = nonCompletedList.length === 0 ? false : state.objectManager.managerOpen;
       state.objectManager.newItems = false;
     },
     toggleList: (state) => {
@@ -265,9 +245,7 @@ const objectBrowserSlice = createSlice({
     },
     setObjectDetailsView: (state, action: PayloadAction<boolean>) => {
       state.objectDetailsOpen = action.payload;
-      state.selectedInternalPaths = action.payload
-        ? state.selectedInternalPaths
-        : null;
+      state.selectedInternalPaths = action.payload ? state.selectedInternalPaths : null;
     },
     setSelectedObjectView: (state, action: PayloadAction<string | null>) => {
       state.selectedInternalPaths = action.payload;
@@ -276,16 +254,10 @@ const objectBrowserSlice = createSlice({
       state.simplePath = action.payload;
     },
     newDownloadInit: (state, action: PayloadAction<string>) => {
-      state.objectManager.currentDownloads = [
-        ...state.objectManager.currentDownloads,
-        action.payload,
-      ];
+      state.objectManager.currentDownloads = [...state.objectManager.currentDownloads, action.payload];
     },
     newUploadInit: (state, action: PayloadAction<string>) => {
-      state.objectManager.currentUploads = [
-        ...state.objectManager.currentUploads,
-        action.payload,
-      ];
+      state.objectManager.currentUploads = [...state.objectManager.currentUploads, action.payload];
     },
     setRecords: (state, action: PayloadAction<BucketObjectItem[]>) => {
       state.records = action.payload;
@@ -293,10 +265,7 @@ const objectBrowserSlice = createSlice({
     setLoadingVersioning: (state, action: PayloadAction<boolean>) => {
       state.loadingVersioning = action.payload;
     },
-    setIsVersioned: (
-      state,
-      action: PayloadAction<BucketVersioningResponse>,
-    ) => {
+    setIsVersioned: (state, action: PayloadAction<BucketVersioningResponse>) => {
       state.versionInfo = action.payload;
     },
     setLoadingLocking: (state, action: PayloadAction<boolean>) => {
@@ -319,16 +288,10 @@ const objectBrowserSlice = createSlice({
     setSelectedObjects: (state, action: PayloadAction<string[]>) => {
       state.selectedObjects = action.payload;
     },
-    setDownloadRenameModal: (
-      state,
-      action: PayloadAction<BucketObjectItem | null>,
-    ) => {
+    setDownloadRenameModal: (state, action: PayloadAction<BucketObjectItem | null>) => {
       state.downloadRenameModal = action.payload;
     },
-    setSelectedPreview: (
-      state,
-      action: PayloadAction<BucketObjectItem | null>,
-    ) => {
+    setSelectedPreview: (state, action: PayloadAction<BucketObjectItem | null>) => {
       state.selectedPreview = action.payload;
     },
     setPreviewOpen: (state, action: PayloadAction<boolean>) => {
@@ -337,19 +300,12 @@ const objectBrowserSlice = createSlice({
     setShareFileModalOpen: (state, action: PayloadAction<boolean>) => {
       state.shareFileModalOpen = action.payload;
     },
-    restoreLocalObjectList: (
-      state,
-      action: PayloadAction<IRestoreLocalObjectList>,
-    ) => {
-      const indexToReplace = state.records.findIndex(
-        (element) => element.name === action.payload.prefix,
-      );
+    restoreLocalObjectList: (state, action: PayloadAction<IRestoreLocalObjectList>) => {
+      const indexToReplace = state.records.findIndex((element) => element.name === action.payload.prefix);
 
       if (indexToReplace >= 0) {
-        state.records[indexToReplace].delete_flag =
-          action.payload.objectInfo.is_delete_marker;
-        state.records[indexToReplace].size =
-          action.payload.objectInfo.size || 0;
+        state.records[indexToReplace].delete_flag = action.payload.objectInfo.is_delete_marker;
+        state.records[indexToReplace].size = action.payload.objectInfo.size || 0;
       }
     },
     setSelectedBucket: (state, action: PayloadAction<string>) => {
@@ -375,51 +331,50 @@ const objectBrowserSlice = createSlice({
   },
 });
 export const {
-  setRewindEnable,
-  resetRewind,
-  setVersionsModeEnabled,
-  setNewObject,
-  updateProgress,
-  completeObject,
-  failObject,
-  deleteFromList,
-  cleanList,
-  toggleList,
-  openList,
-  setSearchObjects,
-  setRequestInProgress,
   cancelObjectInList,
-  setSearchVersions,
-  setSelectedVersion,
-  setShowDeletedObjects,
-  setLoadingVersions,
-  setLoadingObjectInfo,
-  setObjectDetailsView,
-  setSelectedObjectView,
-  setSimplePathHandler,
+  cleanList,
+  completeObject,
+  deleteFromList,
+  errorInConnection,
+  failObject,
   newDownloadInit,
+  newMessage,
   newUploadInit,
-  setRecords,
+  openList,
   resetMessages,
-  setLoadingVersioning,
+  resetRewind,
+  restoreLocalObjectList,
+  setAnonymousAccessOpen,
+  setDownloadRenameModal,
   setIsVersioned,
   setLoadingLocking,
-  newMessage,
-  setSelectedObjects,
-  setDownloadRenameModal,
-  setSelectedPreview,
-  setPreviewOpen,
-  setShareFileModalOpen,
-  setReloadObjectsList,
-  restoreLocalObjectList,
-  setSelectedBucket,
+  setLoadingObjectInfo,
+  setLoadingVersioning,
+  setLoadingVersions,
   setLongFileOpen,
-  setAnonymousAccessOpen,
   setMaxShareLinkExpTime,
-  errorInConnection,
+  setNewObject,
+  setObjectDetailsView,
+  setPreviewOpen,
+  setRecords,
+  setReloadObjectsList,
+  setRequestInProgress,
+  setRewindEnable,
+  setSearchObjects,
+  setSearchVersions,
+  setSelectedBucket,
+  setSelectedObjectView,
+  setSelectedObjects,
+  setSelectedPreview,
+  setSelectedVersion,
+  setShareFileModalOpen,
+  setShowDeletedObjects,
+  setSimplePathHandler,
+  setVersionsModeEnabled,
+  toggleList,
+  updateProgress,
 } = objectBrowserSlice.actions;
 
-export const maxShareLinkExpTime = (state: AppState) =>
-  state.objectBrowser.maxShareLinkExpTime;
+export const maxShareLinkExpTime = (state: AppState) => state.objectBrowser.maxShareLinkExpTime;
 
 export default objectBrowserSlice.reducer;

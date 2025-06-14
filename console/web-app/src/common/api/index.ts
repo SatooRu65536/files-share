@@ -14,24 +14,25 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import request from "superagent";
-import get from "lodash/get";
-import { clearSession } from "../utils";
-import { ErrorResponseHandler } from "../types";
-import { baseUrl } from "../../history";
+import get from 'lodash/get';
+import request from 'superagent';
+
+import { baseUrl } from '../../history';
+import { ErrorResponseHandler } from '../types';
+import { clearSession } from '../utils';
 
 type RequestHeaders = { [name: string]: string };
 
 export class API {
   invoke(method: string, url: string, data?: object, headers?: RequestHeaders) {
     let targetURL = url;
-    if (targetURL[0] === "/") {
+    if (targetURL[0] === '/') {
       targetURL = targetURL.slice(1);
     }
-    let req = request(method, targetURL);
+    const req = request(method, targetURL);
 
     if (headers) {
-      for (let k in headers) {
+      for (const k in headers) {
         req.set(k, headers[k]);
       }
     }
@@ -41,13 +42,9 @@ export class API {
       .then((res) => res.body)
       .catch((err) => {
         // if we get unauthorized and we are not doing login, kick out the user
-        if (
-          err.status === 401 &&
-          localStorage.getItem("userLoggedIn") &&
-          !targetURL.includes("api/v1/login")
-        ) {
-          if (window.location.pathname !== "/") {
-            localStorage.setItem("redirect-path", window.location.pathname);
+        if (err.status === 401 && localStorage.getItem('userLoggedIn') && !targetURL.includes('api/v1/login')) {
+          if (window.location.pathname !== '/') {
+            localStorage.setItem('redirect-path', window.location.pathname);
           }
           clearSession();
           // Refresh the whole page to ensure cache is clear
@@ -62,22 +59,16 @@ export class API {
 
   onError(err: any) {
     if (err.status) {
-      const errMessage = get(
-        err.response,
-        "body.message",
-        `Error ${err.status.toString()}`,
-      );
+      const errMessage = get(err.response, 'body.message', `Error ${err.status.toString()}`);
 
-      let detailedMessage = get(err.response, "body.detailedMessage", "");
+      let detailedMessage = get(err.response, 'body.detailedMessage', '');
 
       if (errMessage === detailedMessage) {
-        detailedMessage = "";
+        detailedMessage = '';
       }
 
-      const capMessage =
-        errMessage.charAt(0).toUpperCase() + errMessage.slice(1);
-      const capDetailed =
-        detailedMessage.charAt(0).toUpperCase() + detailedMessage.slice(1);
+      const capMessage = errMessage.charAt(0).toUpperCase() + errMessage.slice(1);
+      const capDetailed = detailedMessage.charAt(0).toUpperCase() + detailedMessage.slice(1);
 
       const throwMessage: ErrorResponseHandler = {
         errorMessage: capMessage,

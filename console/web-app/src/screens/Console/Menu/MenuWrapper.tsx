@@ -14,26 +14,25 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
-import { AddIcon, DocumentationIcon, LicenseIcon, Menu, MenuItem } from "mds";
-import { AppState, useAppDispatch } from "../../../store";
-import { menuOpen } from "../../../systemSlice";
-import { getLogoApplicationVariant, getLogoVar } from "../../../config";
-import { useLocation, useNavigate } from "react-router-dom";
-import { IAM_PAGES } from "../../../common/SecureComponent/permissions";
-import { setAddBucketOpen } from "../Buckets/ListBuckets/AddBucket/addBucketsSlice";
-import BucketsListing from "./Listing/BucketsListing";
-import { getLicenseConsent } from "../License/utils";
+import { AddIcon, DocumentationIcon, LicenseIcon, Menu, MenuItem } from 'mds';
+import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { IAM_PAGES } from '../../../common/SecureComponent/permissions';
+import { getLogoApplicationVariant, getLogoVar } from '../../../config';
+import { AppState, useAppDispatch } from '../../../store';
+import { menuOpen } from '../../../systemSlice';
+import { setAddBucketOpen } from '../Buckets/ListBuckets/AddBucket/addBucketsSlice';
+import { getLicenseConsent } from '../License/utils';
+import BucketsListing from './Listing/BucketsListing';
 
 const MenuWrapper = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { pathname = "" } = useLocation();
+  const { pathname = '' } = useLocation();
 
-  const sidebarOpen = useSelector(
-    (state: AppState) => state.system.sidebarOpen,
-  );
+  const sidebarOpen = useSelector((state: AppState) => state.system.sidebarOpen);
 
   return (
     <Menu
@@ -47,7 +46,7 @@ const MenuWrapper = () => {
         navigate(path);
       }}
       signOutAction={() => {
-        navigate("/logout");
+        navigate('/logout');
       }}
       collapseAction={() => {
         dispatch(menuOpen(!sidebarOpen));
@@ -57,12 +56,12 @@ const MenuWrapper = () => {
       endComponent={
         <Fragment>
           <MenuItem
-            name={"Documentation"}
+            name={'Documentation'}
             icon={<DocumentationIcon />}
-            path={"https://min.io/docs/minio/linux/index.html?ref=con"}
+            path={'https://min.io/docs/minio/linux/index.html?ref=con'}
           />
           <MenuItem
-            name={"License"}
+            name={'License'}
             icon={<LicenseIcon />}
             path={IAM_PAGES.LICENSE}
             onClick={() => navigate(IAM_PAGES.LICENSE)}
@@ -72,11 +71,7 @@ const MenuWrapper = () => {
       }
       middleComponent={
         <>
-          <MenuItem
-            name={"Create Bucket"}
-            icon={<AddIcon />}
-            onClick={() => dispatch(setAddBucketOpen(true))}
-          />
+          <MenuItem name={'Create Bucket'} icon={<AddIcon />} onClick={() => dispatch(setAddBucketOpen(true))} />
           <BucketsListing />
         </>
       }

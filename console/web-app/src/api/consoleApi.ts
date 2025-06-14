@@ -11,9 +11,9 @@
 
 /** @default "PRIVATE" */
 export enum BucketAccess {
-  PRIVATE = "PRIVATE",
-  PUBLIC = "PUBLIC",
-  CUSTOM = "CUSTOM",
+  PRIVATE = 'PRIVATE',
+  PUBLIC = 'PUBLIC',
+  CUSTOM = 'CUSTOM',
 }
 
 export interface Bucket {
@@ -38,7 +38,7 @@ export interface Bucket {
     quota?: {
       /** @format int64 */
       quota?: number;
-      type?: "hard";
+      type?: 'hard';
     };
   };
   creation_date?: string;
@@ -55,13 +55,13 @@ export interface ListBucketsResponse {
 }
 
 export enum ObjectRetentionUnit {
-  Days = "days",
-  Years = "years",
+  Days = 'days',
+  Years = 'years',
 }
 
 export enum ObjectRetentionMode {
-  Governance = "governance",
-  Compliance = "compliance",
+  Governance = 'governance',
+  Compliance = 'compliance',
 }
 
 export interface GetBucketRetentionConfig {
@@ -117,7 +117,7 @@ export interface MakeBucketsResponse {
 
 export interface BucketQuota {
   quota?: number;
-  type?: "hard";
+  type?: 'hard';
 }
 
 export interface LoginResponse {
@@ -126,7 +126,7 @@ export interface LoginResponse {
 }
 
 export interface LoginDetails {
-  loginStrategy?: "form" | "service-account" | "redirect-service-account";
+  loginStrategy?: 'form' | 'service-account' | 'redirect-service-account';
   redirectRules?: RedirectRule[];
   isK8S?: boolean;
   animatedLogin?: boolean;
@@ -157,7 +157,7 @@ export interface Principal {
 
 export interface SessionResponse {
   features?: string[];
-  status?: "ok";
+  status?: 'ok';
   operator?: boolean;
   distributedMode?: boolean;
   serverEndPoint?: string;
@@ -195,7 +195,7 @@ export interface AdminInfoResponse {
   buckets?: number;
   objects?: number;
   usage?: number;
-  advancedMetricsStatus?: "not configured" | "available" | "unavailable";
+  advancedMetricsStatus?: 'not configured' | 'available' | 'unavailable';
   widgets?: Widget[];
   servers?: ServerProperties[];
   backend?: BackendProperties;
@@ -301,9 +301,9 @@ export interface MaxShareLinkExpResponse {
 }
 
 export type QueryParamsType = Record<string | number, any>;
-export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
+export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>;
 
-export interface FullRequestParams extends Omit<RequestInit, "body"> {
+export interface FullRequestParams extends Omit<RequestInit, 'body'> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -322,22 +322,16 @@ export interface FullRequestParams extends Omit<RequestInit, "body"> {
   cancelToken?: CancelToken;
 }
 
-export type RequestParams = Omit<
-  FullRequestParams,
-  "body" | "method" | "query" | "path"
->;
+export type RequestParams = Omit<FullRequestParams, 'body' | 'method' | 'query' | 'path'>;
 
 export interface ApiConfig<SecurityDataType = unknown> {
   baseUrl?: string;
-  baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
-  securityWorker?: (
-    securityData: SecurityDataType | null,
-  ) => Promise<RequestParams | void> | RequestParams | void;
+  baseApiParams?: Omit<RequestParams, 'baseUrl' | 'cancelToken' | 'signal'>;
+  securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestParams | void> | RequestParams | void;
   customFetch?: typeof fetch;
 }
 
-export interface HttpResponse<D extends unknown, E extends unknown = unknown>
-  extends Response {
+export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
   data: D;
   error: E;
 }
@@ -345,25 +339,24 @@ export interface HttpResponse<D extends unknown, E extends unknown = unknown>
 type CancelToken = Symbol | string | number;
 
 export enum ContentType {
-  Json = "application/json",
-  FormData = "multipart/form-data",
-  UrlEncoded = "application/x-www-form-urlencoded",
-  Text = "text/plain",
+  Json = 'application/json',
+  FormData = 'multipart/form-data',
+  UrlEncoded = 'application/x-www-form-urlencoded',
+  Text = 'text/plain',
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = "/api/v1";
+  public baseUrl: string = '/api/v1';
   private securityData: SecurityDataType | null = null;
-  private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
+  private securityWorker?: ApiConfig<SecurityDataType>['securityWorker'];
   private abortControllers = new Map<CancelToken, AbortController>();
-  private customFetch = (...fetchParams: Parameters<typeof fetch>) =>
-    fetch(...fetchParams);
+  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
   private baseApiParams: RequestParams = {
-    credentials: "same-origin",
+    credentials: 'same-origin',
     headers: {},
-    redirect: "follow",
-    referrerPolicy: "no-referrer",
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
   };
 
   constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
@@ -376,7 +369,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected encodeQueryParam(key: string, value: any) {
     const encodedKey = encodeURIComponent(key);
-    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    return `${encodedKey}=${encodeURIComponent(typeof value === 'number' ? value : `${value}`)}`;
   }
 
   protected addQueryParam(query: QueryParamsType, key: string) {
@@ -385,37 +378,26 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected addArrayQueryParam(query: QueryParamsType, key: string) {
     const value = query[key];
-    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+    return value.map((v: any) => this.encodeQueryParam(key, v)).join('&');
   }
 
   protected toQueryString(rawQuery?: QueryParamsType): string {
     const query = rawQuery || {};
-    const keys = Object.keys(query).filter(
-      (key) => "undefined" !== typeof query[key],
-    );
+    const keys = Object.keys(query).filter((key) => 'undefined' !== typeof query[key]);
     return keys
-      .map((key) =>
-        Array.isArray(query[key])
-          ? this.addArrayQueryParam(query, key)
-          : this.addQueryParam(query, key),
-      )
-      .join("&");
+      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+      .join('&');
   }
 
   protected addQueryParams(rawQuery?: QueryParamsType): string {
     const queryString = this.toQueryString(rawQuery);
-    return queryString ? `?${queryString}` : "";
+    return queryString ? `?${queryString}` : '';
   }
 
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
-      input !== null && (typeof input === "object" || typeof input === "string")
-        ? JSON.stringify(input)
-        : input,
-    [ContentType.Text]: (input: any) =>
-      input !== null && typeof input !== "string"
-        ? JSON.stringify(input)
-        : input,
+      input !== null && (typeof input === 'object' || typeof input === 'string') ? JSON.stringify(input) : input,
+    [ContentType.Text]: (input: any) => (input !== null && typeof input !== 'string' ? JSON.stringify(input) : input),
     [ContentType.FormData]: (input: any) =>
       Object.keys(input || {}).reduce((formData, key) => {
         const property = input[key];
@@ -423,7 +405,7 @@ export class HttpClient<SecurityDataType = unknown> {
           key,
           property instanceof Blob
             ? property
-            : typeof property === "object" && property !== null
+            : typeof property === 'object' && property !== null
               ? JSON.stringify(property)
               : `${property}`,
         );
@@ -432,10 +414,7 @@ export class HttpClient<SecurityDataType = unknown> {
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
 
-  protected mergeRequestParams(
-    params1: RequestParams,
-    params2?: RequestParams,
-  ): RequestParams {
+  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
     return {
       ...this.baseApiParams,
       ...params1,
@@ -448,9 +427,7 @@ export class HttpClient<SecurityDataType = unknown> {
     };
   }
 
-  protected createAbortSignal = (
-    cancelToken: CancelToken,
-  ): AbortSignal | undefined => {
+  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
     if (this.abortControllers.has(cancelToken)) {
       const abortController = this.abortControllers.get(cancelToken);
       if (abortController) {
@@ -485,7 +462,7 @@ export class HttpClient<SecurityDataType = unknown> {
     ...params
   }: FullRequestParams): Promise<HttpResponse<T, E>> => {
     const secureParams =
-      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
+      ((typeof secure === 'boolean' ? secure : this.baseApiParams.secure) &&
         this.securityWorker &&
         (await this.securityWorker(this.securityData))) ||
       {};
@@ -494,26 +471,15 @@ export class HttpClient<SecurityDataType = unknown> {
     const payloadFormatter = this.contentFormatters[type || ContentType.Json];
     const responseFormat = format || requestParams.format;
 
-    return this.customFetch(
-      `${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`,
-      {
-        ...requestParams,
-        headers: {
-          ...(requestParams.headers || {}),
-          ...(type && type !== ContentType.FormData
-            ? { "Content-Type": type }
-            : {}),
-        },
-        signal:
-          (cancelToken
-            ? this.createAbortSignal(cancelToken)
-            : requestParams.signal) || null,
-        body:
-          typeof body === "undefined" || body === null
-            ? null
-            : payloadFormatter(body),
+    return this.customFetch(`${baseUrl || this.baseUrl || ''}${path}${queryString ? `?${queryString}` : ''}`, {
+      ...requestParams,
+      headers: {
+        ...(requestParams.headers || {}),
+        ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
       },
-    ).then(async (response) => {
+      signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
+      body: typeof body === 'undefined' || body === null ? null : payloadFormatter(body),
+    }).then(async (response) => {
       const r = response.clone() as HttpResponse<T, E>;
       r.data = null as unknown as T;
       r.error = null as unknown as E;
@@ -549,9 +515,7 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version 0.1.0
  * @baseUrl /api/v1
  */
-export class Api<
-  SecurityDataType extends unknown,
-> extends HttpClient<SecurityDataType> {
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   login = {
     /**
      * No description
@@ -564,8 +528,8 @@ export class Api<
     loginDetail: (params: RequestParams = {}) =>
       this.request<LoginDetails, ApiError>({
         path: `/login`,
-        method: "GET",
-        format: "json",
+        method: 'GET',
+        format: 'json',
         ...params,
       }),
 
@@ -580,7 +544,7 @@ export class Api<
     login: (body: LoginRequest, params: RequestParams = {}) =>
       this.request<void, ApiError>({
         path: `/login`,
-        method: "POST",
+        method: 'POST',
         body: body,
         type: ContentType.Json,
         ...params,
@@ -599,7 +563,7 @@ export class Api<
     logout: (body: LogoutRequest, params: RequestParams = {}) =>
       this.request<void, ApiError>({
         path: `/logout`,
-        method: "POST",
+        method: 'POST',
         body: body,
         secure: true,
         type: ContentType.Json,
@@ -619,9 +583,9 @@ export class Api<
     sessionCheck: (params: RequestParams = {}) =>
       this.request<SessionResponse, ApiError>({
         path: `/session`,
-        method: "GET",
+        method: 'GET',
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
   };
@@ -638,9 +602,9 @@ export class Api<
     listBuckets: (params: RequestParams = {}) =>
       this.request<ListBucketsResponse, ApiError>({
         path: `/buckets`,
-        method: "GET",
+        method: 'GET',
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -656,11 +620,11 @@ export class Api<
     makeBucket: (body: MakeBucketRequest, params: RequestParams = {}) =>
       this.request<MakeBucketsResponse, ApiError>({
         path: `/buckets`,
-        method: "POST",
+        method: 'POST',
         body: body,
         secure: true,
         type: ContentType.Json,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -676,9 +640,9 @@ export class Api<
     bucketInfo: (name: string, params: RequestParams = {}) =>
       this.request<Bucket, ApiError>({
         path: `/buckets/${encodeURIComponent(name)}`,
-        method: "GET",
+        method: 'GET',
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -708,10 +672,10 @@ export class Api<
     ) =>
       this.request<ListObjectsResponse, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects`,
-        method: "GET",
+        method: 'GET',
         query: query,
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -738,7 +702,7 @@ export class Api<
     ) =>
       this.request<void, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects`,
-        method: "DELETE",
+        method: 'DELETE',
         query: query,
         secure: true,
         ...params,
@@ -764,7 +728,7 @@ export class Api<
     ) =>
       this.request<void, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/delete-objects`,
-        method: "POST",
+        method: 'POST',
         query: query,
         body: files,
         secure: true,
@@ -791,7 +755,7 @@ export class Api<
     ) =>
       this.request<void, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/upload`,
-        method: "POST",
+        method: 'POST',
         query: query,
         body: data,
         secure: true,
@@ -808,14 +772,10 @@ export class Api<
      * @request POST:/buckets/{bucket_name}/objects/download-multiple
      * @secure
      */
-    downloadMultipleObjects: (
-      bucketName: string,
-      objectList: string[],
-      params: RequestParams = {},
-    ) =>
+    downloadMultipleObjects: (bucketName: string, objectList: string[], params: RequestParams = {}) =>
       this.request<File, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/download-multiple`,
-        method: "POST",
+        method: 'POST',
         body: objectList,
         secure: true,
         type: ContentType.Json,
@@ -845,7 +805,7 @@ export class Api<
     ) =>
       this.request<File, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/download`,
-        method: "GET",
+        method: 'GET',
         query: query,
         secure: true,
         ...params,
@@ -871,10 +831,10 @@ export class Api<
     ) =>
       this.request<string, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/share`,
-        method: "GET",
+        method: 'GET',
         query: query,
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -898,7 +858,7 @@ export class Api<
     ) =>
       this.request<void, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/tags`,
-        method: "PUT",
+        method: 'PUT',
         query: query,
         body: body,
         secure: true,
@@ -925,7 +885,7 @@ export class Api<
     ) =>
       this.request<void, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/restore`,
-        method: "PUT",
+        method: 'PUT',
         query: query,
         secure: true,
         ...params,
@@ -950,10 +910,10 @@ export class Api<
     ) =>
       this.request<Metadata, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/objects/metadata`,
-        method: "GET",
+        method: 'GET',
         query: query,
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -969,9 +929,9 @@ export class Api<
     getBucketQuota: (name: string, params: RequestParams = {}) =>
       this.request<BucketQuota, ApiError>({
         path: `/buckets/${encodeURIComponent(name)}/quota`,
-        method: "GET",
+        method: 'GET',
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -987,9 +947,9 @@ export class Api<
     getBucketVersioning: (bucketName: string, params: RequestParams = {}) =>
       this.request<BucketVersioningResponse, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/versioning`,
-        method: "GET",
+        method: 'GET',
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -1002,14 +962,10 @@ export class Api<
      * @request PUT:/buckets/{bucket_name}/versioning
      * @secure
      */
-    setBucketVersioning: (
-      bucketName: string,
-      body: SetBucketVersioning,
-      params: RequestParams = {},
-    ) =>
+    setBucketVersioning: (bucketName: string, body: SetBucketVersioning, params: RequestParams = {}) =>
       this.request<void, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/versioning`,
-        method: "PUT",
+        method: 'PUT',
         body: body,
         secure: true,
         type: ContentType.Json,
@@ -1035,10 +991,10 @@ export class Api<
     ) =>
       this.request<RewindResponse, ApiError>({
         path: `/buckets/${encodeURIComponent(bucketName)}/rewind/${encodeURIComponent(date)}`,
-        method: "GET",
+        method: 'GET',
         query: query,
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
 
@@ -1054,9 +1010,9 @@ export class Api<
     getMaxShareLinkExp: (params: RequestParams = {}) =>
       this.request<MaxShareLinkExpResponse, ApiError>({
         path: `/buckets/max-share-exp`,
-        method: "GET",
+        method: 'GET',
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
   };
@@ -1079,10 +1035,10 @@ export class Api<
     ) =>
       this.request<AdminInfoResponse, ApiError>({
         path: `/admin/info`,
-        method: "GET",
+        method: 'GET',
         query: query,
         secure: true,
-        format: "json",
+        format: 'json',
         ...params,
       }),
   };
@@ -1099,7 +1055,7 @@ export class Api<
     licenseAcknowledge: (params: RequestParams = {}) =>
       this.request<void, ApiError>({
         path: `/license/acknowledge`,
-        method: "GET",
+        method: 'GET',
         secure: true,
         ...params,
       }),
@@ -1116,7 +1072,7 @@ export class Api<
     downloadSharedObject: (url: string, params: RequestParams = {}) =>
       this.request<File, ApiError>({
         path: `/download-shared-object/${encodeURIComponent(url)}`,
-        method: "GET",
+        method: 'GET',
         ...params,
       }),
   };

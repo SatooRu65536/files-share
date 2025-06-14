@@ -13,13 +13,14 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { ModalBox, Snackbar } from "mds";
-import { CSSObject } from "styled-components";
-import { AppState, useAppDispatch } from "../../../../store";
-import { setModalSnackMessage } from "../../../../systemSlice";
-import MainError from "../MainError/MainError";
+import { ModalBox, Snackbar } from 'mds';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { CSSObject } from 'styled-components';
+
+import { AppState, useAppDispatch } from '../../../../store';
+import { setModalSnackMessage } from '../../../../systemSlice';
+import MainError from '../MainError/MainError';
 
 interface IModalProps {
   onClose: () => void;
@@ -28,39 +29,37 @@ interface IModalProps {
   children: any;
   wideLimit?: boolean;
   titleIcon?: React.ReactNode;
-  iconColor?: "default" | "delete" | "accept";
+  iconColor?: 'default' | 'delete' | 'accept';
   sx?: CSSObject;
 }
 
 const ModalWrapper = ({
-  onClose,
-  modalOpen,
-  title,
   children,
-  wideLimit = true,
-  titleIcon = null,
-  iconColor = "default",
+  iconColor = 'default',
+  modalOpen,
+  onClose,
   sx,
+  title,
+  titleIcon = null,
+  wideLimit = true,
 }: IModalProps) => {
   const dispatch = useAppDispatch();
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
-  const modalSnackMessage = useSelector(
-    (state: AppState) => state.system.modalSnackBar,
-  );
+  const modalSnackMessage = useSelector((state: AppState) => state.system.modalSnackBar);
 
   useEffect(() => {
-    dispatch(setModalSnackMessage(""));
+    dispatch(setModalSnackMessage(''));
   }, [dispatch]);
 
   useEffect(() => {
     if (modalSnackMessage) {
-      if (modalSnackMessage.message === "") {
+      if (modalSnackMessage.message === '') {
         setOpenSnackbar(false);
         return;
       }
       // Open SnackBar
-      if (modalSnackMessage.type !== "error") {
+      if (modalSnackMessage.type !== 'error') {
         setOpenSnackbar(true);
       }
     }
@@ -68,14 +67,14 @@ const ModalWrapper = ({
 
   const closeSnackBar = () => {
     setOpenSnackbar(false);
-    dispatch(setModalSnackMessage(""));
+    dispatch(setModalSnackMessage(''));
   };
 
-  let message = "";
+  let message = '';
 
   if (modalSnackMessage) {
     message = modalSnackMessage.detailedErrorMsg;
-    if (message === "" || (message && message.length < 5)) {
+    if (message === '' || (message && message.length < 5)) {
       message = modalSnackMessage.message;
     }
   }
@@ -95,9 +94,9 @@ const ModalWrapper = ({
         onClose={closeSnackBar}
         open={openSnackbar}
         message={message}
-        mode={"inline"}
-        variant={modalSnackMessage.type === "error" ? "error" : "default"}
-        autoHideDuration={modalSnackMessage.type === "error" ? 10 : 5}
+        mode={'inline'}
+        variant={modalSnackMessage.type === 'error' ? 'error' : 'default'}
+        autoHideDuration={modalSnackMessage.type === 'error' ? 10 : 5}
         condensed
       />
       {children}

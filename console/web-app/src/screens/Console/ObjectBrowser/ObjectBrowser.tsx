@@ -14,15 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import LoadingComponent from "../../../common/LoadingComponent";
-import NotFoundPage from "../../NotFoundPage";
-import OBBrowserMain from "./OBBrowserMain";
+import React, { Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-const BrowserHandler = React.lazy(
-  () => import("../Buckets/BucketDetails/BrowserHandler"),
-);
+import LoadingComponent from '../../../common/LoadingComponent';
+import NotFoundPage from '../../NotFoundPage';
+import OBBrowserMain from './OBBrowserMain';
+
+const BrowserHandler = React.lazy(() => import('../Buckets/BucketDetails/BrowserHandler'));
 
 const ObjectBrowser = () => {
   return (

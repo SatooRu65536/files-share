@@ -12,12 +12,7 @@
       "Resource": ["arn:aws:s3:::testcafe/*"]
     },
     {
-      "Action": [
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:DeleteObject"
-      ],
+      "Action": ["s3:ListBucket", "s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
       "Effect": "Allow",
       "Resource": ["arn:aws:s3:::testcafe/write/*"]
     }

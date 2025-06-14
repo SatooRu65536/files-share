@@ -14,18 +14,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useState } from "react";
-import { ErrorResponseHandler } from "../../../../../../common/types";
-import ConfirmDialog from "../../../../Common/ModalWrapper/ConfirmDialog";
-import useApi from "../../../../Common/Hooks/useApi";
-import { ConfirmDeleteIcon, Switch } from "mds";
-import { setErrorSnackMessage } from "../../../../../../systemSlice";
-import { AppState, useAppDispatch } from "../../../../../../store";
-import { hasPermission } from "../../../../../../common/SecureComponent";
-import { IAM_SCOPES } from "../../../../../../common/SecureComponent/permissions";
-import { useSelector } from "react-redux";
-import { isVersionedMode } from "../../../../../../utils/validationFunctions";
-import { BucketVersioningResponse } from "api/consoleApi";
+import { BucketVersioningResponse } from 'api/consoleApi';
+import { ConfirmDeleteIcon, Switch } from 'mds';
+import React, { Fragment, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { hasPermission } from '../../../../../../common/SecureComponent';
+import { IAM_SCOPES } from '../../../../../../common/SecureComponent/permissions';
+import { ErrorResponseHandler } from '../../../../../../common/types';
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { setErrorSnackMessage } from '../../../../../../systemSlice';
+import { isVersionedMode } from '../../../../../../utils/validationFunctions';
+import useApi from '../../../../Common/Hooks/useApi';
+import ConfirmDialog from '../../../../Common/ModalWrapper/ConfirmDialog';
 
 interface IDeleteObjectProps {
   closeDeleteModalAndRefresh: (refresh: boolean) => void;
@@ -42,8 +43,8 @@ const DeleteObject = ({
   deleteOpen,
   selectedBucket,
   selectedObject,
+  selectedVersion = '',
   versioningInfo,
-  selectedVersion = "",
 }: IDeleteObjectProps) => {
   const dispatch = useAppDispatch();
   const onDelSuccess = () => closeDeleteModalAndRefresh(true);
@@ -51,7 +52,7 @@ const DeleteObject = ({
     dispatch(setErrorSnackMessage(err));
 
     // We close the modal box on access denied.
-    if (err.detailedError === "Access Denied.") {
+    if (err.detailedError === 'Access Denied.') {
       closeDeleteModalAndRefresh(true);
     }
   };
@@ -61,35 +62,31 @@ const DeleteObject = ({
   const [deleteVersions, setDeleteVersions] = useState<boolean>(false);
   const [bypassGovernance, setBypassGovernance] = useState<boolean>(false);
 
-  const retentionConfig = useSelector(
-    (state: AppState) => state.objectBrowser.retentionConfig,
-  );
+  const retentionConfig = useSelector((state: AppState) => state.objectBrowser.retentionConfig);
 
   const canBypass =
-    hasPermission(
-      [selectedBucket],
-      [IAM_SCOPES.S3_BYPASS_GOVERNANCE_RETENTION],
-    ) && retentionConfig?.mode === "governance";
+    hasPermission([selectedBucket], [IAM_SCOPES.S3_BYPASS_GOVERNANCE_RETENTION]) &&
+    retentionConfig?.mode === 'governance';
 
   if (!selectedObject) {
     return null;
   }
   const onConfirmDelete = () => {
-    const recursive = selectedObject.endsWith("/");
+    const recursive = selectedObject.endsWith('/');
     invokeDeleteApi(
-      "DELETE",
+      'DELETE',
       `/api/v1/buckets/${encodeURIComponent(selectedBucket)}/objects?prefix=${encodeURIComponent(selectedObject)}${
-        selectedVersion !== ""
+        selectedVersion !== ''
           ? `&version_id=${encodeURIComponent(selectedVersion)}`
           : `&recursive=${recursive}&all_versions=${deleteVersions}`
-      }${bypassGovernance ? "&bypass=true" : ""}`,
+      }${bypassGovernance ? '&bypass=true' : ''}`,
     );
   };
 
   return (
     <ConfirmDialog
       title={`Delete Object`}
-      confirmText={"Delete"}
+      confirmText={'Delete'}
       isOpen={deleteOpen}
       titleIcon={<ConfirmDeleteIcon />}
       isLoading={deleteLoading}
@@ -98,8 +95,8 @@ const DeleteObject = ({
       confirmationContent={
         <Fragment>
           Are you sure you want to delete: <br />
-          <b>{selectedObject}</b>{" "}
-          {selectedVersion !== "" ? (
+          <b>{selectedObject}</b>{' '}
+          {selectedVersion !== '' ? (
             <Fragment>
               <br />
               <br />
@@ -108,28 +105,27 @@ const DeleteObject = ({
               <strong>{selectedVersion}</strong>
             </Fragment>
           ) : (
-            ""
+            ''
           )}
           ? <br />
           <br />
-          {isVersionedMode(versioningInfo?.status) &&
-            selectedVersion === "" && (
-              <Fragment>
-                <Switch
-                  label={"Delete All Versions"}
-                  indicatorLabels={["Yes", "No"]}
-                  checked={deleteVersions}
-                  value={"delete_versions"}
-                  id="delete-versions"
-                  name="delete-versions"
-                  onChange={(e) => {
-                    setDeleteVersions(!deleteVersions);
-                  }}
-                  description=""
-                />
-              </Fragment>
-            )}
-          {canBypass && (deleteVersions || selectedVersion !== "") && (
+          {isVersionedMode(versioningInfo?.status) && selectedVersion === '' && (
+            <Fragment>
+              <Switch
+                label={'Delete All Versions'}
+                indicatorLabels={['Yes', 'No']}
+                checked={deleteVersions}
+                value={'delete_versions'}
+                id="delete-versions"
+                name="delete-versions"
+                onChange={(e) => {
+                  setDeleteVersions(!deleteVersions);
+                }}
+                description=""
+              />
+            </Fragment>
+          )}
+          {canBypass && (deleteVersions || selectedVersion !== '') && (
             <Fragment>
               <div
                 style={{
@@ -137,10 +133,10 @@ const DeleteObject = ({
                 }}
               >
                 <Switch
-                  label={"Bypass Governance Mode"}
-                  indicatorLabels={["Yes", "No"]}
+                  label={'Bypass Governance Mode'}
+                  indicatorLabels={['Yes', 'No']}
                   checked={bypassGovernance}
-                  value={"bypass_governance"}
+                  value={'bypass_governance'}
                   id="bypass_governance"
                   name="bypass_governance"
                   onChange={(e) => {
@@ -156,15 +152,14 @@ const DeleteObject = ({
               <div
                 style={{
                   marginTop: 10,
-                  border: "#c83b51 1px solid",
+                  border: '#c83b51 1px solid',
                   borderRadius: 3,
                   padding: 5,
-                  backgroundColor: "#c83b5120",
-                  color: "#c83b51",
+                  backgroundColor: '#c83b5120',
+                  color: '#c83b51',
                 }}
               >
-                This will remove the object as well as all of its versions,{" "}
-                <br />
+                This will remove the object as well as all of its versions, <br />
                 This action is irreversible.
               </div>
               <br />

@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import * as elements from "../utils/elements";
-import * as functions from "../utils/functions";
-import { logoutItem } from "../utils/elements-menu";
-import { testBucketBrowseButtonFor } from "../utils/functions";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import * as elements from '../utils/elements';
+import * as functions from '../utils/functions';
+import { logoutItem } from '../utils/elements-menu';
+import { testBucketBrowseButtonFor } from '../utils/functions';
+import { acknowledgeButton } from '../utils/elements';
 
-fixture("For user with Bucket Read permissions")
-  .page("http://localhost:9090")
+fixture('For user with Bucket Read permissions')
+  .page('http://localhost:9090')
   .beforeEach(async (t) => {
     await t.useRole(roles.bucketRead);
   });
@@ -30,46 +30,46 @@ fixture("For user with Bucket Read permissions")
 test
   .before(async (t) => {
     // Create a bucket
-    await functions.setUpBucket(t, "bucketread1");
-  })("Browse button exists", async (t) => {
+    await functions.setUpBucket(t, 'bucketread1');
+  })('Browse button exists', async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     await t
       .useRole(roles.bucketRead)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "bucketread1")
-      .expect(testBucketBrowseButtonFor("bucketread1").exists)
+      .typeText(elements.filterBuckets, 'bucketread1')
+      .expect(testBucketBrowseButtonFor('bucketread1').exists)
       .ok();
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpBucket(t, "bucketread1");
+    await functions.cleanUpBucket(t, 'bucketread1');
   });
 
 test
   .before(async (t) => {
     // Create a bucket
-    await functions.setUpBucket(t, "aread3");
+    await functions.setUpBucket(t, 'aread3');
     await t
       .useRole(roles.admin)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "aread3")
-      .click(testBucketBrowseButtonFor("aread3"))
+      .typeText(elements.filterBuckets, 'aread3')
+      .click(testBucketBrowseButtonFor('aread3'))
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt")
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt')
       .click(logoutItem);
-  })("Object list table is enabled", async (t) => {
+  })('Object list table is enabled', async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     await t
       .useRole(roles.bucketRead)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "aread3")
+      .typeText(elements.filterBuckets, 'aread3')
       .wait(2000)
-      .click(testBucketBrowseButtonFor("aread3"))
+      .click(testBucketBrowseButtonFor('aread3'))
       .wait(2000)
       .expect(elements.table.exists)
       .ok();
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpBucketAndUploads(t, "aread3");
+    await functions.cleanUpBucketAndUploads(t, 'aread3');
   });

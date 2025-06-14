@@ -14,18 +14,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, Suspense } from "react";
-import { ApplicationLogo, Button } from "mds";
-import { Route, Routes } from "react-router-dom";
-import { IAM_PAGES } from "../../common/SecureComponent/permissions";
-import { resetSession } from "../Console/consoleSlice";
-import { useAppDispatch } from "../../store";
-import { resetSystem } from "../../systemSlice";
-import { getLogoApplicationVariant, getLogoVar } from "../../config";
-import ObjectBrowser from "../Console/ObjectBrowser/ObjectBrowser";
-import LoadingComponent from "../../common/LoadingComponent";
-import ObjectManager from "../Console/Common/ObjectManager/ObjectManager";
-import ObjectManagerButton from "../Console/Common/ObjectManager/ObjectManagerButton";
+import { ApplicationLogo, Button } from 'mds';
+import React, { Fragment, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import LoadingComponent from '../../common/LoadingComponent';
+import { IAM_PAGES } from '../../common/SecureComponent/permissions';
+import { getLogoApplicationVariant, getLogoVar } from '../../config';
+import { useAppDispatch } from '../../store';
+import { resetSystem } from '../../systemSlice';
+import ObjectManager from '../Console/Common/ObjectManager/ObjectManager';
+import ObjectManagerButton from '../Console/Common/ObjectManager/ObjectManagerButton';
+import { resetSession } from '../Console/consoleSlice';
+import ObjectBrowser from '../Console/ObjectBrowser/ObjectBrowser';
 
 const AnonymousAccess = () => {
   const dispatch = useAppDispatch();
@@ -34,33 +35,28 @@ const AnonymousAccess = () => {
     <Fragment>
       <div
         style={{
-          background:
-            "linear-gradient(90deg, rgba(16,47,81,1) 0%, rgba(13,28,64,1) 100%)",
+          background: 'linear-gradient(90deg, rgba(16,47,81,1) 0%, rgba(13,28,64,1) 100%)',
           height: 100,
-          width: "100%",
-          alignItems: "center",
-          display: "flex",
+          width: '100%',
+          alignItems: 'center',
+          display: 'flex',
           paddingLeft: 16,
           paddingRight: 16,
         }}
       >
         <div style={{ width: 200, flexShrink: 1 }}>
-          <ApplicationLogo
-            applicationName={getLogoApplicationVariant()}
-            subVariant={getLogoVar()}
-            inverse={true}
-          />
+          <ApplicationLogo applicationName={getLogoApplicationVariant()} subVariant={getLogoVar()} inverse={true} />
         </div>
         <div style={{ flexGrow: 1 }}></div>
-        <div style={{ flexShrink: 1, display: "flex", flexDirection: "row" }}>
+        <div style={{ flexShrink: 1, display: 'flex', flexDirection: 'row' }}>
           <Button
-            id={"go-to-login"}
-            variant={"text"}
+            id={'go-to-login'}
+            variant={'text'}
             onClick={() => {
               dispatch(resetSession());
               dispatch(resetSystem());
             }}
-            sx={{ color: "white", textTransform: "initial" }}
+            sx={{ color: 'white', textTransform: 'initial' }}
           >
             Login
           </Button>

@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
-import { Button, EditIcon, FormLayout, Grid, InputBox, Switch } from "mds";
-import { modalStyleUtils } from "../Common/FormComponents/common/styleLibrary";
-import { useAppDispatch } from "../../../store";
-import { downloadObject } from "./utils";
-import { BucketObject } from "api/consoleApi";
-import ModalWrapper from "../Common/ModalWrapper/ModalWrapper";
+import { BucketObject } from 'api/consoleApi';
+import { Button, EditIcon, FormLayout, Grid, InputBox, Switch } from 'mds';
+import React, { useState } from 'react';
+
+import { useAppDispatch } from '../../../store';
+import { modalStyleUtils } from '../Common/FormComponents/common/styleLibrary';
+import ModalWrapper from '../Common/ModalWrapper/ModalWrapper';
+import { downloadObject } from './utils';
 
 interface IRenameLongFilename {
   open: boolean;
@@ -32,12 +33,12 @@ interface IRenameLongFilename {
 }
 
 const RenameLongFileName = ({
-  open,
+  actualInfo,
+  bucketName,
   closeModal,
   currentItem,
   internalPaths,
-  actualInfo,
-  bucketName,
+  open,
 }: IRenameLongFilename) => {
   const dispatch = useAppDispatch();
 
@@ -51,17 +52,11 @@ const RenameLongFileName = ({
   };
 
   return (
-    <ModalWrapper
-      title={`Rename Download`}
-      modalOpen={open}
-      onClose={closeModal}
-      titleIcon={<EditIcon />}
-    >
+    <ModalWrapper title={`Rename Download`} modalOpen={open} onClose={closeModal} titleIcon={<EditIcon />}>
       <div>
         The file you are trying to download has a long name.
         <br />
-        This can cause issues on Windows Systems by trimming the file name after
-        download.
+        This can cause issues on Windows Systems by trimming the file name after download.
         <br />
         <br /> We recommend to rename the file download
       </div>
@@ -80,12 +75,10 @@ const RenameLongFileName = ({
               setNewFileName(event.target.value);
             }}
             label=""
-            type={"text"}
+            type={'text'}
             value={newFileName}
             error={
-              newFileName.length > 200 && !acceptLongName
-                ? "Filename should be less than 200 characters long."
-                : ""
+              newFileName.length > 200 && !acceptLongName ? 'Filename should be less than 200 characters long.' : ''
             }
           />
           <Switch
@@ -99,16 +92,16 @@ const RenameLongFileName = ({
                 setNewFileName(currentItem);
               }
             }}
-            label={"Use Original Name"}
+            label={'Use Original Name'}
           />
           <Grid item xs={12} sx={modalStyleUtils.modalButtonBar}>
             <Button
-              id={"download-file"}
+              id={'download-file'}
               type="submit"
               variant="callAction"
               color="primary"
               disabled={newFileName.length > 200 && !acceptLongName}
-              label={"Download File"}
+              label={'Download File'}
             />
           </Grid>
         </FormLayout>

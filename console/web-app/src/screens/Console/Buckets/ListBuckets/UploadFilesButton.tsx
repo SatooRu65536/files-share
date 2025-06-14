@@ -14,18 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useState } from "react";
-import { CSSObject } from "styled-components";
-import { Button, DropdownSelector, UploadFolderIcon, UploadIcon } from "mds";
-import {
-  IAM_SCOPES,
-  permissionTooltipHelper,
-} from "../../../../common/SecureComponent/permissions";
-import { hasPermission } from "../../../../common/SecureComponent";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
-import { useSelector } from "react-redux";
-import { AppState } from "../../../../store";
-import { getSessionGrantsWildCard } from "./UploadPermissionUtils";
+import { Button, DropdownSelector, UploadFolderIcon, UploadIcon } from 'mds';
+import React, { Fragment, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { CSSObject } from 'styled-components';
+
+import { hasPermission } from '../../../../common/SecureComponent';
+import { IAM_SCOPES, permissionTooltipHelper } from '../../../../common/SecureComponent/permissions';
+import { AppState } from '../../../../store';
+import TooltipWrapper from '../../Common/TooltipWrapper/TooltipWrapper';
+import { getSessionGrantsWildCard } from './UploadPermissionUtils';
 
 interface IUploadFilesButton {
   uploadPath: string;
@@ -37,34 +35,25 @@ interface IUploadFilesButton {
 }
 
 const UploadFilesButton = ({
-  uploadPath,
   bucketName,
   forceDisable = false,
+  overrideStyles = {},
   uploadFileFunction,
   uploadFolderFunction,
-  overrideStyles = {},
+  uploadPath,
 }: IUploadFilesButton) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [uploadOptionsOpen, uploadOptionsSetOpen] = useState<boolean>(false);
 
-  const anonymousMode = useSelector(
-    (state: AppState) => state.system.anonymousMode,
-  );
+  const anonymousMode = useSelector((state: AppState) => state.system.anonymousMode);
 
   const sessionGrants = useSelector((state: AppState) =>
     state.console.session ? state.console.session.permissions || {} : {},
   );
 
-  const putObjectPermScopes = [
-    IAM_SCOPES.S3_PUT_OBJECT,
-    IAM_SCOPES.S3_PUT_ACTIONS,
-  ];
+  const putObjectPermScopes = [IAM_SCOPES.S3_PUT_OBJECT, IAM_SCOPES.S3_PUT_ACTIONS];
 
-  const sessionGrantWildCards = getSessionGrantsWildCard(
-    sessionGrants,
-    uploadPath,
-    putObjectPermScopes,
-  );
+  const sessionGrantWildCards = getSessionGrantsWildCard(sessionGrants, uploadPath, putObjectPermScopes);
 
   const openUploadMenu = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -76,20 +65,12 @@ const UploadFilesButton = ({
   };
 
   const uploadObjectAllowed =
-    hasPermission(
-      [uploadPath, ...sessionGrantWildCards],
-      putObjectPermScopes,
-    ) || anonymousMode;
+    hasPermission([uploadPath, ...sessionGrantWildCards], putObjectPermScopes) || anonymousMode;
 
-  const uploadFolderAllowed = hasPermission(
-    [bucketName, ...sessionGrantWildCards],
-    putObjectPermScopes,
-    false,
-    true,
-  );
+  const uploadFolderAllowed = hasPermission([bucketName, ...sessionGrantWildCards], putObjectPermScopes, false, true);
 
   const uploadFolderAction = (action: string) => {
-    if (action === "folder") {
+    if (action === 'folder') {
       uploadFolderFunction(handleCloseUpload);
       return;
     }
@@ -104,50 +85,50 @@ const UploadFilesButton = ({
       <TooltipWrapper
         tooltip={
           uploadEnabled
-            ? "Upload Files"
+            ? 'Upload Files'
             : permissionTooltipHelper(
                 [IAM_SCOPES.S3_PUT_OBJECT, IAM_SCOPES.S3_PUT_ACTIONS],
-                "upload files to this bucket",
+                'upload files to this bucket',
               )
         }
       >
         <Button
-          id={"upload-main"}
+          id={'upload-main'}
           aria-controls={`upload-main-menu`}
           aria-haspopup="true"
-          aria-expanded={openUploadMenu ? "true" : undefined}
+          aria-expanded={openUploadMenu ? 'true' : undefined}
           onClick={handleClick}
-          label={"Upload"}
+          label={'Upload'}
           icon={<UploadIcon />}
-          variant={"callAction"}
+          variant={'callAction'}
           disabled={forceDisable || !uploadEnabled}
           sx={overrideStyles}
         />
       </TooltipWrapper>
       <DropdownSelector
-        id={"upload-main-menu"}
+        id={'upload-main-menu'}
         options={[
           {
-            label: "Upload File",
+            label: 'Upload File',
             icon: <UploadIcon />,
-            value: "file",
+            value: 'file',
             disabled: !uploadObjectAllowed || forceDisable,
           },
           {
-            label: "Upload Folder",
+            label: 'Upload Folder',
             icon: <UploadFolderIcon />,
-            value: "folder",
+            value: 'folder',
             disabled: !uploadFolderAllowed || forceDisable,
           },
         ]}
-        selectedOption={""}
+        selectedOption={''}
         onSelect={(nValue) => uploadFolderAction(nValue)}
         hideTriggerAction={() => {
           uploadOptionsSetOpen(false);
         }}
         open={uploadOptionsOpen}
         anchorEl={anchorEl}
-        anchorOrigin={"end"}
+        anchorOrigin={'end'}
         useAnchorWidth
       />
     </Fragment>

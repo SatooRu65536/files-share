@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-let objectCalls: { [key: string]: XMLHttpRequest } = {};
-let formDataElements: { [key: string]: FormData } = {};
+const objectCalls: { [key: string]: XMLHttpRequest } = {};
+const formDataElements: { [key: string]: FormData } = {};
 
 export const storeCallForObjectWithID = (id: string, call: any) => {
   objectCalls[id] = call;
@@ -39,11 +39,10 @@ export const removeTrace = (id: string) => {
 };
 
 export const makeid = (length: number) => {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;

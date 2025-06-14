@@ -13,9 +13,6 @@
 //
 //  You should have received a copy of the GNU Affero General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   ActionId,
   ActionImpl,
@@ -28,55 +25,52 @@ import {
   useKBar,
   useMatches,
   useRegisterActions,
-} from "kbar";
-import { Action } from "kbar/lib/types";
-import { routesAsKbarActions } from "./kbar-actions";
+} from 'kbar';
+import { Action } from 'kbar/lib/types';
+import { Box, MenuExpandedIcon } from 'mds';
+import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Box, MenuExpandedIcon } from "mds";
-import { Bucket } from "../../api/consoleApi";
-import { api } from "../../api";
+import { api } from '../../api';
+import { Bucket } from '../../api/consoleApi';
+import { routesAsKbarActions } from './kbar-actions';
 
 const searchStyle = {
-  padding: "12px 16px",
-  width: "100%",
-  boxSizing: "border-box" as React.CSSProperties["boxSizing"],
-  outline: "none",
-  border: "none",
-  color: "#858585",
-  boxShadow: "0px 3px 5px #00000017",
-  borderRadius: "4px 4px 0px 0px",
-  fontSize: "14px",
-  backgroundImage: "url(/images/search-icn.svg)",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "95%",
+  padding: '12px 16px',
+  width: '100%',
+  boxSizing: 'border-box' as React.CSSProperties['boxSizing'],
+  outline: 'none',
+  border: 'none',
+  color: '#858585',
+  boxShadow: '0px 3px 5px #00000017',
+  borderRadius: '4px 4px 0px 0px',
+  fontSize: '14px',
+  backgroundImage: 'url(/images/search-icn.svg)',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: '95%',
 };
 
 const animatorStyle = {
-  maxWidth: "600px",
-  width: "100%",
-  background: "white",
-  color: "black",
-  borderRadius: "4px",
-  overflow: "hidden",
-  boxShadow: "0px 3px 20px #00000055",
+  maxWidth: '600px',
+  width: '100%',
+  background: 'white',
+  color: 'black',
+  borderRadius: '4px',
+  overflow: 'hidden',
+  boxShadow: '0px 3px 20px #00000055',
 };
 
 const groupNameStyle = {
-  marginLeft: "30px",
-  padding: "19px 0px 14px 0px",
-  fontSize: "10px",
-  textTransform: "uppercase" as const,
-  color: "#858585",
-  borderBottom: "1px solid #eaeaea",
+  marginLeft: '30px',
+  padding: '19px 0px 14px 0px',
+  fontSize: '10px',
+  textTransform: 'uppercase' as const,
+  color: '#858585',
+  borderBottom: '1px solid #eaeaea',
 };
 
-const KBarStateChangeMonitor = ({
-  onShow,
-  onHide,
-}: {
-  onShow?: () => void;
-  onHide?: () => void;
-}) => {
+const KBarStateChangeMonitor = ({ onHide, onShow }: { onShow?: () => void; onHide?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { visualState } = useKBar((state: KBarState) => {
     return {
@@ -85,12 +79,12 @@ const KBarStateChangeMonitor = ({
   });
 
   useEffect(() => {
-    if (visualState === "showing") {
+    if (visualState === 'showing') {
       setIsOpen(true);
     } else {
       setIsOpen(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [visualState]);
 
   useEffect(() => {
@@ -121,7 +115,7 @@ const CommandBar = () => {
 
   const fetchBuckets = useCallback(() => {
     invokeListBucketsApi();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const initialActions: Action[] = routesAsKbarActions(buckets, navigate);
@@ -141,8 +135,8 @@ const CommandBar = () => {
       <KBarPositioner
         style={{
           zIndex: 9999,
-          boxShadow: "0px 3px 20px #00000055",
-          borderRadius: "4px",
+          boxShadow: '0px 3px 20px #00000055',
+          borderRadius: '4px',
         }}
       >
         <KBarAnimator style={animatorStyle}>
@@ -160,15 +154,11 @@ function RenderResults() {
   return (
     <KBarResults
       items={results}
-      onRender={({ item, active }) =>
-        typeof item === "string" ? (
+      onRender={({ active, item }) =>
+        typeof item === 'string' ? (
           <Box style={groupNameStyle}>{item}</Box>
         ) : (
-          <ResultItem
-            action={item}
-            active={active}
-            currentRootActionId={`${rootActionId}`}
-          />
+          <ResultItem action={item} active={active} currentRootActionId={`${rootActionId}`} />
         )
       }
     />
@@ -189,10 +179,8 @@ const ResultItem = React.forwardRef(
     ref: React.Ref<HTMLDivElement>,
   ) => {
     const ancestors = React.useMemo(() => {
-      if (!currentRootActionId) return action.ancestors;
-      const index = action.ancestors.findIndex(
-        (ancestor) => ancestor.id === currentRootActionId,
-      );
+      if (!currentRootActionId) {return action.ancestors;}
+      const index = action.ancestors.findIndex((ancestor) => ancestor.id === currentRootActionId);
       // +1 removes the currentRootAction; e.g.
       // if we are on the "Set theme" parent action,
       // the UI should not display "Set theme… > Dark"
@@ -204,33 +192,31 @@ const ResultItem = React.forwardRef(
       <div
         ref={ref}
         style={{
-          padding: "12px 12px 12px 36px",
-          marginTop: "2px",
-          background: active ? "#dddddd" : "transparent",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          cursor: "pointer",
+          padding: '12px 12px 12px 36px',
+          marginTop: '2px',
+          background: active ? '#dddddd' : 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          cursor: 'pointer',
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            gap: "8px",
-            alignItems: "center",
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'center',
             fontSize: 14,
             flex: 1,
-            justifyContent: "space-between",
-            "& .min-icon": {
-              width: "17px",
-              height: "17px",
+            justifyContent: 'space-between',
+            '& .min-icon': {
+              width: '17px',
+              height: '17px',
             },
           }}
         >
-          <Box sx={{ height: "15px", width: "15px", marginRight: "36px" }}>
-            {action.icon && action.icon}
-          </Box>
-          <div style={{ display: "flex", flexDirection: "column", flex: 2 }}>
+          <Box sx={{ height: '15px', width: '15px', marginRight: '36px' }}>{action.icon && action.icon}</Box>
+          <div style={{ display: 'flex', flexDirection: 'column', flex: 2 }}>
             <Box>
               {ancestors.length > 0 &&
                 ancestors.map((ancestor) => (
@@ -266,14 +252,14 @@ const ResultItem = React.forwardRef(
           </div>
           <Box
             sx={{
-              "& .min-icon": {
-                width: "15px",
-                height: "15px",
-                fill: "#8f8b8b",
-                transform: "rotate(90deg)",
+              '& .min-icon': {
+                width: '15px',
+                height: '15px',
+                fill: '#8f8b8b',
+                transform: 'rotate(90deg)',
 
-                "& rect": {
-                  fill: "#ffffff",
+                '& rect': {
+                  fill: '#ffffff',
                 },
               },
             }}
@@ -282,17 +268,14 @@ const ResultItem = React.forwardRef(
           </Box>
         </Box>
         {action.shortcut?.length ? (
-          <div
-            aria-hidden
-            style={{ display: "grid", gridAutoFlow: "column", gap: "4px" }}
-          >
+          <div aria-hidden style={{ display: 'grid', gridAutoFlow: 'column', gap: '4px' }}>
             {action.shortcut.map((sc) => (
               <kbd
                 key={sc}
                 style={{
-                  padding: "4px 6px",
-                  background: "rgba(0 0 0 / .1)",
-                  borderRadius: "4px",
+                  padding: '4px 6px',
+                  background: 'rgba(0 0 0 / .1)',
+                  borderRadius: '4px',
                   fontSize: 14,
                 }}
               >

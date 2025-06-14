@@ -14,22 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import { IFileItem } from "../../ObjectBrowser/types";
-import ProgressBarWrapper from "../ProgressBarWrapper/ProgressBarWrapper";
-import {
-  Box,
-  CancelledIcon,
-  DisabledIcon,
-  DownloadStatIcon,
-  EnabledIcon,
-  UploadStatIcon,
-  Tooltip,
-} from "mds";
-import clsx from "clsx";
-import { callForObjectID } from "../../ObjectBrowser/transferManager";
-import styled from "styled-components";
-import get from "lodash/get";
+import clsx from 'clsx';
+import get from 'lodash/get';
+import { Box, CancelledIcon, DisabledIcon, DownloadStatIcon, EnabledIcon, Tooltip,UploadStatIcon } from 'mds';
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
+
+import { callForObjectID } from '../../ObjectBrowser/transferManager';
+import { IFileItem } from '../../ObjectBrowser/types';
+import ProgressBarWrapper from '../ProgressBarWrapper/ProgressBarWrapper';
 
 interface IObjectHandled {
   objectToDisplay: IFileItem;
@@ -37,108 +30,108 @@ interface IObjectHandled {
 }
 
 const ObjectHandledCloseButton = styled.button(({ theme }) => ({
-  backgroundColor: "transparent",
+  backgroundColor: 'transparent',
   border: 0,
   right: 0,
   top: 5,
   marginTop: 15,
-  position: "absolute",
-  cursor: "pointer",
-  "& .closeIcon": {
-    backgroundColor: get(theme, "buttons.regular.hover.background", "#E6EAEB"),
-    display: "block",
+  position: 'absolute',
+  cursor: 'pointer',
+  '& .closeIcon': {
+    backgroundColor: get(theme, 'buttons.regular.hover.background', '#E6EAEB'),
+    display: 'block',
     width: 18,
     height: 18,
-    borderRadius: "100%",
-    "&:hover": {
-      backgroundColor: get(theme, "mutedText", "#E9EDEE"),
+    borderRadius: '100%',
+    '&:hover': {
+      backgroundColor: get(theme, 'mutedText', '#E9EDEE'),
     },
-    "&::before": {
+    '&::before': {
       width: 1,
       height: 9,
-      top: "50%",
+      top: '50%',
       content: "' '",
-      position: "absolute",
-      transform: "translate(-50%, -50%) rotate(45deg)",
-      borderLeft: `${get(theme, "fontColor", "#000")} 2px solid`,
+      position: 'absolute',
+      transform: 'translate(-50%, -50%) rotate(45deg)',
+      borderLeft: `${get(theme, 'fontColor', '#000')} 2px solid`,
     },
-    "&::after": {
+    '&::after': {
       width: 1,
       height: 9,
-      top: "50%",
+      top: '50%',
       content: "' '",
-      position: "absolute",
-      transform: "translate(-50%, -50%) rotate(-45deg)",
-      borderLeft: `${get(theme, "fontColor", "#000")} 2px solid`,
+      position: 'absolute',
+      transform: 'translate(-50%, -50%) rotate(-45deg)',
+      borderLeft: `${get(theme, 'fontColor', '#000')} 2px solid`,
     },
   },
 }));
 
 const ObjectInformation = styled.div(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-  "span.headItem": {
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  'span.headItem': {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     width: 270,
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
   },
-  "& .iconContainer": {
+  '& .iconContainer': {
     paddingTop: 5,
     marginRight: 5,
-    "& svg": {
+    '& svg': {
       width: 16,
       height: 16,
     },
   },
-  "& .completedSuccess": {
-    color: get(theme, "signalColors.good", "#4CCB92"),
+  '& .completedSuccess': {
+    color: get(theme, 'signalColors.good', '#4CCB92'),
   },
-  "& .inProgress": {
-    color: get(theme, "signalColors.main", "#2781B0"),
+  '& .inProgress': {
+    color: get(theme, 'signalColors.main', '#2781B0'),
   },
-  "& .completedError": {
-    color: get(theme, "signalColors.danger", "#C83B51"),
+  '& .completedError': {
+    color: get(theme, 'signalColors.danger', '#C83B51'),
   },
-  "& .cancelledAction": {
-    color: get(theme, "signalColors.warning", "#FFBD62"),
+  '& .cancelledAction': {
+    color: get(theme, 'signalColors.warning', '#FFBD62'),
   },
 }));
 
-const ObjectHandled = ({ objectToDisplay, deleteFromList }: IObjectHandled) => {
+const ObjectHandled = ({ deleteFromList, objectToDisplay }: IObjectHandled) => {
   const prefix = `${objectToDisplay.prefix}`;
   return (
     <Fragment>
       <Box
         sx={{
-          borderBottom: "#E2E2E2 1px solid",
-          padding: "15px 5px",
-          margin: "0 30px",
-          position: "relative",
-          "& .showOnHover": {
+          borderBottom: '#E2E2E2 1px solid',
+          padding: '15px 5px',
+          margin: '0 30px',
+          position: 'relative',
+          '& .showOnHover': {
             opacity: 1,
-            transitionDuration: "0.2s",
+            transitionDuration: '0.2s',
           },
-          "&:hover": {
-            "& .showOnHover": {
+          '&:hover': {
+            '& .showOnHover': {
               opacity: 1,
             },
           },
         }}
-        className={objectToDisplay.percentage !== 100 ? "inProgress" : ""}
+        className={objectToDisplay.percentage !== 100 ? 'inProgress' : ''}
       >
         <Box
           sx={{
-            "& .closeButton": {
-              backgroundColor: "transparent",
+            '& .closeButton': {
+              backgroundColor: 'transparent',
               border: 0,
               right: 0,
               top: 5,
               marginTop: 15,
-              position: "absolute",
+              position: 'absolute',
             },
           }}
         >
@@ -155,19 +148,19 @@ const ObjectHandled = ({ objectToDisplay, deleteFromList }: IObjectHandled) => {
             }}
             className={`closeButton hideOnProgress`}
           >
-            <span className={"closeIcon"} />
+            <span className={'closeIcon'} />
           </ObjectHandledCloseButton>
         </Box>
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           <Box
             sx={{
               width: 295,
-              "& .bucketName": {
+              '& .bucketName': {
                 fontSize: 12,
               },
             }}
@@ -175,15 +168,9 @@ const ObjectHandled = ({ objectToDisplay, deleteFromList }: IObjectHandled) => {
             <Tooltip tooltip={prefix} placement="top">
               <ObjectInformation>
                 <span
-                  className={clsx("iconContainer", {
-                    inProgress:
-                      !objectToDisplay.done &&
-                      !objectToDisplay.failed &&
-                      !objectToDisplay.cancelled,
-                    completedSuccess:
-                      objectToDisplay.done &&
-                      !objectToDisplay.failed &&
-                      !objectToDisplay.cancelled,
+                  className={clsx('iconContainer', {
+                    inProgress: !objectToDisplay.done && !objectToDisplay.failed && !objectToDisplay.cancelled,
+                    completedSuccess: objectToDisplay.done && !objectToDisplay.failed && !objectToDisplay.cancelled,
                     completedError: objectToDisplay.failed,
                     cancelledAction: objectToDisplay.cancelled,
                   })}
@@ -200,11 +187,7 @@ const ObjectHandled = ({ objectToDisplay, deleteFromList }: IObjectHandled) => {
                             <EnabledIcon />
                           ) : (
                             <Fragment>
-                              {objectToDisplay.type === "download" ? (
-                                <DownloadStatIcon />
-                              ) : (
-                                <UploadStatIcon />
-                              )}
+                              {objectToDisplay.type === 'download' ? <DownloadStatIcon /> : <UploadStatIcon />}
                             </Fragment>
                           )}
                         </Fragment>
@@ -212,16 +195,10 @@ const ObjectHandled = ({ objectToDisplay, deleteFromList }: IObjectHandled) => {
                     </Fragment>
                   )}
                 </span>
-                <span
-                  className={`headItem ${
-                    objectToDisplay.failed ? "completedError" : ""
-                  }`}
-                >
-                  {prefix}
-                </span>
+                <span className={`headItem ${objectToDisplay.failed ? 'completedError' : ''}`}>{prefix}</span>
               </ObjectInformation>
             </Tooltip>
-            <Box className={"muted bucketName"}>
+            <Box className={'muted bucketName'}>
               <strong>Bucket: </strong>
               {objectToDisplay.bucketName}
             </Box>
@@ -241,11 +218,7 @@ const ObjectHandled = ({ objectToDisplay, deleteFromList }: IObjectHandled) => {
               error={objectToDisplay.failed}
               cancelled={objectToDisplay.cancelled}
               withLabel
-              notificationLabel={
-                objectToDisplay.errorMessage !== ""
-                  ? objectToDisplay.errorMessage
-                  : ""
-              }
+              notificationLabel={objectToDisplay.errorMessage !== '' ? objectToDisplay.errorMessage : ''}
             />
           )}
         </Box>

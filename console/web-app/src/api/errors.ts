@@ -14,20 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { ErrorResponseHandler } from "../common/types";
-import { ApiError } from "./consoleApi";
+import { ErrorResponseHandler } from '../common/types';
+import { ApiError } from './consoleApi';
 
 // errorToHandler translates a swagger error to a ErrorResponseHandler which
 // is legacy, when all API calls are using the swagger API, we can remove this.
 export const errorToHandler = (e: ApiError): ErrorResponseHandler => {
   if (!e) {
     return {
-      errorMessage: "",
-      detailedError: "",
+      errorMessage: '',
+      detailedError: '',
     };
   }
   return {
-    errorMessage: e.message || "",
-    detailedError: e.detailedMessage || "",
+    errorMessage: e.message || '',
+    detailedError: e.detailedMessage || '',
   };
 };

@@ -14,83 +14,56 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import { Selector } from "testcafe";
-import * as functions from "../utils/functions";
-import {
-  cleanUpNamedBucketAndUploads,
-  namedTestBucketBrowseButtonFor,
-} from "../utils/functions";
-import * as elements from "../utils/elements";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import { Selector } from 'testcafe';
+import * as functions from '../utils/functions';
+import { cleanUpNamedBucketAndUploads, namedTestBucketBrowseButtonFor } from '../utils/functions';
+import * as elements from '../utils/elements';
+import { acknowledgeButton } from '../utils/elements';
 
-fixture("Test resources policy").page("http://localhost:9090/");
+fixture('Test resources policy').page('http://localhost:9090/');
 
-const bucket1 = "testcondition";
-const bucket3 = "my-company";
+const bucket1 = 'testcondition';
+const bucket3 = 'my-company';
 const test1BucketBrowseButton = namedTestBucketBrowseButtonFor(bucket1);
 const test3BucketBrowseButton = namedTestBucketBrowseButtonFor(bucket3);
-export const file = Selector(".ReactVirtualized__Table__rowColumn").withText(
-  "test.txt",
-);
-export const deniedError =
-  Selector(".messageTruncation").withText("Access Denied.");
+export const file = Selector('.ReactVirtualized__Table__rowColumn').withText('test.txt');
+export const deniedError = Selector('.messageTruncation').withText('Access Denied.');
 
 test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucket1);
+    await functions.uploadNamedObjectToBucket(t, bucket1, 'test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucket1, 'firstlevel/test.txt', 'web-app/tests/uploads/test.txt');
     await functions.uploadNamedObjectToBucket(
       t,
       bucket1,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
+      'firstlevel/secondlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
     await functions.uploadNamedObjectToBucket(
       t,
       bucket1,
-      "firstlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
+      'firstlevel/secondlevel/thirdlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket1,
-      "firstlevel/secondlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket1,
-      "firstlevel/secondlevel/thirdlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })(
-    "User can only see permitted files in last path as expected",
-    async (t) => {
-      await t
-        .useRole(roles.conditions2)
-        .click(acknowledgeButton)
-        .typeText(elements.filterBuckets, bucket1)
-        .click(test1BucketBrowseButton)
-        .wait(1500)
-        .click(
-          Selector(".ReactVirtualized__Table__rowColumn").withText(
-            "firstlevel",
-          ),
-        )
-        .wait(1500)
-        .expect(file.exists)
-        .notOk()
-        .wait(1500)
-        .click(
-          Selector(".ReactVirtualized__Table__rowColumn").withText(
-            "secondlevel",
-          ),
-        )
-        .wait(1500)
-        .expect(file.exists)
-        .notOk();
-    },
-  )
+  })('User can only see permitted files in last path as expected', async (t) => {
+    await t
+      .useRole(roles.conditions2)
+      .click(acknowledgeButton)
+      .typeText(elements.filterBuckets, bucket1)
+      .click(test1BucketBrowseButton)
+      .wait(1500)
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('firstlevel'))
+      .wait(1500)
+      .expect(file.exists)
+      .notOk()
+      .wait(1500)
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('secondlevel'))
+      .wait(1500)
+      .expect(file.exists)
+      .notOk();
+  })
   .after(async (t) => {
     await functions.cleanUpNamedBucketAndUploads(t, bucket1);
   });
@@ -98,54 +71,38 @@ test
 test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucket1);
+    await functions.uploadNamedObjectToBucket(t, bucket1, 'test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucket1, 'firstlevel/test.txt', 'web-app/tests/uploads/test.txt');
     await functions.uploadNamedObjectToBucket(
       t,
       bucket1,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
+      'firstlevel/secondlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
     await functions.uploadNamedObjectToBucket(
       t,
       bucket1,
-      "firstlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
+      'firstlevel/secondlevel/thirdlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket1,
-      "firstlevel/secondlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket1,
-      "firstlevel/secondlevel/thirdlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })("User can browse from first level as policy has wildcard", async (t) => {
+  })('User can browse from first level as policy has wildcard', async (t) => {
     await t
       .useRole(roles.conditions1)
       .click(acknowledgeButton)
       .typeText(elements.filterBuckets, bucket1)
       .click(test1BucketBrowseButton)
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("firstlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('firstlevel'))
       .wait(1500)
       .expect(file.exists)
       .ok()
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("secondlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('secondlevel'))
       .wait(1500)
       .expect(file.exists)
       .ok()
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("thirdlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('thirdlevel'))
       .wait(1500)
       .expect(file.exists)
       .ok();
@@ -157,56 +114,32 @@ test
 test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucket3);
+    await functions.uploadNamedObjectToBucket(t, bucket3, 'test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucket3, 'home/UserY/test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucket3, 'home/UserX/test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucket3, 'home/User/test.txt', 'web-app/tests/uploads/test.txt');
     await functions.uploadNamedObjectToBucket(
       t,
       bucket3,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
+      'home/User/secondlevel/thirdlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket3,
-      "home/UserY/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket3,
-      "home/UserX/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket3,
-      "home/User/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket3,
-      "home/User/secondlevel/thirdlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })("User can browse from sub levels as policy has wildcard", async (t) => {
+  })('User can browse from sub levels as policy has wildcard', async (t) => {
     await t
       .useRole(roles.conditions3)
       .click(acknowledgeButton)
       .typeText(elements.filterBuckets, bucket3)
       .click(test3BucketBrowseButton)
       .wait(1500)
-      .click(Selector(".ReactVirtualized__Table__rowColumn").withText("home"))
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('home'))
       .wait(1500)
-      .click(Selector(".ReactVirtualized__Table__rowColumn").withText("User"))
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('User'))
       .wait(1500)
       .expect(file.exists)
       .ok()
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("secondlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('secondlevel'))
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("thirdlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('thirdlevel'))
       .wait(1500)
       .expect(file.exists)
       .ok()
@@ -214,9 +147,9 @@ test
       .click(acknowledgeButton)
       .click(test3BucketBrowseButton)
       .wait(1500)
-      .click(Selector(".ReactVirtualized__Table__rowColumn").withText("home"))
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('home'))
       .wait(1500)
-      .click(Selector(".ReactVirtualized__Table__rowColumn").withText("UserX"))
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('UserX'))
       .expect(deniedError.exists)
       .ok();
   })

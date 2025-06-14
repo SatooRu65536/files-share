@@ -14,33 +14,22 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import {
-  Button,
-  CopyIcon,
-  ReadBox,
-  ShareIcon,
-  Grid,
-  ProgressBar,
-  Tooltip,
-} from "mds";
-import CopyToClipboard from "react-copy-to-clipboard";
-import ModalWrapper from "../../../../Common/ModalWrapper/ModalWrapper";
-import DaysSelector from "../../../../Common/FormComponents/DaysSelector/DaysSelector";
-import { niceTimeFromSeconds } from "../../../../../../common/utils";
-import {
-  selDistSet,
-  setModalErrorSnackMessage,
-  setModalSnackMessage,
-} from "../../../../../../systemSlice";
-import { useAppDispatch } from "../../../../../../store";
-import { BucketObject } from "api/consoleApi";
-import { api } from "api";
-import { errorToHandler } from "api/errors";
-import { getMaxShareLinkExpTime } from "screens/Console/ObjectBrowser/objectBrowserThunks";
-import { maxShareLinkExpTime } from "screens/Console/ObjectBrowser/objectBrowserSlice";
-import debounce from "lodash/debounce";
+import { api } from 'api';
+import { BucketObject } from 'api/consoleApi';
+import { errorToHandler } from 'api/errors';
+import debounce from 'lodash/debounce';
+import { Button, CopyIcon, Grid, ProgressBar, ReadBox, ShareIcon, Tooltip } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useSelector } from 'react-redux';
+import { maxShareLinkExpTime } from 'screens/Console/ObjectBrowser/objectBrowserSlice';
+import { getMaxShareLinkExpTime } from 'screens/Console/ObjectBrowser/objectBrowserThunks';
+
+import { niceTimeFromSeconds } from '../../../../../../common/utils';
+import { useAppDispatch } from '../../../../../../store';
+import { selDistSet, setModalErrorSnackMessage, setModalSnackMessage } from '../../../../../../systemSlice';
+import DaysSelector from '../../../../Common/FormComponents/DaysSelector/DaysSelector';
+import ModalWrapper from '../../../../Common/ModalWrapper/ModalWrapper';
 
 interface IShareFileProps {
   open: boolean;
@@ -49,21 +38,16 @@ interface IShareFileProps {
   closeModalAndRefresh: () => void;
 }
 
-const ShareFile = ({
-  open,
-  closeModalAndRefresh,
-  bucketName,
-  dataObject,
-}: IShareFileProps) => {
+const ShareFile = ({ bucketName, closeModalAndRefresh, dataObject, open }: IShareFileProps) => {
   const dispatch = useAppDispatch();
   const distributedSetup = useSelector(selDistSet);
   const maxShareLinkExpTimeVal = useSelector(maxShareLinkExpTime);
-  const [shareURL, setShareURL] = useState<string>("");
+  const [shareURL, setShareURL] = useState<string>('');
   const [isLoadingVersion, setIsLoadingVersion] = useState<boolean>(true);
   const [isLoadingFile, setIsLoadingFile] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>('');
   const [dateValid, setDateValid] = useState<boolean>(true);
-  const [versionID, setVersionID] = useState<string>("null");
+  const [versionID, setVersionID] = useState<string>('null');
 
   const debouncedDateChange = debounce((newDate: string, isValid: boolean) => {
     setDateValid(isValid);
@@ -71,8 +55,8 @@ const ShareFile = ({
       setSelectedDate(newDate);
       return;
     }
-    setSelectedDate("");
-    setShareURL("");
+    setSelectedDate('');
+    setShareURL('');
   }, 300);
 
   useEffect(() => {
@@ -86,15 +70,13 @@ const ShareFile = ({
       if (distributedSetup) {
         api.buckets
           .listObjects(bucketName, {
-            prefix: dataObject.name || "",
+            prefix: dataObject.name || '',
             with_versions: distributedSetup,
           })
           .then((res) => {
             const result: BucketObject[] = res.data.objects || [];
 
-            const latestVersion: BucketObject | undefined = result.find(
-              (elem: BucketObject) => elem.is_latest,
-            );
+            const latestVersion: BucketObject | undefined = result.find((elem: BucketObject) => elem.is_latest);
 
             if (latestVersion) {
               setVersionID(`${latestVersion.version_id}`);
@@ -102,7 +84,7 @@ const ShareFile = ({
             }
 
             // Version couldn't be retrieved, we default
-            setVersionID("null");
+            setVersionID('null');
           })
           .catch((err) => {
             dispatch(setModalErrorSnackMessage(errorToHandler(err.error)));
@@ -111,32 +93,30 @@ const ShareFile = ({
         setIsLoadingVersion(false);
         return;
       }
-      setVersionID("null");
+      setVersionID('null');
       setIsLoadingVersion(false);
       return;
     }
-    setVersionID(dataObject.version_id || "null");
+    setVersionID(dataObject.version_id || 'null');
     setIsLoadingVersion(false);
   }, [bucketName, dataObject, distributedSetup, dispatch]);
 
   useEffect(() => {
     if (dateValid && !isLoadingVersion) {
       setIsLoadingFile(true);
-      setShareURL("");
+      setShareURL('');
 
       const slDate = new Date(`${selectedDate}`);
       const currDate = new Date();
 
-      const diffDate = Math.ceil(
-        (slDate.getTime() - currDate.getTime()) / 1000,
-      );
+      const diffDate = Math.ceil((slDate.getTime() - currDate.getTime()) / 1000);
 
       if (diffDate > 0) {
         api.buckets
           .shareObject(bucketName, {
-            prefix: dataObject.name || "",
+            prefix: dataObject.name || '',
             version_id: versionID,
-            expires: selectedDate !== "" ? `${diffDate}s` : "",
+            expires: selectedDate !== '' ? `${diffDate}s` : '',
           })
           .then((res) => {
             setShareURL(res.data);
@@ -144,7 +124,7 @@ const ShareFile = ({
           })
           .catch((err) => {
             dispatch(setModalErrorSnackMessage(errorToHandler(err.error)));
-            setShareURL("");
+            setShareURL('');
             setIsLoadingFile(false);
           });
       }
@@ -165,7 +145,7 @@ const ShareFile = ({
     <React.Fragment>
       <ModalWrapper
         title="Share File"
-        titleIcon={<ShareIcon style={{ fill: "#4CCB92" }} />}
+        titleIcon={<ShareIcon style={{ fill: '#4CCB92' }} />}
         modalOpen={open}
         onClose={() => {
           closeModalAndRefresh();
@@ -190,22 +170,18 @@ const ShareFile = ({
                 placement="right"
                 tooltip={
                   <span>
-                    You can reset your session by logging out and logging back
-                    in to the web UI. <br /> <br />
-                    You can increase the maximum configuration time by setting
-                    the MINIO_STS_DURATION environment variable on all your
-                    nodes. <br /> <br />
-                    You can use <b>mc share</b> as an alternative to this UI,
-                    where the session length does not limit the URL validity.
+                    You can reset your session by logging out and logging back in to the web UI. <br /> <br />
+                    You can increase the maximum configuration time by setting the MINIO_STS_DURATION environment
+                    variable on all your nodes. <br /> <br />
+                    You can use <b>mc share</b> as an alternative to this UI, where the session length does not limit
+                    the URL validity.
                   </span>
                 }
               >
                 <span>
-                  The following URL lets you share this object without requiring
-                  a login. <br />
-                  The URL expires automatically at the earlier of your
-                  configured time ({niceTimeFromSeconds(maxShareLinkExpTimeVal)}
-                  ) or the expiration of your current web session.
+                  The following URL lets you share this object without requiring a login. <br />
+                  The URL expires automatically at the earlier of your configured time (
+                  {niceTimeFromSeconds(maxShareLinkExpTimeVal)}) or the expiration of your current web session.
                 </span>
               </Tooltip>
             </Grid>
@@ -230,18 +206,16 @@ const ShareFile = ({
                 actionButton={
                   <CopyToClipboard text={shareURL}>
                     <Button
-                      id={"copy-path"}
+                      id={'copy-path'}
                       variant="regular"
                       onClick={() => {
-                        dispatch(
-                          setModalSnackMessage("Share URL Copied to clipboard"),
-                        );
+                        dispatch(setModalSnackMessage('Share URL Copied to clipboard'));
                       }}
-                      disabled={shareURL === "" || isLoadingFile}
+                      disabled={shareURL === '' || isLoadingFile}
                       style={{
-                        width: "28px",
-                        height: "28px",
-                        padding: "0px",
+                        width: '28px',
+                        height: '28px',
+                        padding: '0px',
                       }}
                       icon={<CopyIcon />}
                     />

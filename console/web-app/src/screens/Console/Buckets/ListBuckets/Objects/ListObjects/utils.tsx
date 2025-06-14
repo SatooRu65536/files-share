@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-
 import {
   FileBookIcon,
   FileCodeIcon,
@@ -34,8 +32,10 @@ import {
   FileXlsIcon,
   FileZipIcon,
   FolderBrowserIcon,
-} from "mds";
-import IconWithLabel from "./IconWithLabel";
+} from 'mds';
+import React from 'react';
+
+import IconWithLabel from './IconWithLabel';
 
 interface IExtToIcon {
   icon: any;
@@ -45,70 +45,67 @@ interface IExtToIcon {
 const extensionToIcon: IExtToIcon[] = [
   {
     icon: <FileVideoIcon />,
-    extensions: ["mp4", "mov", "avi", "mpeg", "mpg"],
+    extensions: ['mp4', 'mov', 'avi', 'mpeg', 'mpg'],
   },
   {
     icon: <FileMusicIcon />,
-    extensions: ["mp3", "m4a", "aac"],
+    extensions: ['mp3', 'm4a', 'aac'],
   },
   {
     icon: <FilePdfIcon />,
-    extensions: ["pdf"],
+    extensions: ['pdf'],
   },
   {
     icon: <FilePptIcon />,
-    extensions: ["ppt", "pptx"],
+    extensions: ['ppt', 'pptx'],
   },
   {
     icon: <FileXlsIcon />,
-    extensions: ["xls", "xlsx"],
+    extensions: ['xls', 'xlsx'],
   },
   {
     icon: <FileLockIcon />,
-    extensions: ["cer", "crt", "pem"],
+    extensions: ['cer', 'crt', 'pem'],
   },
   {
     icon: <FileCodeIcon />,
-    extensions: ["html", "xml", "css", "py", "go", "php", "cpp", "h", "java"],
+    extensions: ['html', 'xml', 'css', 'py', 'go', 'php', 'cpp', 'h', 'java'],
   },
   {
     icon: <FileConfigIcon />,
-    extensions: ["cfg", "yaml"],
+    extensions: ['cfg', 'yaml'],
   },
   {
     icon: <FileDbIcon />,
-    extensions: ["sql"],
+    extensions: ['sql'],
   },
   {
     icon: <FileFontIcon />,
-    extensions: ["ttf", "otf"],
+    extensions: ['ttf', 'otf'],
   },
   {
     icon: <FileTxtIcon />,
-    extensions: ["doc", "docx", "txt", "rtf"],
+    extensions: ['doc', 'docx', 'txt', 'rtf'],
   },
   {
     icon: <FileZipIcon />,
-    extensions: ["zip", "rar", "tar", "gz"],
+    extensions: ['zip', 'rar', 'tar', 'gz'],
   },
   {
     icon: <FileBookIcon />,
-    extensions: ["epub", "mobi", "azw", "azw3"],
+    extensions: ['epub', 'mobi', 'azw', 'azw3'],
   },
   {
     icon: <FileImageIcon />,
-    extensions: ["jpeg", "jpg", "gif", "tiff", "png", "heic", "dng"],
+    extensions: ['jpeg', 'jpg', 'gif', 'tiff', 'png', 'heic', 'dng'],
   },
 ];
 
-export const displayFileIconName = (
-  element: string,
-  returnOnlyIcon: boolean = false,
-) => {
+export const displayFileIconName = (element: string, returnOnlyIcon: boolean = false) => {
   let elementString = element;
   let icon = <FileNonType />;
   // Element is a folder
-  if (element.endsWith("/")) {
+  if (element.endsWith('/')) {
     icon = <FolderBrowserIcon />;
     elementString = element.slice(0, -1);
   }
@@ -122,11 +119,11 @@ export const displayFileIconName = (
     }
   }
 
-  if (!element.endsWith("/") && element.indexOf(".") < 0) {
+  if (!element.endsWith('/') && element.indexOf('.') < 0) {
     icon = <FileMissingIcon />;
   }
 
-  const splitItem = elementString.split("/");
+  const splitItem = elementString.split('/');
 
   if (returnOnlyIcon) {
     return icon;
@@ -137,5 +134,5 @@ export const displayFileIconName = (
 
 export const sanitizeFilePath = (filePath: string) => {
   // Replace `./` at the start of the path or preceded by `/` - happens when drag drop upload of files (not folders !) in chrome
-  return filePath.replace(/(^|\/)\.\//g, "/");
+  return filePath.replace(/(^|\/)\.\//g, '/');
 };

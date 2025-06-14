@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addBucketAsync } from "./addBucketThunks";
-import { ApiError } from "api/consoleApi";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ApiError } from 'api/consoleApi';
+
+import { addBucketAsync } from './addBucketThunks';
 
 interface AddBucketState {
   loading: boolean;
@@ -33,13 +34,13 @@ const initialState: AddBucketState = {
   isDirty: false,
   addBucketOpen: false,
   invalidFields: [],
-  name: "",
-  navigateTo: "",
+  name: '',
+  navigateTo: '',
   error: null,
 };
 
 const addBucketsSlice = createSlice({
-  name: "addBuckets",
+  name: 'addBuckets',
   initialState,
   reducers: {
     setIsDirty: (state, action: PayloadAction<boolean>) => {
@@ -51,21 +52,19 @@ const addBucketsSlice = createSlice({
     setName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
 
-      if (state.name.trim() === "") {
-        state.invalidFields = [...state.invalidFields, "name"];
+      if (state.name.trim() === '') {
+        state.invalidFields = [...state.invalidFields, 'name'];
       } else {
-        state.invalidFields = state.invalidFields.filter(
-          (field) => field !== "name",
-        );
+        state.invalidFields = state.invalidFields.filter((field) => field !== 'name');
       }
     },
     resetForm: (state) => {
-      state.name = "";
+      state.name = '';
       state.loading = false;
       state.isDirty = false;
       state.invalidFields = [];
-      state.name = "";
-      state.navigateTo = "";
+      state.name = '';
+      state.navigateTo = '';
       state.error = null;
     },
   },
@@ -83,15 +82,12 @@ const addBucketsSlice = createSlice({
         state.loading = false;
         state.error = null;
         if (action.payload) {
-          state.navigateTo = action.payload.data.bucketName
-            ? `/browser/${action.payload.data.bucketName}`
-            : `/browser`;
+          state.navigateTo = action.payload.data.bucketName ? `/browser/${action.payload.data.bucketName}` : `/browser`;
         }
       });
   },
 });
 
-export const { setName, setAddBucketOpen, setIsDirty, resetForm } =
-  addBucketsSlice.actions;
+export const { resetForm, setAddBucketOpen, setIsDirty, setName } = addBucketsSlice.actions;
 
 export default addBucketsSlice.reducer;

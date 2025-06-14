@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { Button, DarkModeIcon, LightModeIcon } from "mds";
-import TooltipWrapper from "../TooltipWrapper/TooltipWrapper";
-import { useSelector } from "react-redux";
-import { AppState, useAppDispatch } from "../../../../store";
-import { setDarkMode } from "../../../../systemSlice";
-import { storeDarkMode } from "../../../../utils/stylesUtils";
+import { Button, DarkModeIcon, LightModeIcon } from 'mds';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState, useAppDispatch } from '../../../../store';
+import { setDarkMode } from '../../../../systemSlice';
+import { storeDarkMode } from '../../../../utils/stylesUtils';
+import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
 
 const DarkModeActivator = () => {
   const dispatch = useAppDispatch();
@@ -31,13 +32,13 @@ const DarkModeActivator = () => {
     const currentStatus = !!darkMode;
 
     dispatch(setDarkMode(!currentStatus));
-    storeDarkMode(!currentStatus ? "on" : "off");
+    storeDarkMode(!currentStatus ? 'on' : 'off');
   };
 
   return (
-    <TooltipWrapper tooltip={`${darkMode ? "Light" : "Dark"} Mode`}>
+    <TooltipWrapper tooltip={`${darkMode ? 'Light' : 'Dark'} Mode`}>
       <Button
-        id={"dark-mode-activator"}
+        id={'dark-mode-activator'}
         icon={darkMode ? <LightModeIcon /> : <DarkModeIcon />}
         onClick={darkModeActivator}
       />

@@ -14,65 +14,47 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, {
-  Fragment,
-  Suspense,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
-import { MainContainer, ProgressBar, Snackbar } from "mds";
-import debounce from "lodash/debounce";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selFeatures, selSession } from "./consoleSlice";
+import debounce from 'lodash/debounce';
+import { MainContainer, ProgressBar, Snackbar } from 'mds';
+import React, { Fragment, Suspense, useEffect, useLayoutEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
-import { AppState, useAppDispatch } from "../../store";
-import MainError from "./Common/MainError/MainError";
-import {
-  CONSOLE_UI_RESOURCE,
-  IAM_PAGES,
-  IAM_PAGES_PERMISSIONS,
-} from "../../common/SecureComponent/permissions";
-import { hasPermission } from "../../common/SecureComponent";
-import { IRouteRule } from "./Menu/types";
-import { menuOpen, setSnackBarMessage } from "../../systemSlice";
-import MenuWrapper from "./Menu/MenuWrapper";
-import LoadingComponent from "../../common/LoadingComponent";
-import AddBucketModal from "./Buckets/ListBuckets/AddBucket/AddBucketModal";
+import LoadingComponent from '../../common/LoadingComponent';
+import { hasPermission } from '../../common/SecureComponent';
+import { CONSOLE_UI_RESOURCE, IAM_PAGES, IAM_PAGES_PERMISSIONS } from '../../common/SecureComponent/permissions';
+import { AppState, useAppDispatch } from '../../store';
+import { menuOpen, setSnackBarMessage } from '../../systemSlice';
+import AddBucketModal from './Buckets/ListBuckets/AddBucket/AddBucketModal';
+import MainError from './Common/MainError/MainError';
+import { selFeatures, selSession } from './consoleSlice';
+import MenuWrapper from './Menu/MenuWrapper';
+import { IRouteRule } from './Menu/types';
 
-const ObjectManager = React.lazy(
-  () => import("./Common/ObjectManager/ObjectManager"),
-);
+const ObjectManager = React.lazy(() => import('./Common/ObjectManager/ObjectManager'));
 
-const ObjectBrowser = React.lazy(() => import("./ObjectBrowser/ObjectBrowser"));
+const ObjectBrowser = React.lazy(() => import('./ObjectBrowser/ObjectBrowser'));
 
-const Buckets = React.lazy(() => import("./Buckets/Buckets"));
+const Buckets = React.lazy(() => import('./Buckets/Buckets'));
 
-const License = React.lazy(() => import("./License/License"));
+const License = React.lazy(() => import('./License/License'));
 
 const Console = () => {
   const dispatch = useAppDispatch();
-  const { pathname = "" } = useLocation();
+  const { pathname = '' } = useLocation();
   const open = useSelector((state: AppState) => state.system.sidebarOpen);
   const session = useSelector(selSession);
   const features = useSelector(selFeatures);
-  const snackBarMessage = useSelector(
-    (state: AppState) => state.system.snackBar,
-  );
-  const loadingProgress = useSelector(
-    (state: AppState) => state.system.loadingProgress,
-  );
-  const createBucketOpen = useSelector(
-    (state: AppState) => state.addBucket.addBucketOpen,
-  );
+  const snackBarMessage = useSelector((state: AppState) => state.system.snackBar);
+  const loadingProgress = useSelector((state: AppState) => state.system.loadingProgress);
+  const createBucketOpen = useSelector((state: AppState) => state.addBucket.addBucketOpen);
 
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
-  const obOnly = !!features?.includes("object-browser-only");
+  const obOnly = !!features?.includes('object-browser-only');
 
   useEffect(() => {
-    dispatch({ type: "socket/OBConnect" });
+    dispatch({ type: 'socket/OBConnect' });
   }, [dispatch]);
 
   // Layout effect to be executed after last re-render for resizing only
@@ -85,10 +67,10 @@ const Console = () => {
     }, 300);
 
     // Added event listener for window resize
-    window.addEventListener("resize", debounceSize);
+    window.addEventListener('resize', debounceSize);
 
     // We remove the listener on component unmount
-    return () => window.removeEventListener("resize", debounceSize);
+    return () => window.removeEventListener('resize', debounceSize);
   });
 
   const consoleAdminRoutes: IRouteRule[] = [
@@ -102,10 +84,7 @@ const Console = () => {
         return (
           resource &&
           resource.length > 0 &&
-          hasPermission(
-            resource[1],
-            IAM_PAGES_PERMISSIONS[IAM_PAGES.OBJECT_BROWSER_VIEW],
-          )
+          hasPermission(resource[1], IAM_PAGES_PERMISSIONS[IAM_PAGES.OBJECT_BROWSER_VIEW])
         );
       },
     },
@@ -118,7 +97,7 @@ const Console = () => {
       component: Buckets,
       path: IAM_PAGES.ADD_BUCKETS,
       customPermissionFnc: () => {
-        return hasPermission("*", IAM_PAGES_PERMISSIONS[IAM_PAGES.ADD_BUCKETS]);
+        return hasPermission('*', IAM_PAGES_PERMISSIONS[IAM_PAGES.ADD_BUCKETS]);
       },
     },
     {
@@ -130,52 +109,46 @@ const Console = () => {
 
   const allowedRoutes = consoleAdminRoutes.filter((route: any) =>
     obOnly
-      ? route.path.includes("browser")
+      ? route.path.includes('browser')
       : (route.forceDisplay ||
           (route.customPermissionFnc
             ? route.customPermissionFnc()
-            : hasPermission(
-                CONSOLE_UI_RESOURCE,
-                IAM_PAGES_PERMISSIONS[route.path],
-              ))) &&
+            : hasPermission(CONSOLE_UI_RESOURCE, IAM_PAGES_PERMISSIONS[route.path]))) &&
         !route.fsHidden,
   );
 
   const closeSnackBar = () => {
     setOpenSnackbar(false);
-    dispatch(setSnackBarMessage(""));
+    dispatch(setSnackBarMessage(''));
   };
 
   useEffect(() => {
-    if (snackBarMessage.message === "") {
+    if (snackBarMessage.message === '') {
       setOpenSnackbar(false);
       return;
     }
     // Open SnackBar
-    if (snackBarMessage.type !== "error") {
+    if (snackBarMessage.type !== 'error') {
       setOpenSnackbar(true);
     }
   }, [snackBarMessage]);
 
   let hideMenu = false;
-  if (features?.includes("hide-menu") || pathname.endsWith("/hop") || obOnly) {
+  if (features?.includes('hide-menu') || pathname.endsWith('/hop') || obOnly) {
     hideMenu = true;
   }
 
   return (
     <Fragment>
-      {session && session.status === "ok" ? (
-        <MainContainer
-          menu={!hideMenu ? <MenuWrapper /> : <Fragment />}
-          mobileModeAuto={false}
-        >
+      {session && session.status === 'ok' ? (
+        <MainContainer menu={!hideMenu ? <MenuWrapper /> : <Fragment />} mobileModeAuto={false}>
           <Fragment>
             {loadingProgress < 100 && (
               <ProgressBar
                 barHeight={3}
                 variant="determinate"
                 value={loadingProgress}
-                sx={{ width: "100%", position: "absolute", top: 0, left: 0 }}
+                sx={{ width: '100%', position: 'absolute', top: 0, left: 0 }}
               />
             )}
             {createBucketOpen && <AddBucketModal />}
@@ -184,8 +157,8 @@ const Console = () => {
               onClose={closeSnackBar}
               open={openSnackbar}
               message={snackBarMessage.message}
-              variant={snackBarMessage.type === "error" ? "error" : "default"}
-              autoHideDuration={snackBarMessage.type === "error" ? 10 : 5}
+              variant={snackBarMessage.type === 'error' ? 'error' : 'default'}
+              autoHideDuration={snackBarMessage.type === 'error' ? 10 : 5}
               condensed
             />
             <Suspense fallback={<LoadingComponent />}>
@@ -204,14 +177,10 @@ const Console = () => {
                 />
               ))}
               <Route
-                path={"*"}
+                path={'*'}
                 element={
                   <Fragment>
-                    {allowedRoutes.length > 0 ? (
-                      <Navigate to={allowedRoutes[0].path} />
-                    ) : (
-                      <Fragment />
-                    )}
+                    {allowedRoutes.length > 0 ? <Navigate to={allowedRoutes[0].path} /> : <Fragment />}
                   </Fragment>
                 }
               />

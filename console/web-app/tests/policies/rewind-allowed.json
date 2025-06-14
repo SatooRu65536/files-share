@@ -19,10 +19,7 @@
     {
       "Effect": "Allow",
       "Action": ["s3:GetObject"],
-      "Resource": [
-        "arn:aws:s3:::bucketname/firstlevel",
-        "arn:aws:s3:::bucketname/firstlevel/*"
-      ]
+      "Resource": ["arn:aws:s3:::bucketname/firstlevel", "arn:aws:s3:::bucketname/firstlevel/*"]
     },
     {
       "Effect": "Allow",

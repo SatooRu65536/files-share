@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import { Box, Button, InformativeMessage } from "mds";
+import { Box, Button, InformativeMessage } from 'mds';
+import React, { Fragment, useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 
-pdfjs.GlobalWorkerOptions.workerSrc = "./scripts/pdf.worker.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = './scripts/pdf.worker.min.mjs';
 
 interface IPreviewPDFProps {
   path: string;
@@ -27,12 +27,7 @@ interface IPreviewPDFProps {
   downloadFile: () => void;
 }
 
-const PreviewPDF = ({
-  path,
-  loading,
-  onLoad,
-  downloadFile,
-}: IPreviewPDFProps) => {
+const PreviewPDF = ({ downloadFile, loading, onLoad, path }: IPreviewPDFProps) => {
   const [errorState, setErrorState] = useState<boolean>(false);
   const [totalPages, setTotalPages] = useState<number>(0);
 
@@ -47,23 +42,19 @@ const PreviewPDF = ({
     <Fragment>
       {errorState && totalPages === 0 && (
         <InformativeMessage
-          variant={"error"}
-          title={"Error"}
+          variant={'error'}
+          title={'Error'}
           message={
             <Fragment>
               File preview couldn't be displayed, Please try Download instead.
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
+                  display: 'flex',
+                  justifyContent: 'center',
                   marginTop: 12,
                 }}
               >
-                <Button
-                  id={"download-preview"}
-                  onClick={downloadFile}
-                  variant={"callAction"}
-                >
+                <Button id={'download-preview'} onClick={downloadFile} variant={'callAction'}>
                   Download File
                 </Button>
               </Box>
@@ -74,25 +65,20 @@ const PreviewPDF = ({
       )}
       {!loading && !errorState && (
         <InformativeMessage
-          variant={"warning"}
-          title={"File Preview"}
+          variant={'warning'}
+          title={'File Preview'}
           message={
             <Fragment>
-              This is a File Preview for the first {arrayCreate.length} pages of
-              the document, if you wish to work with the full document please
-              download instead.
+              This is a File Preview for the first {arrayCreate.length} pages of the document, if you wish to work with
+              the full document please download instead.
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
+                  display: 'flex',
+                  justifyContent: 'center',
                   marginTop: 12,
                 }}
               >
-                <Button
-                  id={"download-preview"}
-                  onClick={downloadFile}
-                  variant={"callAction"}
-                >
+                <Button id={'download-preview'} onClick={downloadFile} variant={'callAction'}>
                   Download File
                 </Button>
               </Box>
@@ -104,10 +90,10 @@ const PreviewPDF = ({
       {!errorState && (
         <Box
           sx={{
-            overflowY: "auto",
-            "& .react-pdf__Page__canvas": {
-              margin: "0 auto",
-              backgroundColor: "transparent",
+            overflowY: 'auto',
+            '& .react-pdf__Page__canvas': {
+              margin: '0 auto',
+              backgroundColor: 'transparent',
             },
           }}
         >

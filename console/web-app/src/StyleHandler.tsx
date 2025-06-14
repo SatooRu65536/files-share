@@ -14,23 +14,22 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import { GlobalStyles, ThemeHandler } from "mds";
-import "react-virtualized/styles.css";
+import 'react-virtualized/styles.css';
+import './index.css';
 
-import { generateOverrideTheme } from "./utils/stylesUtils";
-import "./index.css";
-import { useSelector } from "react-redux";
-import { AppState } from "./store";
+import { GlobalStyles, ThemeHandler } from 'mds';
+import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState } from './store';
+import { generateOverrideTheme } from './utils/stylesUtils';
 
 interface IStyleHandler {
   children: React.ReactNode;
 }
 
 const StyleHandler = ({ children }: IStyleHandler) => {
-  const colorVariants = useSelector(
-    (state: AppState) => state.system.overrideStyles,
-  );
+  const colorVariants = useSelector((state: AppState) => state.system.overrideStyles);
   const darkMode = useSelector((state: AppState) => state.system.darkMode);
 
   let thm = undefined;

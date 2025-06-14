@@ -40,7 +40,7 @@ jobs:
           make verifiers
 
   ui-assets-istanbul-coverage:
-    name: "Assets with Istanbul Plugin for coverage"
+    name: 'Assets with Istanbul Plugin for coverage'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: "yarn"
+          cache: 'yarn'
           cache-dependency-path: web-app/yarn.lock
       - uses: actions/cache@v4
         id: assets-cache-istanbul-coverage
@@ -102,7 +102,7 @@ jobs:
           go mod download
 
   semgrep-static-code-analysis:
-    name: "semgrep checks"
+    name: 'semgrep checks'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -120,7 +120,7 @@ jobs:
           semgrep --config semgrep.yaml $(pwd)/web-app --error
 
   compile-binary-istanbul-coverage:
-    name: "Compile Console Binary with Istanbul Plugin for Coverage"
+    name: 'Compile Console Binary with Istanbul Plugin for Coverage'
     needs:
       - lint-job
       - ui-assets-istanbul-coverage

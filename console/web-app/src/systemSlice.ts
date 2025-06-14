@@ -13,17 +13,18 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { snackBarMessage, SRInfoStateType } from "./types";
-import { ErrorResponseHandler, IEmbeddedCustomStyles } from "./common/types";
-import { AppState } from "./store";
-import { SubnetInfo } from "./screens/Console/License/types";
-import { isDarkModeOn } from "./utils/stylesUtils";
-import { addBucketAsync } from "./screens/Console/Buckets/ListBuckets/AddBucket/addBucketThunks";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { ErrorResponseHandler, IEmbeddedCustomStyles } from './common/types';
+import { addBucketAsync } from './screens/Console/Buckets/ListBuckets/AddBucket/addBucketThunks';
+import { SubnetInfo } from './screens/Console/License/types';
+import { AppState } from './store';
+import { snackBarMessage, SRInfoStateType } from './types';
+import { isDarkModeOn } from './utils/stylesUtils';
 
 // determine whether we have the sidebar state stored on localstorage
-const initSideBarOpen = localStorage.getItem("sidebarOpen")
-  ? JSON.parse(localStorage.getItem("sidebarOpen")!)["open"]
+const initSideBarOpen = localStorage.getItem('sidebarOpen')
+  ? JSON.parse(localStorage.getItem('sidebarOpen')!)['open']
   : true;
 
 interface SystemState {
@@ -57,39 +58,39 @@ const initialState: SystemState = {
   value: 0,
   loggedIn: false,
   showMarketplace: false,
-  userName: "",
+  userName: '',
   sidebarOpen: initSideBarOpen,
-  siteReplicationInfo: { siteName: "", curSite: false, enabled: false },
+  siteReplicationInfo: { siteName: '', curSite: false, enabled: false },
   serverNeedsRestart: false,
   serverIsLoading: false,
   loadingConfigurations: true,
   loadingProgress: 100,
   snackBar: {
-    message: "",
-    detailedErrorMsg: "",
-    type: "message",
+    message: '',
+    detailedErrorMsg: '',
+    type: 'message',
   },
   modalSnackBar: {
-    message: "",
-    detailedErrorMsg: "",
-    type: "message",
+    message: '',
+    detailedErrorMsg: '',
+    type: 'message',
   },
-  serverDiagnosticStatus: "",
+  serverDiagnosticStatus: '',
   distributedSetup: false,
   licenseInfo: null,
   overrideStyles: null,
   anonymousMode: false,
-  helpName: "help",
-  helpTabName: "docs",
-  locationPath: "",
+  helpName: 'help',
+  helpTabName: 'docs',
+  locationPath: '',
   darkMode: isDarkModeOn(),
-  filterBucketList: "",
+  filterBucketList: '',
   loadBucketsListing: true,
   licenseAcknowledged: false,
 };
 
 const systemSlice = createSlice({
-  name: "system",
+  name: 'system',
   initialState,
   reducers: {
     userLogged: (state, action: PayloadAction<boolean>) => {
@@ -100,10 +101,7 @@ const systemSlice = createSlice({
     },
     menuOpen: (state, action: PayloadAction<boolean>) => {
       // persist preference to local storage
-      localStorage.setItem(
-        "sidebarOpen",
-        JSON.stringify({ open: action.payload }),
-      );
+      localStorage.setItem('sidebarOpen', JSON.stringify({ open: action.payload }));
       state.sidebarOpen = action.payload;
     },
     configurationIsLoading: (state, action: PayloadAction<boolean>) => {
@@ -115,35 +113,29 @@ const systemSlice = createSlice({
     setSnackBarMessage: (state, action: PayloadAction<string>) => {
       state.snackBar = {
         message: action.payload,
-        detailedErrorMsg: "",
-        type: "message",
+        detailedErrorMsg: '',
+        type: 'message',
       };
     },
-    setErrorSnackMessage: (
-      state,
-      action: PayloadAction<ErrorResponseHandler>,
-    ) => {
+    setErrorSnackMessage: (state, action: PayloadAction<ErrorResponseHandler>) => {
       state.snackBar = {
         message: action.payload.errorMessage,
         detailedErrorMsg: action.payload.detailedError,
-        type: "error",
+        type: 'error',
       };
     },
     setModalSnackMessage: (state, action: PayloadAction<string>) => {
       state.modalSnackBar = {
         message: action.payload,
-        detailedErrorMsg: "",
-        type: "message",
+        detailedErrorMsg: '',
+        type: 'message',
       };
     },
-    setModalErrorSnackMessage: (
-      state,
-      action: PayloadAction<{ errorMessage: string; detailedError: string }>,
-    ) => {
+    setModalErrorSnackMessage: (state, action: PayloadAction<{ errorMessage: string; detailedError: string }>) => {
       state.modalSnackBar = {
         message: action.payload.errorMessage,
         detailedErrorMsg: action.payload.detailedError,
-        type: "error",
+        type: 'error',
       };
     },
     setServerDiagStat: (state, action: PayloadAction<string>) => {
@@ -165,10 +157,7 @@ const systemSlice = createSlice({
       state.helpTabName = action.payload;
     },
 
-    setOverrideStyles: (
-      state,
-      action: PayloadAction<IEmbeddedCustomStyles>,
-    ) => {
+    setOverrideStyles: (state, action: PayloadAction<IEmbeddedCustomStyles>) => {
       state.overrideStyles = action.payload;
     },
     setAnonymousMode: (state) => {
@@ -203,23 +192,23 @@ const systemSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-  userLogged,
-  menuOpen,
-  setSnackBarMessage,
-  setErrorSnackMessage,
-  setModalErrorSnackMessage,
-  setModalSnackMessage,
   globalSetDistributedSetup,
-  setOverrideStyles,
-  setAnonymousMode,
+  menuOpen,
   resetSystem,
+  setAcknowledgeLicense,
+  setAnonymousMode,
+  setBucketLoadListing,
+  setDarkMode,
+  setErrorSnackMessage,
+  setFilterBucket,
   setHelpName,
   setHelpTabName,
   setLocationPath,
-  setDarkMode,
-  setFilterBucket,
-  setBucketLoadListing,
-  setAcknowledgeLicense,
+  setModalErrorSnackMessage,
+  setModalSnackMessage,
+  setOverrideStyles,
+  setSnackBarMessage,
+  userLogged,
 } = systemSlice.actions;
 
 export const selDistSet = (state: AppState) => state.system.distributedSetup;

@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import ModalWrapper from "../../../../Common/ModalWrapper/ModalWrapper";
-import PreviewFileContent from "./PreviewFileContent";
-import { ObjectPreviewIcon } from "mds";
-import { BucketObject } from "../../../../../../api/consoleApi";
+import { ObjectPreviewIcon } from 'mds';
+import React, { Fragment } from 'react';
+
+import { BucketObject } from '../../../../../../api/consoleApi';
+import ModalWrapper from '../../../../Common/ModalWrapper/ModalWrapper';
+import PreviewFileContent from './PreviewFileContent';
 
 interface IPreviewFileProps {
   open: boolean;
@@ -27,12 +28,7 @@ interface IPreviewFileProps {
   onClosePreview: () => void;
 }
 
-const PreviewFileModal = ({
-  open,
-  bucketName,
-  actualInfo,
-  onClosePreview,
-}: IPreviewFileProps) => {
+const PreviewFileModal = ({ actualInfo, bucketName, onClosePreview, open }: IPreviewFileProps) => {
   return (
     <Fragment>
       <ModalWrapper

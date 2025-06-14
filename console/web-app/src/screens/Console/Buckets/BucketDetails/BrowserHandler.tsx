@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
-import { api } from "api";
-import { AppState, useAppDispatch } from "../../../../store";
-import { IAM_SCOPES } from "../../../../common/SecureComponent/permissions";
+import { api } from 'api';
+import React, { Fragment, useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, useParams } from 'react-router-dom';
+
+import hasPermission from '../../../../common/SecureComponent/accessControl';
+import { IAM_SCOPES } from '../../../../common/SecureComponent/permissions';
+import { AppState, useAppDispatch } from '../../../../store';
+import OBHeader from '../../ObjectBrowser/OBHeader';
 import {
   resetMessages,
   setIsVersioned,
@@ -31,56 +34,33 @@ import {
   setRequestInProgress,
   setSelectedObjectView,
   setVersionsModeEnabled,
-} from "../../ObjectBrowser/objectBrowserSlice";
-import ListObjects from "../ListBuckets/Objects/ListObjects/ListObjects";
-import hasPermission from "../../../../common/SecureComponent/accessControl";
-import OBHeader from "../../ObjectBrowser/OBHeader";
+} from '../../ObjectBrowser/objectBrowserSlice';
+import ListObjects from '../ListBuckets/Objects/ListObjects/ListObjects';
 
 const BrowserHandler = () => {
   const dispatch = useAppDispatch();
   const params = useParams();
   const location = useLocation();
 
-  const loadingVersioning = useSelector(
-    (state: AppState) => state.objectBrowser.loadingVersioning,
-  );
+  const loadingVersioning = useSelector((state: AppState) => state.objectBrowser.loadingVersioning);
 
-  const rewindEnabled = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.rewindEnabled,
-  );
-  const rewindDate = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.dateToRewind,
-  );
-  const showDeleted = useSelector(
-    (state: AppState) => state.objectBrowser.showDeleted,
-  );
-  const requestInProgress = useSelector(
-    (state: AppState) => state.objectBrowser.requestInProgress,
-  );
-  const reloadObjectsList = useSelector(
-    (state: AppState) => state.objectBrowser.reloadObjectsList,
-  );
-  const simplePath = useSelector(
-    (state: AppState) => state.objectBrowser.simplePath,
-  );
-  const anonymousMode = useSelector(
-    (state: AppState) => state.system.anonymousMode,
-  );
-  const selectedBucket = useSelector(
-    (state: AppState) => state.objectBrowser.selectedBucket,
-  );
+  const rewindEnabled = useSelector((state: AppState) => state.objectBrowser.rewind.rewindEnabled);
+  const rewindDate = useSelector((state: AppState) => state.objectBrowser.rewind.dateToRewind);
+  const showDeleted = useSelector((state: AppState) => state.objectBrowser.showDeleted);
+  const requestInProgress = useSelector((state: AppState) => state.objectBrowser.requestInProgress);
+  const reloadObjectsList = useSelector((state: AppState) => state.objectBrowser.reloadObjectsList);
+  const simplePath = useSelector((state: AppState) => state.objectBrowser.simplePath);
+  const anonymousMode = useSelector((state: AppState) => state.system.anonymousMode);
+  const selectedBucket = useSelector((state: AppState) => state.objectBrowser.selectedBucket);
   const records = useSelector((state: AppState) => state.objectBrowser.records);
 
-  const bucketName = params.bucketName || "";
-  const pathSegment = location.pathname.split(
-    `/browser/${encodeURIComponent(bucketName)}/`,
-  );
-  const internalPaths =
-    pathSegment.length === 2 ? decodeURIComponent(pathSegment[1]) : "";
+  const bucketName = params.bucketName || '';
+  const pathSegment = location.pathname.split(`/browser/${encodeURIComponent(bucketName)}/`);
+  const internalPaths = pathSegment.length === 2 ? decodeURIComponent(pathSegment[1]) : '';
 
   const initWSRequest = useCallback(
     (path: string) => {
-      let currDate = new Date();
+      const currDate = new Date();
 
       let date = currDate.toISOString();
 
@@ -95,7 +75,7 @@ const BrowserHandler = () => {
         date: date,
       };
 
-      dispatch({ type: "socket/OBRequest", payload: payloadData });
+      dispatch({ type: 'socket/OBRequest', payload: payloadData });
     },
     [bucketName, showDeleted, rewindDate, rewindEnabled, dispatch],
   );
@@ -108,37 +88,26 @@ const BrowserHandler = () => {
 
       let searchPath = internalPaths;
 
-      if (!internalPaths.endsWith("/") && internalPaths !== "") {
-        searchPath = `${internalPaths.split("/").slice(0, -1).join("/")}/`;
+      if (!internalPaths.endsWith('/') && internalPaths !== '') {
+        searchPath = `${internalPaths.split('/').slice(0, -1).join('/')}/`;
       }
 
-      if (searchPath === "/") {
-        searchPath = "";
+      if (searchPath === '/') {
+        searchPath = '';
       }
 
       // If the path is different of the actual path or reload objects list is requested, then we initialize a new request to load a new record set.
-      if (
-        searchPath !== simplePath ||
-        bucketName !== selectedBucket ||
-        forceLoad
-      ) {
+      if (searchPath !== simplePath || bucketName !== selectedBucket || forceLoad) {
         dispatch(setRequestInProgress(true));
         initWSRequest(searchPath);
       }
     },
-    [
-      internalPaths,
-      dispatch,
-      simplePath,
-      selectedBucket,
-      bucketName,
-      initWSRequest,
-    ],
+    [internalPaths, dispatch, simplePath, selectedBucket, bucketName, initWSRequest],
   );
 
   useEffect(() => {
     return () => {
-      dispatch({ type: "socket/OBCancelLast" });
+      dispatch({ type: 'socket/OBCancelLast' });
     };
   }, [dispatch]);
 
@@ -146,7 +115,7 @@ const BrowserHandler = () => {
   useEffect(() => {
     dispatch(setLoadingVersioning(true));
 
-    if (internalPaths.endsWith("/") || internalPaths === "") {
+    if (internalPaths.endsWith('/') || internalPaths === '') {
       dispatch(setObjectDetailsView(false));
       dispatch(setSelectedObjectView(null));
       dispatch(setLoadingLocking(true));
@@ -154,7 +123,7 @@ const BrowserHandler = () => {
       dispatch(setLoadingObjectInfo(true));
       dispatch(setObjectDetailsView(true));
       dispatch(setLoadingVersions(true));
-      dispatch(setSelectedObjectView(internalPaths || ""));
+      dispatch(setSelectedObjectView(internalPaths || ''));
     }
   }, [bucketName, internalPaths, rewindDate, rewindEnabled, dispatch]);
 
@@ -171,10 +140,7 @@ const BrowserHandler = () => {
   }, [reloadObjectsList, records, requestInProgress, pathLoad]);
 
   const displayListObjects =
-    hasPermission(bucketName, [
-      IAM_SCOPES.S3_LIST_BUCKET,
-      IAM_SCOPES.S3_ALL_LIST_BUCKET,
-    ]) || anonymousMode;
+    hasPermission(bucketName, [IAM_SCOPES.S3_LIST_BUCKET, IAM_SCOPES.S3_ALL_LIST_BUCKET]) || anonymousMode;
 
   useEffect(() => {
     if (loadingVersioning && !anonymousMode) {
@@ -186,10 +152,7 @@ const BrowserHandler = () => {
             dispatch(setLoadingVersioning(false));
           })
           .catch((err) => {
-            console.error(
-              "Error Getting Object Versioning Status: ",
-              err.error.detailedMessage,
-            );
+            console.error('Error Getting Object Versioning Status: ', err.error.detailedMessage);
             dispatch(setLoadingVersioning(false));
           });
       } else {
@@ -197,13 +160,7 @@ const BrowserHandler = () => {
         dispatch(resetMessages());
       }
     }
-  }, [
-    bucketName,
-    loadingVersioning,
-    dispatch,
-    displayListObjects,
-    anonymousMode,
-  ]);
+  }, [bucketName, loadingVersioning, dispatch, displayListObjects, anonymousMode]);
 
   return (
     <Fragment>

@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
-import get from "lodash/get";
-import { useSelector } from "react-redux";
+import { api } from 'api';
+import { BucketObject, BucketVersioningResponse } from 'api/consoleApi';
+import get from 'lodash/get';
 import {
   ActionsList,
   Box,
@@ -32,48 +32,39 @@ import {
   SimpleHeader,
   TagsIcon,
   VersionsIcon,
-} from "mds";
-import { api } from "api";
-import { downloadObject } from "../../../../ObjectBrowser/utils";
-import { BucketObject, BucketVersioningResponse } from "api/consoleApi";
-import { AllowedPreviews, previewObjectType } from "../utils";
-import {
-  niceBytes,
-  niceBytesInt,
-  niceDaysInt,
-} from "../../../../../../common/utils";
-import {
-  IAM_SCOPES,
-  permissionTooltipHelper,
-} from "../../../../../../common/SecureComponent/permissions";
-import { AppState, useAppDispatch } from "../../../../../../store";
-import {
-  hasPermission,
-  SecureComponent,
-} from "../../../../../../common/SecureComponent";
-import { selDistSet } from "../../../../../../systemSlice";
+} from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { hasPermission, SecureComponent } from '../../../../../../common/SecureComponent';
+import { IAM_SCOPES, permissionTooltipHelper } from '../../../../../../common/SecureComponent/permissions';
+import { niceBytes, niceBytesInt, niceDaysInt } from '../../../../../../common/utils';
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { selDistSet } from '../../../../../../systemSlice';
+import TooltipWrapper from '../../../../Common/TooltipWrapper/TooltipWrapper';
 import {
   setLoadingObjectInfo,
   setLoadingVersions,
   setSelectedVersion,
   setVersionsModeEnabled,
-} from "../../../../ObjectBrowser/objectBrowserSlice";
-import { displayFileIconName } from "./utils";
-import PreviewFileModal from "../Preview/PreviewFileModal";
-import ObjectMetaData from "../ObjectDetails/ObjectMetaData";
-import ShareFile from "../ObjectDetails/ShareFile";
-import DeleteObject from "../ListObjects/DeleteObject";
-import TagsModal from "../ObjectDetails/TagsModal";
-import RenameLongFileName from "../../../../ObjectBrowser/RenameLongFilename";
-import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
+} from '../../../../ObjectBrowser/objectBrowserSlice';
+import RenameLongFileName from '../../../../ObjectBrowser/RenameLongFilename';
+import { downloadObject } from '../../../../ObjectBrowser/utils';
+import DeleteObject from '../ListObjects/DeleteObject';
+import ObjectMetaData from '../ObjectDetails/ObjectMetaData';
+import ShareFile from '../ObjectDetails/ShareFile';
+import TagsModal from '../ObjectDetails/TagsModal';
+import PreviewFileModal from '../Preview/PreviewFileModal';
+import { AllowedPreviews, previewObjectType } from '../utils';
+import { displayFileIconName } from './utils';
 
 const emptyFile: BucketObject = {
   is_latest: true,
-  last_modified: "",
-  legal_hold_status: "",
-  name: "",
-  retention_mode: "",
-  retention_until_date: "",
+  last_modified: '',
+  legal_hold_status: '',
+  name: '',
+  retention_mode: '',
+  retention_until_date: '',
   size: 0,
   tags: {},
   version_id: undefined,
@@ -86,24 +77,13 @@ interface IObjectDetailPanelProps {
   onClosePanel: (hardRefresh: boolean) => void;
 }
 
-const ObjectDetailPanel = ({
-  internalPaths,
-  bucketName,
-  versioningInfo,
-  onClosePanel,
-}: IObjectDetailPanelProps) => {
+const ObjectDetailPanel = ({ bucketName, internalPaths, onClosePanel, versioningInfo }: IObjectDetailPanelProps) => {
   const dispatch = useAppDispatch();
 
   const distributedSetup = useSelector(selDistSet);
-  const versionsMode = useSelector(
-    (state: AppState) => state.objectBrowser.versionsMode,
-  );
-  const selectedVersion = useSelector(
-    (state: AppState) => state.objectBrowser.selectedVersion,
-  );
-  const loadingObjectInfo = useSelector(
-    (state: AppState) => state.objectBrowser.loadingObjectInfo,
-  );
+  const versionsMode = useSelector((state: AppState) => state.objectBrowser.versionsMode);
+  const selectedVersion = useSelector((state: AppState) => state.objectBrowser.selectedVersion);
+  const loadingObjectInfo = useSelector((state: AppState) => state.objectBrowser.loadingObjectInfo);
 
   const [shareFileModalOpen, setShareFileModalOpen] = useState<boolean>(false);
   const [tagModalOpen, setTagModalOpen] = useState<boolean>(false);
@@ -118,26 +98,22 @@ const ObjectDetailPanel = ({
   const [metaData, setMetaData] = useState<any | null>(null);
   const [loadMetadata, setLoadingMetadata] = useState<boolean>(false);
 
-  const internalPathsDecoded = internalPaths || "";
-  const allPathData = internalPathsDecoded.split("/");
-  const currentItem = allPathData.pop() || "";
+  const internalPathsDecoded = internalPaths || '';
+  const allPathData = internalPathsDecoded.split('/');
+  const currentItem = allPathData.pop() || '';
 
   // calculate object name to display
   let objectNameArray: string[] = [];
   if (actualInfo && actualInfo.name) {
-    objectNameArray = actualInfo.name.split("/");
+    objectNameArray = actualInfo.name.split('/');
   }
 
   useEffect(() => {
     if (distributedSetup && allInfoElements && allInfoElements.length >= 1) {
-      let infoElement =
-        allInfoElements.find((el: BucketObject) => el.is_latest) || emptyFile;
+      let infoElement = allInfoElements.find((el: BucketObject) => el.is_latest) || emptyFile;
 
-      if (selectedVersion !== "") {
-        infoElement =
-          allInfoElements.find(
-            (el: BucketObject) => el.version_id === selectedVersion,
-          ) || emptyFile;
+      if (selectedVersion !== '') {
+        infoElement = allInfoElements.find((el: BucketObject) => el.version_id === selectedVersion) || emptyFile;
       }
 
       if (!infoElement.is_delete_marker) {
@@ -149,7 +125,7 @@ const ObjectDetailPanel = ({
   }, [selectedVersion, distributedSetup, allInfoElements]);
 
   useEffect(() => {
-    if (loadingObjectInfo && internalPaths !== "") {
+    if (loadingObjectInfo && internalPaths !== '') {
       api.buckets
         .listObjects(bucketName, {
           prefix: internalPaths,
@@ -161,15 +137,12 @@ const ObjectDetailPanel = ({
             setAllInfoElements(result);
             setVersions(result);
 
-            const tVersionSize = result.reduce(
-              (acc: number, currValue: BucketObject): number => {
-                if (currValue?.size) {
-                  return acc + currValue.size;
-                }
-                return acc;
-              },
-              0,
-            );
+            const tVersionSize = result.reduce((acc: number, currValue: BucketObject): number => {
+              if (currValue?.size) {
+                return acc + currValue.size;
+              }
+              return acc;
+            }, 0);
 
             setTotalVersionsSize(tVersionSize);
           } else {
@@ -186,34 +159,27 @@ const ObjectDetailPanel = ({
           dispatch(setLoadingObjectInfo(false));
         })
         .catch((err) => {
-          console.error("Error loading object details", err.error);
+          console.error('Error loading object details', err.error);
           dispatch(setLoadingObjectInfo(false));
         });
     }
-  }, [
-    loadingObjectInfo,
-    bucketName,
-    internalPaths,
-    dispatch,
-    distributedSetup,
-    selectedVersion,
-  ]);
+  }, [loadingObjectInfo, bucketName, internalPaths, dispatch, distributedSetup, selectedVersion]);
 
   useEffect(() => {
-    if (loadMetadata && internalPaths !== "") {
+    if (loadMetadata && internalPaths !== '') {
       api.buckets
         .getObjectMetadata(bucketName, {
           prefix: internalPaths,
-          versionID: actualInfo?.version_id || "",
+          versionID: actualInfo?.version_id || '',
         })
         .then((res) => {
-          let metadata = get(res.data, "objectMetadata", {});
+          const metadata = get(res.data, 'objectMetadata', {});
 
           setMetaData(metadata);
           setLoadingMetadata(false);
         })
         .catch((err) => {
-          console.error("Error Getting Metadata Status: ", err.detailedError);
+          console.error('Error Getting Metadata Status: ', err.detailedError);
           setLoadingMetadata(false);
         });
     }
@@ -241,11 +207,11 @@ const ObjectDetailPanel = ({
   const closeDeleteModal = (closeAndReload: boolean) => {
     setDeleteOpen(false);
 
-    if (closeAndReload && selectedVersion === "") {
+    if (closeAndReload && selectedVersion === '') {
       onClosePanel(true);
     } else {
       dispatch(setLoadingVersions(true));
-      dispatch(setSelectedVersion(""));
+      dispatch(setSelectedVersion(''));
       dispatch(setLoadingObjectInfo(true));
     }
   };
@@ -258,7 +224,7 @@ const ObjectDetailPanel = ({
   };
 
   const loaderForContainer = (
-    <div style={{ textAlign: "center", marginTop: 35 }}>
+    <div style={{ textAlign: 'center', marginTop: 35 }}>
       <Loader />
     </div>
   );
@@ -271,20 +237,10 @@ const ObjectDetailPanel = ({
     return null;
   }
 
-  const objectName =
-    objectNameArray.length > 0
-      ? objectNameArray[objectNameArray.length - 1]
-      : actualInfo.name;
+  const objectName = objectNameArray.length > 0 ? objectNameArray[objectNameArray.length - 1] : actualInfo.name;
 
-  const objectResources = [
-    bucketName,
-    currentItem,
-    [bucketName, actualInfo.name].join("/"),
-  ];
-  const canSetTags = hasPermission(objectResources, [
-    IAM_SCOPES.S3_PUT_OBJECT_TAGGING,
-    IAM_SCOPES.S3_PUT_ACTIONS,
-  ]);
+  const objectResources = [bucketName, currentItem, [bucketName, actualInfo.name].join('/')];
+  const canSetTags = hasPermission(objectResources, [IAM_SCOPES.S3_PUT_OBJECT_TAGGING, IAM_SCOPES.S3_PUT_ACTIONS]);
   const canChangeVersioning = hasPermission(objectResources, [
     IAM_SCOPES.S3_GET_BUCKET_VERSIONING,
     IAM_SCOPES.S3_PUT_BUCKET_VERSIONING,
@@ -292,72 +248,57 @@ const ObjectDetailPanel = ({
     IAM_SCOPES.S3_GET_ACTIONS,
     IAM_SCOPES.S3_PUT_ACTIONS,
   ]);
-  const canGetObject = hasPermission(objectResources, [
-    IAM_SCOPES.S3_GET_OBJECT,
-    IAM_SCOPES.S3_GET_ACTIONS,
-  ]);
+  const canGetObject = hasPermission(objectResources, [IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS]);
   const canDelete = hasPermission(
-    [bucketName, currentItem, [bucketName, actualInfo.name].join("/")],
+    [bucketName, currentItem, [bucketName, actualInfo.name].join('/')],
     [IAM_SCOPES.S3_DELETE_OBJECT, IAM_SCOPES.S3_DELETE_ACTIONS],
   );
 
-  let objectType: AllowedPreviews = previewObjectType(metaData, currentItem);
+  const objectType: AllowedPreviews = previewObjectType(metaData, currentItem);
 
   const multiActionButtons = [
     {
       action: () => {
         downloadObject(dispatch, bucketName, internalPaths, actualInfo);
       },
-      label: "Download",
+      label: 'Download',
       disabled: !!actualInfo.is_delete_marker || !canGetObject,
       icon: <DownloadIcon />,
       tooltip: canGetObject
-        ? "Download this Object"
-        : permissionTooltipHelper(
-            [IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS],
-            "download this object",
-          ),
+        ? 'Download this Object'
+        : permissionTooltipHelper([IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS], 'download this object'),
     },
     {
       action: () => {
         shareObject();
       },
-      label: "Share",
+      label: 'Share',
       disabled: !!actualInfo.is_delete_marker || !canGetObject,
       icon: <ShareIcon />,
       tooltip: canGetObject
-        ? "Share this File"
-        : permissionTooltipHelper(
-            [IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS],
-            "share this object",
-          ),
+        ? 'Share this File'
+        : permissionTooltipHelper([IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS], 'share this object'),
     },
     {
       action: () => {
         setPreviewOpen(true);
       },
-      label: "Preview",
-      disabled:
-        !!actualInfo.is_delete_marker ||
-        (objectType === "none" && !canGetObject),
+      label: 'Preview',
+      disabled: !!actualInfo.is_delete_marker || (objectType === 'none' && !canGetObject),
       icon: <PreviewIcon />,
       tooltip: canGetObject
-        ? "Preview this File"
-        : permissionTooltipHelper(
-            [IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS],
-            "preview this object",
-          ),
+        ? 'Preview this File'
+        : permissionTooltipHelper([IAM_SCOPES.S3_GET_OBJECT, IAM_SCOPES.S3_GET_ACTIONS], 'preview this object'),
     },
     {
       action: () => {
         setTagModalOpen(true);
       },
-      label: "Tags",
-      disabled:
-        !!actualInfo.is_delete_marker || selectedVersion !== "" || !canSetTags,
+      label: 'Tags',
+      disabled: !!actualInfo.is_delete_marker || selectedVersion !== '' || !canSetTags,
       icon: <TagsIcon />,
       tooltip: canSetTags
-        ? "Change Tags for this File"
+        ? 'Change Tags for this File'
         : permissionTooltipHelper(
             [
               IAM_SCOPES.S3_PUT_OBJECT_TAGGING,
@@ -365,7 +306,7 @@ const ObjectDetailPanel = ({
               IAM_SCOPES.S3_GET_ACTIONS,
               IAM_SCOPES.S3_PUT_ACTIONS,
             ],
-            "set Tags on this object",
+            'set Tags on this object',
           ),
     },
     {
@@ -377,16 +318,14 @@ const ObjectDetailPanel = ({
           }),
         );
       },
-      label: versionsMode ? "Hide Object Versions" : "Display Object Versions",
+      label: versionsMode ? 'Hide Object Versions' : 'Display Object Versions',
       icon: <VersionsIcon />,
       disabled:
-        !distributedSetup ||
-        !(actualInfo.version_id && actualInfo.version_id !== "null") ||
-        !canChangeVersioning,
+        !distributedSetup || !(actualInfo.version_id && actualInfo.version_id !== 'null') || !canChangeVersioning,
       tooltip: canChangeVersioning
-        ? actualInfo.version_id && actualInfo.version_id !== "null"
-          ? "Display Versions for this file"
-          : ""
+        ? actualInfo.version_id && actualInfo.version_id !== 'null'
+          ? 'Display Versions for this file'
+          : ''
         : permissionTooltipHelper(
             [
               IAM_SCOPES.S3_GET_BUCKET_VERSIONING,
@@ -395,7 +334,7 @@ const ObjectDetailPanel = ({
               IAM_SCOPES.S3_GET_ACTIONS,
               IAM_SCOPES.S3_PUT_ACTIONS,
             ],
-            "display all versions of this object",
+            'display all versions of this object',
           ),
     },
   ];
@@ -406,9 +345,9 @@ const ObjectDetailPanel = ({
 
     const difTime = currentTime.getTime() - modifiedTime.getTime();
 
-    const formatTime = niceDaysInt(difTime, "ms");
+    const formatTime = niceDaysInt(difTime, 'ms');
 
-    return formatTime.trim() !== "" ? `${formatTime} ago` : "Just now";
+    return formatTime.trim() !== '' ? `${formatTime} ago` : 'Just now';
   };
 
   return (
@@ -465,28 +404,28 @@ const ObjectDetailPanel = ({
       ) : (
         <Box
           sx={{
-            "& .ObjectDetailsTitle": {
-              display: "flex",
-              alignItems: "center",
-              "& .min-icon": {
+            '& .ObjectDetailsTitle': {
+              display: 'flex',
+              alignItems: 'center',
+              '& .min-icon': {
                 width: 26,
                 height: 26,
                 minWidth: 26,
                 minHeight: 26,
               },
             },
-            "& .objectNameContainer": {
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              alignItems: "center",
+            '& .objectNameContainer': {
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              alignItems: 'center',
               marginLeft: 10,
             },
-            "& .capitalizeFirst": {
-              textTransform: "capitalize",
+            '& .capitalizeFirst': {
+              textTransform: 'capitalize',
             },
-            "& .detailContainer": {
-              padding: "0 22px",
+            '& .detailContainer': {
+              padding: '0 22px',
               marginBottom: 10,
               fontSize: 14,
             },
@@ -494,9 +433,9 @@ const ObjectDetailPanel = ({
         >
           <ActionsList
             title={
-              <div className={"ObjectDetailsTitle"}>
-                {displayFileIconName(objectName || "", true)}
-                <span className={"objectNameContainer"}>{objectName}</span>
+              <div className={'ObjectDetailsTitle'}>
+                {displayFileIconName(objectName || '', true)}
+                <span className={'objectNameContainer'}>{objectName}</span>
               </div>
             }
             items={multiActionButtons}
@@ -504,144 +443,114 @@ const ObjectDetailPanel = ({
           <TooltipWrapper
             tooltip={
               canDelete
-                ? ""
+                ? ''
                 : permissionTooltipHelper(
                     [IAM_SCOPES.S3_DELETE_OBJECT, IAM_SCOPES.S3_DELETE_ACTIONS],
-                    "delete this object",
+                    'delete this object',
                   )
             }
           >
-            <Grid
-              item
-              xs={12}
-              sx={{ justifyContent: "center", display: "flex" }}
-            >
+            <Grid item xs={12} sx={{ justifyContent: 'center', display: 'flex' }}>
               <SecureComponent
-                resource={[
-                  bucketName,
-                  currentItem,
-                  [bucketName, actualInfo.name].join("/"),
-                ]}
-                scopes={[
-                  IAM_SCOPES.S3_DELETE_OBJECT,
-                  IAM_SCOPES.S3_DELETE_ACTIONS,
-                ]}
+                resource={[bucketName, currentItem, [bucketName, actualInfo.name].join('/')]}
+                scopes={[IAM_SCOPES.S3_DELETE_OBJECT, IAM_SCOPES.S3_DELETE_ACTIONS]}
                 errorProps={{ disabled: true }}
               >
                 <Button
-                  id={"delete-element-click"}
+                  id={'delete-element-click'}
                   icon={<DeleteIcon />}
-                  iconLocation={"start"}
+                  iconLocation={'start'}
                   fullWidth
-                  variant={"secondary"}
+                  variant={'secondary'}
                   onClick={() => {
                     setDeleteOpen(true);
                   }}
-                  disabled={
-                    selectedVersion === "" && actualInfo.is_delete_marker
-                  }
+                  disabled={selectedVersion === '' && actualInfo.is_delete_marker}
                   sx={{
-                    width: "calc(100% - 44px)",
-                    margin: "8px 0",
+                    width: 'calc(100% - 44px)',
+                    margin: '8px 0',
                   }}
-                  label={`Delete${selectedVersion !== "" ? " version" : ""}`}
+                  label={`Delete${selectedVersion !== '' ? ' version' : ''}`}
                 />
               </SecureComponent>
             </Grid>
           </TooltipWrapper>
-          <SimpleHeader icon={<ObjectInfoIcon />} label={"Object Info"} />
-          <Box className={"detailContainer"}>
+          <SimpleHeader icon={<ObjectInfoIcon />} label={'Object Info'} />
+          <Box className={'detailContainer'}>
             <strong>Name:</strong>
             <br />
-            <div style={{ overflowWrap: "break-word" }}>{objectName}</div>
+            <div style={{ overflowWrap: 'break-word' }}>{objectName}</div>
           </Box>
-          {selectedVersion !== "" && (
-            <Box className={"detailContainer"}>
+          {selectedVersion !== '' && (
+            <Box className={'detailContainer'}>
               <strong>Version ID:</strong>
               <br />
               {selectedVersion}
             </Box>
           )}
-          <Box className={"detailContainer"}>
+          <Box className={'detailContainer'}>
             <strong>Size:</strong>
             <br />
-            {niceBytes(`${actualInfo.size || "0"}`)}
+            {niceBytes(`${actualInfo.size || '0'}`)}
           </Box>
-          {actualInfo.version_id &&
-            actualInfo.version_id !== "null" &&
-            selectedVersion === "" && (
-              <Box className={"detailContainer"}>
-                <strong>Versions:</strong>
-                <br />
-                {versions.length} version{versions.length !== 1 ? "s" : ""},{" "}
-                {niceBytesInt(totalVersionsSize)}
-              </Box>
-            )}
-          {selectedVersion === "" && (
-            <Box className={"detailContainer"}>
-              <strong>Last Modified:</strong>
+          {actualInfo.version_id && actualInfo.version_id !== 'null' && selectedVersion === '' && (
+            <Box className={'detailContainer'}>
+              <strong>Versions:</strong>
               <br />
-              {calculateLastModifyTime(actualInfo.last_modified || "")}
+              {versions.length} version{versions.length !== 1 ? 's' : ''}, {niceBytesInt(totalVersionsSize)}
             </Box>
           )}
-          <Box className={"detailContainer"}>
+          {selectedVersion === '' && (
+            <Box className={'detailContainer'}>
+              <strong>Last Modified:</strong>
+              <br />
+              {calculateLastModifyTime(actualInfo.last_modified || '')}
+            </Box>
+          )}
+          <Box className={'detailContainer'}>
             <strong>ETAG:</strong>
             <br />
-            {actualInfo.etag || "N/A"}
+            {actualInfo.etag || 'N/A'}
           </Box>
-          <Box className={"detailContainer"}>
+          <Box className={'detailContainer'}>
             <strong>Tags:</strong>
             <br />
             {tagKeys.length === 0
-              ? "N/A"
+              ? 'N/A'
               : tagKeys.map((tagKey, index) => {
                   return (
                     <span key={`key-vs-${index.toString()}`}>
-                      {tagKey}:{get(actualInfo, `tags.${tagKey}`, "")}
-                      {index < tagKeys.length - 1 ? ", " : ""}
+                      {tagKey}:{get(actualInfo, `tags.${tagKey}`, '')}
+                      {index < tagKeys.length - 1 ? ', ' : ''}
                     </span>
                   );
                 })}
           </Box>
-          <Box className={"detailContainer"}>
+          <Box className={'detailContainer'}>
             <SecureComponent
-              scopes={[
-                IAM_SCOPES.S3_GET_OBJECT_LEGAL_HOLD,
-                IAM_SCOPES.S3_GET_ACTIONS,
-              ]}
+              scopes={[IAM_SCOPES.S3_GET_OBJECT_LEGAL_HOLD, IAM_SCOPES.S3_GET_ACTIONS]}
               resource={bucketName}
             >
               <Fragment>
                 <strong>Legal Hold:</strong>
                 <br />
-                {actualInfo.legal_hold_status ? "On" : "Off"}
+                {actualInfo.legal_hold_status ? 'On' : 'Off'}
               </Fragment>
             </SecureComponent>
           </Box>
-          <Box className={"detailContainer"}>
+          <Box className={'detailContainer'}>
             <SecureComponent
-              scopes={[
-                IAM_SCOPES.S3_GET_OBJECT_RETENTION,
-                IAM_SCOPES.S3_GET_ACTIONS,
-              ]}
+              scopes={[IAM_SCOPES.S3_GET_OBJECT_RETENTION, IAM_SCOPES.S3_GET_ACTIONS]}
               resource={bucketName}
             >
               <Fragment>
                 <strong>Retention Policy:</strong>
                 <br />
-                <span className={"capitalizeFirst"}>
-                  {actualInfo.version_id && actualInfo.version_id !== "null" ? (
-                    <Fragment>
-                      {actualInfo.retention_mode
-                        ? actualInfo.retention_mode.toLowerCase()
-                        : "None"}
-                    </Fragment>
+                <span className={'capitalizeFirst'}>
+                  {actualInfo.version_id && actualInfo.version_id !== 'null' ? (
+                    <Fragment>{actualInfo.retention_mode ? actualInfo.retention_mode.toLowerCase() : 'None'}</Fragment>
                   ) : (
-                    <Fragment>
-                      {actualInfo.retention_mode
-                        ? actualInfo.retention_mode.toLowerCase()
-                        : "None"}
-                    </Fragment>
+                    <Fragment>{actualInfo.retention_mode ? actualInfo.retention_mode.toLowerCase() : 'None'}</Fragment>
                   )}
                 </span>
               </Fragment>
@@ -649,11 +558,9 @@ const ObjectDetailPanel = ({
           </Box>
           {!actualInfo.is_delete_marker && (
             <Fragment>
-              <SimpleHeader label={"Metadata"} icon={<MetadataIcon />} />
-              <Box className={"detailContainer"}>
-                {actualInfo && metaData ? (
-                  <ObjectMetaData metaData={metaData} />
-                ) : null}
+              <SimpleHeader label={'Metadata'} icon={<MetadataIcon />} />
+              <Box className={'detailContainer'}>
+                {actualInfo && metaData ? <ObjectMetaData metaData={metaData} /> : null}
               </Box>
             </Fragment>
           )}

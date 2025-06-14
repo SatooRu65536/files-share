@@ -17,7 +17,7 @@
 export interface snackBarMessage {
   message: string;
   detailedErrorMsg: string;
-  type: "message" | "error";
+  type: 'message' | 'error';
 }
 
 export interface SRInfoStateType {

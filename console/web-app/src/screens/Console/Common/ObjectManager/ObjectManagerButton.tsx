@@ -14,34 +14,35 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
-import styled from "styled-components";
-import get from "lodash/get";
-import { Button, CircleIcon, ObjectManagerIcon } from "mds";
-import { useSelector } from "react-redux";
-import { toggleList } from "../../ObjectBrowser/objectBrowserSlice";
-import { AppState, useAppDispatch } from "../../../../store";
+import get from 'lodash/get';
+import { Button, CircleIcon, ObjectManagerIcon } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+
+import { AppState, useAppDispatch } from '../../../../store';
+import { toggleList } from '../../ObjectBrowser/objectBrowserSlice';
 
 const IndicatorContainer = styled.div(({ theme }) => ({
-  position: "absolute",
-  display: "block",
+  position: 'absolute',
+  display: 'block',
   width: 15,
   height: 15,
   top: 0,
   right: 4,
   marginTop: 4,
-  transitionDuration: "0.2s",
-  color: get(theme, "signalColors.good", "#32C787"),
-  "& svg": {
+  transitionDuration: '0.2s',
+  color: get(theme, 'signalColors.good', '#32C787'),
+  '& svg': {
     width: 10,
     height: 10,
-    top: "50%",
-    left: "50%",
-    transitionDuration: "0.2s",
+    top: '50%',
+    left: '50%',
+    transitionDuration: '0.2s',
   },
-  "&.newItem": {
-    color: get(theme, "signalColors.info", "#2781B0"),
-    "& svg": {
+  '&.newItem': {
+    color: get(theme, 'signalColors.info', '#2781B0'),
+    '& svg': {
       width: 15,
       height: 15,
     },
@@ -50,15 +51,9 @@ const IndicatorContainer = styled.div(({ theme }) => ({
 
 const ObjectManagerButton = () => {
   const dispatch = useAppDispatch();
-  const managerObjects = useSelector(
-    (state: AppState) => state.objectBrowser.objectManager.objectsToManage,
-  );
-  const newItems = useSelector(
-    (state: AppState) => state.objectBrowser.objectManager.newItems,
-  );
-  const managerOpen = useSelector(
-    (state: AppState) => state.objectBrowser.objectManager.managerOpen,
-  );
+  const managerObjects = useSelector((state: AppState) => state.objectBrowser.objectManager.objectsToManage);
+  const newItems = useSelector((state: AppState) => state.objectBrowser.objectManager.newItems);
+  const managerOpen = useSelector((state: AppState) => state.objectBrowser.objectManager.managerOpen);
 
   const [newObject, setNewObject] = useState<boolean>(false);
 
@@ -82,20 +77,18 @@ const ObjectManagerButton = () => {
           icon={
             <Fragment>
               <IndicatorContainer
-                className={newObject ? "newItem" : ""}
+                className={newObject ? 'newItem' : ''}
                 style={{
                   opacity: managerObjects.length > 0 && newItems ? 1 : 0,
                 }}
               >
                 <CircleIcon />
               </IndicatorContainer>
-              <ObjectManagerIcon
-                style={{ width: 20, height: 20, marginTop: -2 }}
-              />
+              <ObjectManagerIcon style={{ width: 20, height: 20, marginTop: -2 }} />
             </Fragment>
           }
           id="object-manager-toggle"
-          style={{ position: "relative", padding: "0 10px" }}
+          style={{ position: 'relative', padding: '0 10px' }}
         />
       )}
     </Fragment>

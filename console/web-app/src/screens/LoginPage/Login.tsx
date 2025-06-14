@@ -14,29 +14,27 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Loader, LoginWrapper, RefreshIcon } from "mds";
-import { loginStrategyType } from "./login.types";
-import MainError from "../Console/Common/MainError/MainError";
-import { AppState, useAppDispatch } from "../../store";
-import { useSelector } from "react-redux";
-import { getFetchConfigurationAsync } from "./loginThunks";
-import { resetForm } from "./loginSlice";
-import StrategyForm from "./StrategyForm";
-import { getLogoApplicationVariant, getLogoVar } from "../../config";
-import { RedirectRule } from "api/consoleApi";
-import { redirectRules } from "./login.utils";
-import { setHelpName } from "../../systemSlice";
+import { RedirectRule } from 'api/consoleApi';
+import { Box, Button, Loader, LoginWrapper, RefreshIcon } from 'mds';
+import React, { Fragment, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { getLogoApplicationVariant, getLogoVar } from '../../config';
+import { AppState, useAppDispatch } from '../../store';
+import { setHelpName } from '../../systemSlice';
+import MainError from '../Console/Common/MainError/MainError';
+import { loginStrategyType } from './login.types';
+import { redirectRules } from './login.utils';
+import { resetForm } from './loginSlice';
+import { getFetchConfigurationAsync } from './loginThunks';
+import StrategyForm from './StrategyForm';
 
 export const getTargetPath = () => {
-  let targetPath = "/browser";
-  if (
-    localStorage.getItem("redirect-path") &&
-    localStorage.getItem("redirect-path") !== ""
-  ) {
-    targetPath = `${localStorage.getItem("redirect-path")}`;
-    localStorage.setItem("redirect-path", "");
+  let targetPath = '/browser';
+  if (localStorage.getItem('redirect-path') && localStorage.getItem('redirect-path') !== '') {
+    targetPath = `${localStorage.getItem('redirect-path')}`;
+    localStorage.setItem('redirect-path', '');
   }
   return targetPath;
 };
@@ -45,20 +43,14 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const loginStrategy = useSelector(
-    (state: AppState) => state.login.loginStrategy,
-  );
-  const loadingFetchConfiguration = useSelector(
-    (state: AppState) => state.login.loadingFetchConfiguration,
-  );
+  const loginStrategy = useSelector((state: AppState) => state.login.loginStrategy);
+  const loadingFetchConfiguration = useSelector((state: AppState) => state.login.loadingFetchConfiguration);
   const navigateTo = useSelector((state: AppState) => state.login.navigateTo);
 
-  const backgroundAnimation = useSelector(
-    (state: AppState) => state.login.backgroundAnimation,
-  );
+  const backgroundAnimation = useSelector((state: AppState) => state.login.backgroundAnimation);
 
   useEffect(() => {
-    if (navigateTo !== "") {
+    if (navigateTo !== '') {
       dispatch(resetForm());
       navigate(navigateTo);
     }
@@ -76,10 +68,7 @@ const Login = () => {
     case loginStrategyType.form: {
       let redirectItems: RedirectRule[] = [];
 
-      if (
-        loginStrategy.redirectRules &&
-        loginStrategy.redirectRules.length > 0
-      ) {
+      if (loginStrategy.redirectRules && loginStrategy.redirectRules.length > 0) {
         redirectItems = [...loginStrategy.redirectRules].sort(redirectRules);
       }
 
@@ -90,39 +79,39 @@ const Login = () => {
       loginComponent = (
         <Box
           sx={{
-            textAlign: "center",
-            "& .loadingLoginStrategy": {
-              textAlign: "center",
+            textAlign: 'center',
+            '& .loadingLoginStrategy': {
+              textAlign: 'center',
               width: 40,
               height: 40,
             },
-            "& .buttonRetry": {
-              display: "flex",
-              justifyContent: "center",
+            '& .buttonRetry': {
+              display: 'flex',
+              justifyContent: 'center',
             },
           }}
         >
           {loadingFetchConfiguration ? (
-            <Loader className={"loadingLoginStrategy"} />
+            <Loader className={'loadingLoginStrategy'} />
           ) : (
             <Fragment>
               <Box>
-                <p style={{ textAlign: "center" }}>
+                <p style={{ textAlign: 'center' }}>
                   An error has occurred
                   <br />
                   The backend cannot be reached.
                 </p>
               </Box>
-              <div className={"buttonRetry"}>
+              <div className={'buttonRetry'}>
                 <Button
                   onClick={() => {
                     dispatch(getFetchConfigurationAsync());
                   }}
                   icon={<RefreshIcon />}
-                  iconLocation={"end"}
+                  iconLocation={'end'}
                   variant="regular"
                   id="retry"
-                  label={"Retry"}
+                  label={'Retry'}
                 />
               </div>
             </Fragment>
@@ -131,10 +120,10 @@ const Login = () => {
       );
   }
 
-  let docsURL = "https://min.io/docs/minio/linux/index.html?ref=con";
+  const docsURL = 'https://min.io/docs/minio/linux/index.html?ref=con';
 
   useEffect(() => {
-    dispatch(setHelpName("login"));
+    dispatch(setHelpName('login'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,52 +139,36 @@ const Login = () => {
         formFooter={
           <Box
             sx={{
-              "& .separator": {
+              '& .separator': {
                 marginLeft: 4,
                 marginRight: 4,
               },
             }}
           >
-            <a href={docsURL} target="_blank" rel="noopener">
+            <a href={docsURL} target="_blank" rel="noopener noreferrer">
               Documentation
             </a>
-            <span className={"separator"}>|</span>
-            <a
-              href="https://github.com/minio/minio"
-              target="_blank"
-              rel="noopener"
-            >
+            <span className={'separator'}>|</span>
+            <a href="https://github.com/minio/minio" target="_blank" rel="noopener noreferrer">
               GitHub
             </a>
-            <span className={"separator"}>|</span>
-            <a
-              href="https://subnet.min.io/?ref=con"
-              target="_blank"
-              rel="noopener"
-            >
+            <span className={'separator'}>|</span>
+            <a href="https://subnet.min.io/?ref=con" target="_blank" rel="noopener noreferrer">
               Support
             </a>
-            <span className={"separator"}>|</span>
-            <a
-              href="https://min.io/download/?ref=con"
-              target="_blank"
-              rel="noopener"
-            >
+            <span className={'separator'}>|</span>
+            <a href="https://min.io/download/?ref=con" target="_blank" rel="noopener noreferrer">
               Download
             </a>
           </Box>
         }
-        promoHeader={
-          <span style={{ fontSize: 28 }}>High-Performance Object Store</span>
-        }
+        promoHeader={<span style={{ fontSize: 28 }}>High-Performance Object Store</span>}
         promoInfo={
           <span style={{ fontSize: 14, lineHeight: 1 }}>
-            MinIO is a cloud-native object store built to run on any
-            infrastructure - public, private or edge clouds. Primary use cases
-            include data lakes, databases, AI/ML, SaaS applications and fast
-            backup & recovery. MinIO is dual licensed under GNU AGPL v3 and
-            commercial license. To learn more, visit{" "}
-            <a href={"https://min.io/?ref=con"} target="_blank" rel="noopener">
+            MinIO is a cloud-native object store built to run on any infrastructure - public, private or edge clouds.
+            Primary use cases include data lakes, databases, AI/ML, SaaS applications and fast backup & recovery. MinIO
+            is dual licensed under GNU AGPL v3 and commercial license. To learn more, visit{' '}
+            <a href={'https://min.io/?ref=con'} target="_blank" rel="noopener noreferrer">
               www.min.io
             </a>
             .

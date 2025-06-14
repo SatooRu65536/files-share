@@ -14,53 +14,38 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import { Selector } from "testcafe";
-import * as functions from "../utils/functions";
-import { namedTestBucketBrowseButtonFor } from "../utils/functions";
-import * as elements from "../utils/elements";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import { Selector } from 'testcafe';
+import * as functions from '../utils/functions';
+import { namedTestBucketBrowseButtonFor } from '../utils/functions';
+import * as elements from '../utils/elements';
+import { acknowledgeButton } from '../utils/elements';
 
-fixture("Test resources policy").page("http://localhost:9090/");
+fixture('Test resources policy').page('http://localhost:9090/');
 
-const bucket1 = "abucket3";
+const bucket1 = 'abucket3';
 const test1BucketBrowseButton = namedTestBucketBrowseButtonFor(bucket1);
-export const remainingFile = Selector(
-  ".ReactVirtualized__Table__rowColumn",
-).withText("abcd");
+export const remainingFile = Selector('.ReactVirtualized__Table__rowColumn').withText('abcd');
 
 test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucket1);
     await functions.setVersionedBucket(t, bucket1);
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket1,
-      "abc",
-      "web-app/tests/uploads/noextension",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucket1,
-      "abcd",
-      "web-app/tests/uploads/noextension",
-    );
-  })(
-    "Files with similar prefixes don't get deleted with all versions",
-    async (t) => {
-      await t
-        .useRole(roles.admin)
-        .click(acknowledgeButton)
-        .typeText(elements.filterBuckets, bucket1)
-        .click(test1BucketBrowseButton)
-        .click(Selector(".ReactVirtualized__Table__rowColumn").withText("abc"))
-        .click(Selector("#delete-element-click"))
-        .click(Selector("#delete-versions-switch"))
-        .click(Selector("#confirm-ok"))
-        .expect(remainingFile.exists)
-        .ok();
-    },
-  )
+    await functions.uploadNamedObjectToBucket(t, bucket1, 'abc', 'web-app/tests/uploads/noextension');
+    await functions.uploadNamedObjectToBucket(t, bucket1, 'abcd', 'web-app/tests/uploads/noextension');
+  })("Files with similar prefixes don't get deleted with all versions", async (t) => {
+    await t
+      .useRole(roles.admin)
+      .click(acknowledgeButton)
+      .typeText(elements.filterBuckets, bucket1)
+      .click(test1BucketBrowseButton)
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('abc'))
+      .click(Selector('#delete-element-click'))
+      .click(Selector('#delete-versions-switch'))
+      .click(Selector('#confirm-ok'))
+      .expect(remainingFile.exists)
+      .ok();
+  })
   .after(async (t) => {
     await functions.cleanUpNamedBucketAndUploads(t, bucket1);
   });

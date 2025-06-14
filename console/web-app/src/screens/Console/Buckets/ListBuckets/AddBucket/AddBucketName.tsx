@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { InputBox } from "mds";
-import { useSelector } from "react-redux";
-import { setIsDirty, setName } from "./addBucketsSlice";
-import { AppState, useAppDispatch } from "../../../../../store";
+import { InputBox } from 'mds';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState, useAppDispatch } from '../../../../../store';
+import { setIsDirty, setName } from './addBucketsSlice';
 
 const AddBucketName = ({ hasErrors }: { hasErrors: boolean }) => {
   const dispatch = useAppDispatch();
@@ -28,7 +29,7 @@ const AddBucketName = ({ hasErrors }: { hasErrors: boolean }) => {
     <InputBox
       id="bucket-name"
       name="bucket-name"
-      error={hasErrors ? "Invalid bucket name" : ""}
+      error={hasErrors ? 'Invalid bucket name' : ''}
       onFocus={() => {
         dispatch(setIsDirty(true));
       }}

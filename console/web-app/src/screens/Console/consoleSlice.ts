@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SessionResponse } from "../../api/consoleApi";
-import { AppState } from "../../store";
-import { fetchSession } from "../../screens/LoginPage/sessionThunk";
-import { SessionCallStates } from "./consoleSlice.types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { SessionResponse } from '../../api/consoleApi';
+import { fetchSession } from '../../screens/LoginPage/sessionThunk';
+import { AppState } from '../../store';
+import { SessionCallStates } from './consoleSlice.types';
 
 interface ConsoleState {
   session: SessionResponse;
@@ -31,13 +32,10 @@ const initialState: ConsoleState = {
 };
 
 const consoleSlice = createSlice({
-  name: "console",
+  name: 'console',
   initialState,
   reducers: {
-    setSessionLoadingState: (
-      state,
-      action: PayloadAction<SessionCallStates>,
-    ) => {
+    setSessionLoadingState: (state, action: PayloadAction<SessionCallStates>) => {
       state.sessionLoadingState = action.payload;
     },
     saveSessionResponse: (state, action: PayloadAction<SessionResponse>) => {
@@ -58,10 +56,8 @@ const consoleSlice = createSlice({
   },
 });
 
-export const { saveSessionResponse, resetSession, setSessionLoadingState } =
-  consoleSlice.actions;
+export const { resetSession, saveSessionResponse, setSessionLoadingState } = consoleSlice.actions;
 export const selSession = (state: AppState) => state.console.session;
-export const selFeatures = (state: AppState) =>
-  state.console.session ? state.console.session.features : [];
+export const selFeatures = (state: AppState) => (state.console.session ? state.console.session.features : []);
 
 export default consoleSlice.reducer;

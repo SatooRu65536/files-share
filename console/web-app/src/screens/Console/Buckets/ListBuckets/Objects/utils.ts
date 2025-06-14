@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { BucketObjectItem } from "./ListObjects/types";
-import { removeTrace } from "../../../ObjectBrowser/transferManager";
-import { store } from "../../../../../store";
-import { ContentType, PermissionResource } from "api/consoleApi";
-import { api } from "../../../../../api";
-import { setErrorSnackMessage } from "../../../../../systemSlice";
-import { StatusCodes } from "http-status-codes";
+import { ContentType, PermissionResource } from 'api/consoleApi';
+import { StatusCodes } from 'http-status-codes';
+
+import { api } from '../../../../../api';
+import { store } from '../../../../../store';
+import { setErrorSnackMessage } from '../../../../../systemSlice';
+import { removeTrace } from '../../../ObjectBrowser/transferManager';
+import { BucketObjectItem } from './ListObjects/types';
 const downloadWithLink = (href: string, downloadFileName: string) => {
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = href;
   link.download = downloadFileName;
   document.body.appendChild(link);
@@ -30,27 +31,19 @@ const downloadWithLink = (href: string, downloadFileName: string) => {
   document.body.removeChild(link);
 };
 
-export const downloadSelectedAsZip = async (
-  bucketName: string,
-  objectList: string[],
-  resultFileName: string,
-) => {
+export const downloadSelectedAsZip = async (bucketName: string, objectList: string[], resultFileName: string) => {
   const state = store.getState();
   const anonymousMode = state.system.anonymousMode;
 
   try {
-    const resp = await api.buckets.downloadMultipleObjects(
-      bucketName,
-      objectList,
-      {
-        type: ContentType.Json,
-        headers: anonymousMode
-          ? {
-              "X-Anonymous": "1",
-            }
-          : undefined,
-      },
-    );
+    const resp = await api.buckets.downloadMultipleObjects(bucketName, objectList, {
+      type: ContentType.Json,
+      headers: anonymousMode
+        ? {
+            'X-Anonymous': '1',
+          }
+        : undefined,
+    });
     const blob = await resp.blob();
     const href = window.URL.createObjectURL(blob);
     downloadWithLink(href, resultFileName);
@@ -58,14 +51,14 @@ export const downloadSelectedAsZip = async (
     store.dispatch(
       setErrorSnackMessage({
         errorMessage: `Download of multiple files failed. ${err.statusText}`,
-        detailedError: "",
+        detailedError: '',
       }),
     );
   }
 };
 
 const isFolder = (objectPath: string) => {
-  return objectPath.endsWith("/");
+  return objectPath.endsWith('/');
 };
 
 export const download = (
@@ -81,16 +74,16 @@ export const download = (
   abortCallback: () => void,
   toastCallback: () => void,
 ) => {
-  let basename = document.baseURI.replace(window.location.origin, "");
+  const basename = document.baseURI.replace(window.location.origin, '');
   const state = store.getState();
   const anonymousMode = state.system.anonymousMode;
 
   let path = `${
     window.location.origin
   }${basename}api/v1/buckets/${encodeURIComponent(bucketName)}/objects/download?prefix=${encodeURIComponent(objectPath)}${
-    overrideFileName !== null && overrideFileName.trim() !== ""
-      ? `&override_file_name=${encodeURIComponent(overrideFileName || "")}`
-      : ""
+    overrideFileName !== null && overrideFileName.trim() !== ''
+      ? `&override_file_name=${encodeURIComponent(overrideFileName || '')}`
+      : ''
   }`;
   if (versionID) {
     path = path.concat(`&version_id=${versionID}`);
@@ -101,15 +94,15 @@ export const download = (
     return new BrowserDownload(path, id, completeCallback, toastCallback);
   }
 
-  let req = new XMLHttpRequest();
-  req.open("GET", path, true);
+  const req = new XMLHttpRequest();
+  req.open('GET', path, true);
   if (anonymousMode) {
-    req.setRequestHeader("X-Anonymous", "1");
+    req.setRequestHeader('X-Anonymous', '1');
   }
   req.addEventListener(
-    "progress",
+    'progress',
     function (evt) {
-      let percentComplete = Math.round((evt.loaded / fileSize) * 100);
+      const percentComplete = Math.round((evt.loaded / fileSize) * 100);
       if (progressCallback) {
         progressCallback(percentComplete);
       }
@@ -117,19 +110,18 @@ export const download = (
     false,
   );
 
-  req.responseType = "blob";
+  req.responseType = 'blob';
   req.onreadystatechange = () => {
     if (req.readyState === XMLHttpRequest.DONE) {
       // Ensure object was downloaded fully, if it's a folder we don't get the fileSize
-      let completeDownload =
-        isFolder(objectPath) || req.response.size === fileSize;
+      const completeDownload = isFolder(objectPath) || req.response.size === fileSize;
 
       if (req.status === StatusCodes.OK && completeDownload) {
-        const rspHeader = req.getResponseHeader("Content-Disposition");
+        const rspHeader = req.getResponseHeader('Content-Disposition');
 
-        let filename = "download";
+        let filename = 'download';
         if (rspHeader) {
-          let rspHeaderDecoded = decodeURIComponent(rspHeader);
+          const rspHeaderDecoded = decodeURIComponent(rspHeader);
           filename = rspHeaderDecoded.split('"')[1];
         }
 
@@ -141,10 +133,8 @@ export const download = (
 
         downloadWithLink(window.URL.createObjectURL(req.response), filename);
       } else {
-        if (req.getResponseHeader("Content-Type") === "application/json") {
-          const rspBody: { detailedMessage?: string } = JSON.parse(
-            req.response,
-          );
+        if (req.getResponseHeader('Content-Type') === 'application/json') {
+          const rspBody: { detailedMessage?: string } = JSON.parse(req.response);
           if (rspBody.detailedMessage) {
             errorCallback(rspBody.detailedMessage);
             return;
@@ -156,7 +146,7 @@ export const download = (
   };
   req.onerror = () => {
     if (errorCallback) {
-      errorCallback("A network error occurred.");
+      errorCallback('A network error occurred.');
     }
   };
   req.onabort = () => {
@@ -174,12 +164,7 @@ class BrowserDownload {
   completeCallback: () => void;
   toastCallback: () => void;
 
-  constructor(
-    path: string,
-    id: string,
-    completeCallback: () => void,
-    toastCallback: () => void,
-  ) {
+  constructor(path: string, id: string, completeCallback: () => void, toastCallback: () => void) {
     this.path = path;
     this.id = id;
     this.completeCallback = completeCallback;
@@ -188,7 +173,7 @@ class BrowserDownload {
 
   send(): void {
     this.toastCallback();
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = this.path;
     document.body.appendChild(link);
     link.click();
@@ -198,107 +183,90 @@ class BrowserDownload {
   }
 }
 
-export type AllowedPreviews = "image" | "pdf" | "audio" | "video" | "none";
+export type AllowedPreviews = 'image' | 'pdf' | 'audio' | 'video' | 'none';
 const contentTypePreview = (contentType: string): AllowedPreviews => {
   if (contentType) {
-    const mimeObjectType = (contentType || "").toLowerCase();
+    const mimeObjectType = (contentType || '').toLowerCase();
 
-    if (mimeObjectType.includes("image")) {
-      return "image";
+    if (mimeObjectType.includes('image')) {
+      return 'image';
     }
-    if (mimeObjectType.includes("pdf")) {
-      return "pdf";
+    if (mimeObjectType.includes('pdf')) {
+      return 'pdf';
     }
-    if (mimeObjectType.includes("audio")) {
-      return "audio";
+    if (mimeObjectType.includes('audio')) {
+      return 'audio';
     }
-    if (mimeObjectType.includes("video")) {
-      return "video";
+    if (mimeObjectType.includes('video')) {
+      return 'video';
     }
   }
 
-  return "none";
+  return 'none';
 };
 
 // Review file extension by name & returns the type of preview browser that can be used
 const extensionPreview = (fileName: string): AllowedPreviews => {
   const imageExtensions = [
-    "jif",
-    "jfif",
-    "apng",
-    "avif",
-    "svg",
-    "webp",
-    "bmp",
-    "ico",
-    "jpg",
-    "jpe",
-    "jpeg",
-    "gif",
-    "png",
-    "heic",
+    'jif',
+    'jfif',
+    'apng',
+    'avif',
+    'svg',
+    'webp',
+    'bmp',
+    'ico',
+    'jpg',
+    'jpe',
+    'jpeg',
+    'gif',
+    'png',
+    'heic',
   ];
-  const pdfExtensions = ["pdf"];
-  const audioExtensions = ["wav", "mp3", "alac", "aiff", "dsd", "pcm"];
-  const videoExtensions = [
-    "mp4",
-    "avi",
-    "mpg",
-    "webm",
-    "mov",
-    "flv",
-    "mkv",
-    "wmv",
-    "avchd",
-    "mpeg-4",
-  ];
+  const pdfExtensions = ['pdf'];
+  const audioExtensions = ['wav', 'mp3', 'alac', 'aiff', 'dsd', 'pcm'];
+  const videoExtensions = ['mp4', 'avi', 'mpg', 'webm', 'mov', 'flv', 'mkv', 'wmv', 'avchd', 'mpeg-4'];
 
-  let fileExtension = fileName.split(".").pop();
+  let fileExtension = fileName.split('.').pop();
 
   if (!fileExtension) {
-    return "none";
+    return 'none';
   }
 
   fileExtension = fileExtension.toLowerCase();
 
   if (imageExtensions.includes(fileExtension)) {
-    return "image";
+    return 'image';
   }
 
   if (pdfExtensions.includes(fileExtension)) {
-    return "pdf";
+    return 'pdf';
   }
 
   if (audioExtensions.includes(fileExtension)) {
-    return "audio";
+    return 'audio';
   }
 
   if (videoExtensions.includes(fileExtension)) {
-    return "video";
+    return 'video';
   }
 
-  return "none";
+  return 'none';
 };
 
-export const previewObjectType = (
-  metaData: Record<any, any>,
-  objectName: string,
-) => {
-  const metaContentType = (
-    (metaData && metaData["Content-Type"]) ||
-    ""
-  ).toString();
+export const previewObjectType = (metaData: Record<any, any>, objectName: string) => {
+  const metaContentType = ((metaData && metaData['Content-Type']) || '').toString();
 
-  const extensionType = extensionPreview(objectName || "");
+  const extensionType = extensionPreview(objectName || '');
   const contentType = contentTypePreview(metaContentType);
 
   let objectType: AllowedPreviews = extensionType;
 
   if (extensionType === contentType) {
     objectType = extensionType;
-  } else if (extensionType === "none" && contentType !== "none") {
+  } else if (extensionType === 'none' && contentType !== 'none') {
     objectType = contentType;
-  } else if (contentType === "none" && extensionType !== "none") {
+  } else if (contentType === 'none' && extensionType !== 'none') {
     objectType = extensionType;
   }
 
@@ -306,16 +274,13 @@ export const previewObjectType = (
 };
 export const sortListObjects = (fieldSort: string) => {
   switch (fieldSort) {
-    case "name":
+    case 'name':
+      return (a: BucketObjectItem, b: BucketObjectItem) => a.name.localeCompare(b.name);
+    case 'last_modified':
       return (a: BucketObjectItem, b: BucketObjectItem) =>
-        a.name.localeCompare(b.name);
-    case "last_modified":
-      return (a: BucketObjectItem, b: BucketObjectItem) =>
-        new Date(a.last_modified).getTime() -
-        new Date(b.last_modified).getTime();
-    case "size":
-      return (a: BucketObjectItem, b: BucketObjectItem) =>
-        (a.size || -1) - (b.size || -1);
+        new Date(a.last_modified).getTime() - new Date(b.last_modified).getTime();
+    case 'size':
+      return (a: BucketObjectItem, b: BucketObjectItem) => (a.size || -1) - (b.size || -1);
   }
 };
 
@@ -331,8 +296,7 @@ export const permissionItems = (
   // We get permissions applied to the current bucket
   const filteredPermissionsForBucket = permissionsArray.filter(
     (permissionItem) =>
-      permissionItem.resource?.endsWith(`:${bucketName}`) ||
-      permissionItem.resource?.includes(`:${bucketName}/`),
+      permissionItem.resource?.endsWith(`:${bucketName}`) || permissionItem.resource?.includes(`:${bucketName}/`),
   );
 
   // No permissions for this bucket. we can throw the error message at this point
@@ -343,32 +307,29 @@ export const permissionItems = (
   let returnElements: BucketObjectItem[] = [];
 
   // We split current path
-  const splitCurrentPath = currentPath.split("/");
+  const splitCurrentPath = currentPath.split('/');
 
   filteredPermissionsForBucket.forEach((permissionElement) => {
     // We review paths in resource address
 
     // We split ARN & get the last item to check the URL
-    const splitARN = permissionElement.resource?.split(":");
-    const urlARN = splitARN?.pop() || "";
+    const splitARN = permissionElement.resource?.split(':');
+    const urlARN = splitARN?.pop() || '';
 
     // We split the paths of the URL & compare against current location to see if there are more items to include. In case current level is a wildcard or is the last one, we omit this validation
 
-    const splitURLARN = urlARN.split("/");
+    const splitURLARN = urlARN.split('/');
 
     // splitURL has more items than bucket name, we can continue validating
     if (splitURLARN.length > 1) {
       splitURLARN.every((currentElementInPath, index) => {
         // It is a wildcard element. We can store the verification as value should be included (?)
-        if (currentElementInPath === "*") {
+        if (currentElementInPath === '*') {
           return false;
         }
 
         // Element is not included in the path. The user is trying to browse something else.
-        if (
-          splitCurrentPath[index] &&
-          splitCurrentPath[index] !== currentElementInPath
-        ) {
+        if (splitCurrentPath[index] && splitCurrentPath[index] !== currentElementInPath) {
           return false;
         }
 
@@ -377,8 +338,8 @@ export const permissionItems = (
           returnElements.push({
             name: `${currentElementInPath}/`,
             size: 0,
-            last_modified: "",
-            version_id: "",
+            last_modified: '',
+            version_id: '',
           });
         }
 
@@ -388,38 +349,36 @@ export const permissionItems = (
 
     // We review prefixes in allow resources for StringEquals variant only.
     if (
-      permissionElement.conditionOperator === "StringEquals" ||
-      permissionElement.conditionOperator === "StringLike"
+      permissionElement.conditionOperator === 'StringEquals' ||
+      permissionElement.conditionOperator === 'StringLike'
     ) {
       permissionElement.prefixes?.forEach((prefixItem) => {
         // Prefix Item is not empty?
-        if (prefixItem !== "") {
-          const splitItems = prefixItem.split("/");
+        if (prefixItem !== '') {
+          const splitItems = prefixItem.split('/');
 
-          let pathToRouteElements: string[] = [];
+          const pathToRouteElements: string[] = [];
 
           // We verify if currentPath is contained in the path begin, if is not contained the  user has no access to this subpath
-          const cleanCurrPath = currentPath.replace(/\/$/, "");
+          const cleanCurrPath = currentPath.replace(/\/$/, '');
 
-          if (!prefixItem.startsWith(cleanCurrPath) && currentPath !== "") {
+          if (!prefixItem.startsWith(cleanCurrPath) && currentPath !== '') {
             return;
           }
 
           // For every split element we iterate and check if we can construct a URL
           splitItems.every((splitElement, index) => {
-            if (!splitElement.includes("*") && splitElement !== "") {
+            if (!splitElement.includes('*') && splitElement !== '') {
               if (splitElement !== splitCurrentPath[index]) {
                 returnElements.push({
-                  name: `${pathToRouteElements.join("/")}${
-                    pathToRouteElements.length > 0 ? "/" : ""
-                  }${splitElement}/`,
+                  name: `${pathToRouteElements.join('/')}${pathToRouteElements.length > 0 ? '/' : ''}${splitElement}/`,
                   size: 0,
-                  last_modified: "",
-                  version_id: "",
+                  last_modified: '',
+                  version_id: '',
                 });
                 return false;
               }
-              if (splitElement !== "") {
+              if (splitElement !== '') {
                 pathToRouteElements.push(splitElement);
               }
 
@@ -434,8 +393,8 @@ export const permissionItems = (
 
   // We clean duplicated name entries
   if (returnElements.length > 0) {
-    let clElements: BucketObjectItem[] = [];
-    let keys: string[] = [];
+    const clElements: BucketObjectItem[] = [];
+    const keys: string[] = [];
 
     returnElements.forEach((itm) => {
       if (!keys.includes(itm.name)) {

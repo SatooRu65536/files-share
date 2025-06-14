@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store";
-import { ErrorResponseHandler } from "../../common/types";
-import { clearSession } from "../../common/utils";
-import { userLogged } from "../../systemSlice";
-import { resetSession } from "../Console/consoleSlice";
-import api from "../../common/api";
-import LoadingComponent from "../../common/LoadingComponent";
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import api from '../../common/api';
+import LoadingComponent from '../../common/LoadingComponent';
+import { ErrorResponseHandler } from '../../common/types';
+import { clearSession } from '../../common/utils';
+import { useAppDispatch } from '../../store';
+import { userLogged } from '../../systemSlice';
+import { resetSession } from '../Console/consoleSlice';
 
 const LogoutPage = () => {
   const dispatch = useAppDispatch();
@@ -31,20 +32,20 @@ const LogoutPage = () => {
     const deleteSession = () => {
       dispatch(userLogged(false));
       // Disconnect OB Websocket
-      dispatch({ type: "socket/OBDisconnect" });
-      localStorage.setItem("userLoggedIn", "");
-      localStorage.setItem("redirect-path", "");
+      dispatch({ type: 'socket/OBDisconnect' });
+      localStorage.setItem('userLoggedIn', '');
+      localStorage.setItem('redirect-path', '');
       dispatch(resetSession());
       clearSession();
 
-      navigate("/login");
+      navigate('/login');
       window.location.reload(); //reset-all redux states etc. by force reloading.
     };
 
     const logout = () => {
-      const state = localStorage.getItem("auth-state");
+      const state = localStorage.getItem('auth-state');
       api
-        .invoke("POST", `/api/v1/logout`, { state })
+        .invoke('POST', `/api/v1/logout`, { state })
         .then(deleteSession)
         .catch((err: ErrorResponseHandler) => {
           console.error(err);

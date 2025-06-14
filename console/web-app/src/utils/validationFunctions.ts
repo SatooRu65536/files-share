@@ -15,5 +15,5 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 export const isVersionedMode = (status: string | undefined) => {
-  return status === "Enabled" || status === "Suspended";
+  return status === 'Enabled' || status === 'Suspended';
 };

@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { ApplicationLogo } from "mds";
+import { ApplicationLogo } from 'mds';
+import React from 'react';
 
 interface LicensePlanOption {
   planId: string;
   planName: string;
-  planType: "commercial" | "open-source";
+  planType: 'commercial' | 'open-source';
   planIcon: React.ReactNode;
   planDescription: React.ReactNode;
 }
@@ -41,18 +41,18 @@ interface PlansFeatures {
 
 export const FEATURE_ITEMS: PlansFeatures[] = [
   {
-    featureLabel: "License",
+    featureLabel: 'License',
     featurePlans: {
       openSource: {
-        content: "GNU AGPL v3 License",
+        content: 'GNU AGPL v3 License',
       },
       eosPlus: {
-        content: "Enterprise License",
+        content: 'Enterprise License',
       },
     },
   },
   {
-    featureLabel: "Intended Use",
+    featureLabel: 'Intended Use',
     featurePlans: {
       openSource: {
         content: <div>Test and Dev Use</div>,
@@ -60,61 +60,58 @@ export const FEATURE_ITEMS: PlansFeatures[] = [
       eosPlus: {
         content: (
           <div>
-            Production Use <br /> (Site-Replication, Enterprise Grade Security,
-            Encryption and Key Management)
+            Production Use <br /> (Site-Replication, Enterprise Grade Security, Encryption and Key Management)
           </div>
         ),
       },
     },
   },
   {
-    featureLabel: "Features",
+    featureLabel: 'Features',
     featurePlans: {
       openSource: {
-        content: "Basic Features",
+        content: 'Basic Features',
       },
       eosPlus: {
         content:
-          "Basic Features, S3 Express, Non-Disruptive Upgrade, QoS, Catalog, Monitoring, Audit Logs, Health-Diagnostics, RDMA, GPU Direct, AI Features",
+          'Basic Features, S3 Express, Non-Disruptive Upgrade, QoS, Catalog, Monitoring, Audit Logs, Health-Diagnostics, RDMA, GPU Direct, AI Features',
       },
     },
   },
   {
-    featureLabel: "Support",
+    featureLabel: 'Support',
     featurePlans: {
       openSource: {
-        content: "Community Support",
+        content: 'Community Support',
       },
       eosPlus: {
-        content:
-          "SLA backed - 24/7/365, <4 hr response time, Instant SLA for P0 issues ",
+        content: 'SLA backed - 24/7/365, <4 hr response time, Instant SLA for P0 issues ',
       },
     },
   },
   {
-    featureLabel: "Regulatory Compliance",
+    featureLabel: 'Regulatory Compliance',
     featurePlans: {
       openSource: {
-        content: "N/A",
+        content: 'N/A',
       },
       eosPlus: {
         content:
-          "FIPS 140-a Compliant, Pentest\n" +
-          "SOC2, ISO 27001, \n" +
-          "SEC 17a-4(f), FINRA 4511(c) and CFTC 1.31(c)-(d)\n" +
-          "\n",
+          'FIPS 140-a Compliant, Pentest\n' +
+          'SOC2, ISO 27001, \n' +
+          'SEC 17a-4(f), FINRA 4511(c) and CFTC 1.31(c)-(d)\n' +
+          '\n',
       },
     },
   },
   {
-    featureLabel: "Optimizations",
+    featureLabel: 'Optimizations',
     featurePlans: {
       openSource: {
-        content: "N/A",
+        content: 'N/A',
       },
       eosPlus: {
-        content:
-          "Optimizations for Small Objects, Bulk Deletes, List Operations, Low TTFB, Distributed Cache",
+        content: 'Optimizations for Small Objects, Bulk Deletes, List Operations, Low TTFB, Distributed Cache',
       },
     },
   },
@@ -122,30 +119,26 @@ export const FEATURE_ITEMS: PlansFeatures[] = [
 
 export const LICENSE_PLANS_INFORMATION: LicensePlanOption[] = [
   {
-    planId: "openSource",
-    planName: "Community",
-    planType: "open-source",
-    planIcon: (
-      <ApplicationLogo applicationName={"console"} subVariant={"AGPL"} />
-    ),
-    planDescription: "",
+    planId: 'openSource',
+    planName: 'Community',
+    planType: 'open-source',
+    planIcon: <ApplicationLogo applicationName={'console'} subVariant={'AGPL'} />,
+    planDescription: '',
   },
   {
-    planId: "eosPlus",
-    planName: "Enterprise",
-    planType: "commercial",
-    planIcon: (
-      <ApplicationLogo applicationName={"aistor"} subVariant={"enterprise"} />
-    ),
-    planDescription: "",
+    planId: 'eosPlus',
+    planName: 'Enterprise',
+    planType: 'commercial',
+    planIcon: <ApplicationLogo applicationName={'aistor'} subVariant={'enterprise'} />,
+    planDescription: '',
   },
 ];
 
-const LICENSE_CONSENT_STORE_KEY = "agpl_minio_license_consent";
+const LICENSE_CONSENT_STORE_KEY = 'agpl_minio_license_consent';
 export const setLicenseConsent = () => {
-  localStorage.setItem(LICENSE_CONSENT_STORE_KEY, "true");
+  localStorage.setItem(LICENSE_CONSENT_STORE_KEY, 'true');
 };
 
 export const getLicenseConsent = () => {
-  return localStorage.getItem(LICENSE_CONSENT_STORE_KEY) === "true";
+  return localStorage.getItem(LICENSE_CONSENT_STORE_KEY) === 'true';
 };

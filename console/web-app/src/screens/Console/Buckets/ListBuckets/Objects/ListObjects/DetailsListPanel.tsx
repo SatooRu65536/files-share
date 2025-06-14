@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { Box, Button, ClosePanelIcon } from "mds";
+import { Box, Button, ClosePanelIcon } from 'mds';
+import React from 'react';
 
 interface IDetailsListPanel {
   open: boolean;
@@ -24,58 +24,53 @@ interface IDetailsListPanel {
   children: React.ReactNode;
 }
 
-const DetailsListPanel = ({
-  open,
-  closePanel,
-  className = "",
-  children,
-}: IDetailsListPanel) => {
+const DetailsListPanel = ({ children, className = '', closePanel, open }: IDetailsListPanel) => {
   return (
     <Box
-      id={"details-panel"}
+      id={'details-panel'}
       sx={{
-        borderColor: "#EAEDEE",
+        borderColor: '#EAEDEE',
         borderWidth: 0,
-        borderStyle: "solid",
+        borderStyle: 'solid',
         borderRadius: 3,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
         width: 0,
-        transitionDuration: "0.3s",
-        overflowX: "hidden",
-        overflowY: "auto",
-        position: "relative",
+        transitionDuration: '0.3s',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        position: 'relative',
         opacity: 0,
         marginLeft: -1,
-        "&.open": {
+        '&.open': {
           width: 300,
           minWidth: 300,
           borderLeftWidth: 1,
           opacity: 1,
         },
-        "@media (max-width: 799px)": {
-          "&.open": {
-            width: "100%",
-            minWidth: "100%",
+        '@media (max-width: 799px)': {
+          '&.open': {
+            width: '100%',
+            minWidth: '100%',
             borderLeftWidth: 0,
           },
         },
       }}
-      className={`${open ? "open" : ""} ${className}`}
+      className={`${open ? 'open' : ''} ${className}`}
     >
       <Button
-        variant={"text"}
-        id={"close-details-list"}
+        variant={'text'}
+        id={'close-details-list'}
         onClick={closePanel}
         icon={<ClosePanelIcon />}
         sx={{
-          position: "absolute",
+          position: 'absolute',
           right: 5,
           top: 18,
           padding: 0,
           height: 14,
-          "&:hover:not(:disabled)": {
-            backgroundColor: "transparent",
+          '&:hover:not(:disabled)': {
+            backgroundColor: 'transparent',
           },
         }}
       />

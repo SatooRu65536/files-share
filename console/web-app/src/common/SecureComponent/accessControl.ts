@@ -14,9 +14,10 @@
 //  You should have received a copy of the GNU Affero General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { store } from "../../store";
-import get from "lodash/get";
-import { IAM_SCOPES } from "./permissions";
+import get from 'lodash/get';
+
+import { store } from '../../store';
+import { IAM_SCOPES } from './permissions';
 
 const hasPermission = (
   resource: string | string[] | undefined,
@@ -28,11 +29,9 @@ const hasPermission = (
     return false;
   }
   const state = store.getState();
-  const sessionGrants = state.console.session
-    ? state.console.session.permissions || {}
-    : {};
+  const sessionGrants = state.console.session ? state.console.session.permissions || {} : {};
 
-  const globalGrants = sessionGrants["arn:aws:s3:::*"] || [];
+  const globalGrants = sessionGrants['arn:aws:s3:::*'] || [];
   let resources: string[] = [];
   let resourceGrants: string[] = [];
   let containsResourceGrants: string[] = [];
@@ -45,18 +44,14 @@ const hasPermission = (
     }
 
     // Filter wildcard items
-    const wildcards = Object.keys(sessionGrants).filter(
-      (item) => item.includes("*") && item !== "arn:aws:s3:::*",
-    );
+    const wildcards = Object.keys(sessionGrants).filter((item) => item.includes('*') && item !== 'arn:aws:s3:::*');
 
     const getMatchingWildcards = (path: string) => {
       const items = wildcards.map((element) => {
-        const wildcardItemSection = element.split(":").slice(-1)[0];
+        const wildcardItemSection = element.split(':').slice(-1)[0];
 
-        const replaceWildcard = wildcardItemSection
-          .replace("/", "\\/")
-          .replace("*", "($|\\/?(.*?))");
-        const inRegExp = new RegExp(`${replaceWildcard}`, "gm");
+        const replaceWildcard = wildcardItemSection.replace('/', '\\/').replace('*', '($|\\/?(.*?))');
+        const inRegExp = new RegExp(`${replaceWildcard}`, 'gm');
         // Avoid calling inRegExp multiple times and instead use the stored value if need it:
         // https://stackoverflow.com/questions/59694142/regex-testvalue-returns-true-when-logged-but-false-within-an-if-statement
         const matches = inRegExp.test(path);
@@ -70,7 +65,7 @@ const hasPermission = (
 
     resources.forEach((rsItem) => {
       // Validation against inner paths & wildcards
-      let wildcardRules = getMatchingWildcards(rsItem);
+      const wildcardRules = getMatchingWildcards(rsItem);
 
       let wildcardGrants: string[] = [];
 
@@ -87,13 +82,7 @@ const hasPermission = (
       const bucketOnly = get(sessionGrants, `arn:aws:s3:::${rsItem}/`, []);
       const bckOnlyNoSlash = get(sessionGrants, `arn:aws:s3:::${rsItem}`, []);
 
-      resourceGrants = [
-        ...simpleResources,
-        ...s3Resources,
-        ...wildcardGrants,
-        ...bucketOnly,
-        ...bckOnlyNoSlash,
-      ];
+      resourceGrants = [...simpleResources, ...s3Resources, ...wildcardGrants, ...bucketOnly, ...bckOnlyNoSlash];
 
       if (containsResource) {
         const matchResource = `arn:aws:s3:::${rsItem}`;
@@ -108,13 +97,13 @@ const hasPermission = (
   }
 
   let anyResourceGrant: string[] = [];
-  let validScopes = scopes || [];
-  if (resource === "*") {
+  const validScopes = scopes || [];
+  if (resource === '*') {
     Object.entries(sessionGrants).forEach(([key, values = []]) => {
-      let validValues = values || [];
+      const validValues = values || [];
       validScopes.forEach((scope) => {
         validValues.forEach((val) => {
-          if (val === scope || val === "s3:*") {
+          if (val === scope || val === 's3:*') {
             anyResourceGrant = [...anyResourceGrant, scope];
           }
         });
@@ -123,12 +112,7 @@ const hasPermission = (
   }
 
   return hasAccessToResource(
-    [
-      ...resourceGrants,
-      ...globalGrants,
-      ...containsResourceGrants,
-      ...anyResourceGrant,
-    ],
+    [...resourceGrants, ...globalGrants, ...containsResourceGrants, ...anyResourceGrant],
     scopes,
     matchAll,
   );
@@ -147,20 +131,16 @@ const hasAccessToResource = (
   }
 
   const s3All = userPermissionsOnBucket.includes(IAM_SCOPES.S3_ALL_ACTIONS);
-  const AdminAll = userPermissionsOnBucket.includes(
-    IAM_SCOPES.ADMIN_ALL_ACTIONS,
-  );
+  const AdminAll = userPermissionsOnBucket.includes(IAM_SCOPES.ADMIN_ALL_ACTIONS);
 
   const permissions = requiredPermissions.filter(function (n) {
     return (
       userPermissionsOnBucket.indexOf(n) !== -1 ||
-      (n.indexOf("s3:") !== -1 && s3All) ||
-      (n.indexOf("admin:") !== -1 && AdminAll)
+      (n.indexOf('s3:') !== -1 && s3All) ||
+      (n.indexOf('admin:') !== -1 && AdminAll)
     );
   });
-  return matchAll
-    ? permissions.length === requiredPermissions.length
-    : permissions.length > 0;
+  return matchAll ? permissions.length === requiredPermissions.length : permissions.length > 0;
 };
 
 export default hasPermission;

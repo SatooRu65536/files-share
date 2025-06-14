@@ -14,42 +14,42 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
+import React from 'react';
 
 interface ISpecificVersionPillProps {
-  type: "null" | "current" | "deleted";
+  type: 'null' | 'current' | 'deleted';
 }
 
 const SpecificVersionPill = ({ type }: ISpecificVersionPillProps) => {
-  let bgColor = "#000";
-  let message = "";
+  let bgColor = '#000';
+  let message = '';
 
   switch (type) {
-    case "null":
-      bgColor = "#07193E";
-      message = "NULL VERSION";
+    case 'null':
+      bgColor = '#07193E';
+      message = 'NULL VERSION';
       break;
-    case "deleted":
-      bgColor = "#868686";
-      message = "DELETED";
+    case 'deleted':
+      bgColor = '#868686';
+      message = 'DELETED';
       break;
     default:
-      bgColor = "#174551";
-      message = "CURRENT VERSION";
+      bgColor = '#174551';
+      message = 'CURRENT VERSION';
   }
 
   return (
     <span
       style={{
         backgroundColor: bgColor,
-        padding: "0 5px",
-        display: "inline-block",
-        color: "#FFF",
-        fontWeight: "bold",
+        padding: '0 5px',
+        display: 'inline-block',
+        color: '#FFF',
+        fontWeight: 'bold',
         fontSize: 12,
         borderRadius: 2,
-        whiteSpace: "nowrap",
-        margin: "0 10px",
+        whiteSpace: 'nowrap',
+        margin: '0 10px',
       }}
     >
       {message}

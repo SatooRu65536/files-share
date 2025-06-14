@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
-import { Box, RecoverIcon } from "mds";
-import { BucketObject } from "api/consoleApi";
-import { api } from "api";
-import { errorToHandler } from "api/errors";
-import ConfirmDialog from "../../../../Common/ModalWrapper/ConfirmDialog";
-import { setErrorSnackMessage } from "../../../../../../systemSlice";
-import { useAppDispatch } from "../../../../../../store";
-import { restoreLocalObjectList } from "../../../../ObjectBrowser/objectBrowserSlice";
+import { api } from 'api';
+import { BucketObject } from 'api/consoleApi';
+import { errorToHandler } from 'api/errors';
+import { Box, RecoverIcon } from 'mds';
+import React, { useState } from 'react';
+
+import { useAppDispatch } from '../../../../../../store';
+import { setErrorSnackMessage } from '../../../../../../systemSlice';
+import ConfirmDialog from '../../../../Common/ModalWrapper/ConfirmDialog';
+import { restoreLocalObjectList } from '../../../../ObjectBrowser/objectBrowserSlice';
 
 interface IRestoreFileVersion {
   restoreOpen: boolean;
@@ -33,11 +34,11 @@ interface IRestoreFileVersion {
 }
 
 const RestoreFileVersion = ({
-  versionToRestore,
   bucketName,
   objectPath,
-  restoreOpen,
   onCloseAndUpdate,
+  restoreOpen,
+  versionToRestore,
 }: IRestoreFileVersion) => {
   const dispatch = useAppDispatch();
   const [restoreLoading, setRestoreLoading] = useState<boolean>(false);
@@ -48,7 +49,7 @@ const RestoreFileVersion = ({
     api.buckets
       .putObjectRestore(bucketName, {
         prefix: objectPath,
-        version_id: versionToRestore.version_id || "",
+        version_id: versionToRestore.version_id || '',
       })
       .then(() => {
         setRestoreLoading(false);
@@ -69,13 +70,13 @@ const RestoreFileVersion = ({
   return (
     <ConfirmDialog
       title={`Restore File Version`}
-      confirmText={"Restore"}
+      confirmText={'Restore'}
       isOpen={restoreOpen}
       isLoading={restoreLoading}
       titleIcon={<RecoverIcon />}
       onConfirm={restoreVersion}
       confirmButtonProps={{
-        variant: "secondary",
+        variant: 'secondary',
         disabled: restoreLoading,
       }}
       onClose={() => {

@@ -16,9 +16,10 @@
 
 // This object contains variables that will be used across form components.
 
-import React from "react";
-import { Box } from "mds";
-import { replaceUnicodeChar } from "../../../../../../common/utils";
+import { Box } from 'mds';
+import React from 'react';
+
+import { replaceUnicodeChar } from '../../../../../../common/utils';
 
 interface IIconWithLabel {
   icon: React.ReactNode;
@@ -29,26 +30,24 @@ const IconWithLabel = ({ icon, strings }: IIconWithLabel) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        "& .min-icon": {
+        display: 'flex',
+        alignItems: 'center',
+        '& .min-icon': {
           width: 16,
           height: 16,
           marginRight: 4,
           minWidth: 16,
           minHeight: 16,
         },
-        "& .fileNameText": {
-          whiteSpace: "pre",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
+        '& .fileNameText': {
+          whiteSpace: 'pre',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
         },
       }}
     >
       {icon}
-      <span className={"fileNameText"}>
-        {replaceUnicodeChar(strings[strings.length - 1])}
-      </span>
+      <span className={'fileNameText'}>{replaceUnicodeChar(strings[strings.length - 1])}</span>
     </Box>
   );
 };

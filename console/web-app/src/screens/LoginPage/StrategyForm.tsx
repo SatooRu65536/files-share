@@ -14,21 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import {
-  Button,
-  Grid,
-  InputBox,
-  LockFilledIcon,
-  ProgressBar,
-  UserFilledIcon,
-} from "mds";
-import { setAccessKey, setSecretKey } from "./loginSlice";
+import { RedirectRule } from 'api/consoleApi';
+import { Button, Grid, InputBox, LockFilledIcon, ProgressBar, UserFilledIcon } from 'mds';
+import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
 
-import { AppState, useAppDispatch } from "../../store";
-import { useSelector } from "react-redux";
-import { doLoginAsync } from "./loginThunks";
-import { RedirectRule } from "api/consoleApi";
+import { AppState, useAppDispatch } from '../../store';
+import { setAccessKey, setSecretKey } from './loginSlice';
+import { doLoginAsync } from './loginThunks';
 
 const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
   const dispatch = useAppDispatch();
@@ -36,9 +29,7 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
   const accessKey = useSelector((state: AppState) => state.login.accessKey);
   const secretKey = useSelector((state: AppState) => state.login.secretKey);
 
-  const loginSending = useSelector(
-    (state: AppState) => state.login.loginSending,
-  );
+  const loginSending = useSelector((state: AppState) => state.login.loginSending);
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +38,7 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
 
   return (
     <React.Fragment>
-      <form noValidate onSubmit={formSubmit} style={{ width: "100%" }}>
+      <form noValidate onSubmit={formSubmit} style={{ width: '100%' }}>
         <Fragment>
           <Grid
             container
@@ -60,10 +51,8 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
                 fullWidth
                 id="accessKey"
                 value={accessKey}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(setAccessKey(e.target.value))
-                }
-                placeholder={"Username"}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(setAccessKey(e.target.value))}
+                placeholder={'Username'}
                 name="accessKey"
                 autoComplete="username"
                 disabled={loginSending}
@@ -74,15 +63,13 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
               <InputBox
                 fullWidth
                 value={secretKey}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(setSecretKey(e.target.value))
-                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(setSecretKey(e.target.value))}
                 name="secretKey"
                 type="password"
                 id="secretKey"
                 autoComplete="current-password"
                 disabled={loginSending}
-                placeholder={"Password"}
+                placeholder={'Password'}
                 startIcon={<LockFilledIcon />}
               />
             </Grid>
@@ -92,7 +79,7 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
             item
             xs={12}
             sx={{
-              textAlign: "right",
+              textAlign: 'right',
               marginTop: 30,
             }}
           >
@@ -101,14 +88,14 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
               variant="callAction"
               color="primary"
               id="do-login"
-              disabled={accessKey === "" || secretKey === "" || loginSending}
-              label={"Login"}
+              disabled={accessKey === '' || secretKey === '' || loginSending}
+              label={'Login'}
               sx={{
-                margin: "30px 0px 8px",
+                margin: '30px 0px 8px',
                 height: 40,
-                width: "100%",
-                boxShadow: "none",
-                padding: "16px 30px",
+                width: '100%',
+                boxShadow: 'none',
+                padding: '16px 30px',
               }}
               fullWidth
             />

@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as elements from "../utils/elements";
+import * as elements from '../utils/elements';
 
 // Using subpath defined in `MINIO_BROWSER_REDIRECT_URL`
-const appBaseUrl = "http://localhost:8000/console/subpath";
+const appBaseUrl = 'http://localhost:8000/console/subpath';
 let rootUrl = `${appBaseUrl}/`;
 
-fixture("Tests using subpath").page(appBaseUrl);
+fixture('Tests using subpath').page(appBaseUrl);
 
-test("RootUrl redirects to Login Page", async (t) => {
+test('RootUrl redirects to Login Page', async (t) => {
   const loginButtonExists = elements.loginButton.exists;
   await t.navigateTo(rootUrl).expect(loginButtonExists).ok().wait(2000);
 });

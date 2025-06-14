@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoutes";
-import LoadingComponent from "./common/LoadingComponent";
-import AppConsole from "./screens/Console/ConsoleKBar";
-import { baseUrl } from "./history";
+import React, { Suspense } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
-const Login = React.lazy(() => import("./screens/LoginPage/Login"));
-const Logout = React.lazy(() => import("./screens/LogoutPage/LogoutPage"));
+import LoadingComponent from './common/LoadingComponent';
+import { baseUrl } from './history';
+import ProtectedRoute from './ProtectedRoutes';
+import AppConsole from './screens/Console/ConsoleKBar';
+
+const Login = React.lazy(() => import('./screens/LoginPage/Login'));
+const Logout = React.lazy(() => import('./screens/LogoutPage/LogoutPage'));
 
 const MainRouter = () => {
   return (
@@ -44,10 +45,7 @@ const MainRouter = () => {
             </Suspense>
           }
         />
-        <Route
-          path={"/*"}
-          element={<ProtectedRoute Component={AppConsole} />}
-        />
+        <Route path={'/*'} element={<ProtectedRoute Component={AppConsole} />} />
       </Routes>
     </BrowserRouter>
   );

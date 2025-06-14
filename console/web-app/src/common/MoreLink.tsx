@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { ArrowIcon, Box } from "mds";
+import { ArrowIcon, Box } from 'mds';
+import React from 'react';
 
 const MoreLink = ({
   LeadingIcon,
-  text,
-  link,
   color,
+  link,
+  text,
 }: {
   LeadingIcon?: React.FunctionComponent;
   text: string;
@@ -32,18 +32,18 @@ const MoreLink = ({
     <a
       style={{
         color: color,
-        font: "normal normal bold 12px/55px Inter",
-        display: "block",
-        textDecoration: "none",
+        font: 'normal normal bold 12px/55px Inter',
+        display: 'block',
+        textDecoration: 'none',
       }}
       href={link}
-      target={"_blank"}
+      target={'_blank'} rel="noreferrer"
     >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
           height: 20,
           gap: 2,
         }}
@@ -53,8 +53,8 @@ const MoreLink = ({
             sx={{
               flexGrow: 0,
               flexShrink: 1,
-              lineHeight: "12px",
-              "& svg": {
+              lineHeight: '12px',
+              '& svg': {
                 height: 16,
                 width: 16,
               },
@@ -63,14 +63,12 @@ const MoreLink = ({
             <LeadingIcon />
           </Box>
         )}
-        <Box sx={{ flexGrow: 0, flexShrink: 1, lineHeight: "12px" }}>
-          {text}
-        </Box>
+        <Box sx={{ flexGrow: 0, flexShrink: 1, lineHeight: '12px' }}>{text}</Box>
         <Box
           sx={{
             flexGrow: 0,
             flexShrink: 1,
-            lineHeight: "12px",
+            lineHeight: '12px',
             marginTop: 2,
           }}
         >

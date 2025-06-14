@@ -1,13 +1,12 @@
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family:
-    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -20,7 +19,7 @@ input.removeArrows::-webkit-inner-spin-button,
 }
 
 /* Firefox */
-input.removeArrows[type="number"],
-.removeArrows input[type="number"] {
+input.removeArrows[type='number'],
+.removeArrows input[type='number'] {
   -moz-appearance: textfield;
 }

@@ -14,63 +14,64 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { DateTime } from "luxon";
-import { BucketObjectItem } from "./types";
-import { niceBytes } from "../../../../../../common/utils";
-import { displayFileIconName } from "./utils";
+import { DateTime } from 'luxon';
+
+import { niceBytes } from '../../../../../../common/utils';
+import { BucketObjectItem } from './types';
+import { displayFileIconName } from './utils';
 
 // Functions
 
 const displayParsedDate = (object: BucketObjectItem) => {
-  if (object.name.endsWith("/")) {
-    return "";
+  if (object.name.endsWith('/')) {
+    return '';
   }
 
   const currTime = DateTime.now();
   const objectTime = DateTime.fromISO(object.last_modified);
 
   const isToday =
-    currTime.hasSame(objectTime, "day") &&
-    currTime.hasSame(objectTime, "month") &&
-    currTime.hasSame(objectTime, "year");
+    currTime.hasSame(objectTime, 'day') &&
+    currTime.hasSame(objectTime, 'month') &&
+    currTime.hasSame(objectTime, 'year');
 
   if (isToday) {
-    return `Today, ${objectTime.toFormat("HH:mm")}`;
+    return `Today, ${objectTime.toFormat('HH:mm')}`;
   }
 
-  return objectTime.toFormat("ccc, LLL dd yyyy HH:mm (ZZZZ)");
+  return objectTime.toFormat('ccc, LLL dd yyyy HH:mm (ZZZZ)');
 };
 
 const displayNiceBytes = (object: BucketObjectItem) => {
-  if (object.name.endsWith("/") || !object.size) {
-    return "-";
+  if (object.name.endsWith('/') || !object.size) {
+    return '-';
   }
   return niceBytes(String(object.size));
 };
 
 const displayDeleteFlag = (state: boolean) => {
-  return state ? "Yes" : "No";
+  return state ? 'Yes' : 'No';
 };
 
 // Table Props
 
 export const listModeColumns = [
   {
-    label: "Name",
-    elementKey: "name",
+    label: 'Name',
+    elementKey: 'name',
     renderFunction: displayFileIconName,
     enableSort: true,
   },
   {
-    label: "Last Modified",
-    elementKey: "last_modified",
+    label: 'Last Modified',
+    elementKey: 'last_modified',
     renderFunction: displayParsedDate,
     renderFullObject: true,
     enableSort: true,
   },
   {
-    label: "Size",
-    elementKey: "size",
+    label: 'Size',
+    elementKey: 'size',
     renderFunction: displayNiceBytes,
     renderFullObject: true,
     width: 100,
@@ -80,29 +81,29 @@ export const listModeColumns = [
 
 export const rewindModeColumns = [
   {
-    label: "Name",
-    elementKey: "name",
+    label: 'Name',
+    elementKey: 'name',
     renderFunction: displayFileIconName,
     enableSort: true,
   },
   {
-    label: "Object Date",
-    elementKey: "last_modified",
+    label: 'Object Date',
+    elementKey: 'last_modified',
     renderFunction: displayParsedDate,
     renderFullObject: true,
     enableSort: true,
   },
   {
-    label: "Size",
-    elementKey: "size",
+    label: 'Size',
+    elementKey: 'size',
     renderFunction: displayNiceBytes,
     renderFullObject: true,
     width: 100,
     enableSort: true,
   },
   {
-    label: "Deleted",
-    elementKey: "delete_flag",
+    label: 'Deleted',
+    elementKey: 'delete_flag',
     renderFunction: displayDeleteFlag,
     width: 60,
   },

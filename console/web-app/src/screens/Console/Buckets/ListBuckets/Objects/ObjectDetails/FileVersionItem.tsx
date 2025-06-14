@@ -14,24 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { DateTime } from "luxon";
-import styled from "styled-components";
-import get from "lodash/get";
-import { displayFileIconName } from "../ListObjects/utils";
-import {
-  DownloadIcon,
-  PreviewIcon,
-  RecoverIcon,
-  ShareIcon,
-  IconButton,
-  Tooltip,
-  Grid,
-  Checkbox,
-} from "mds";
-import { niceBytes } from "../../../../../../common/utils";
-import SpecificVersionPill from "./SpecificVersionPill";
-import { BucketObject } from "api/consoleApi";
+import { BucketObject } from 'api/consoleApi';
+import get from 'lodash/get';
+import { DateTime } from 'luxon';
+import { Checkbox,DownloadIcon, Grid, IconButton, PreviewIcon, RecoverIcon, ShareIcon, Tooltip } from 'mds';
+import React from 'react';
+import styled from 'styled-components';
+
+import { niceBytes } from '../../../../../../common/utils';
+import { displayFileIconName } from '../ListObjects/utils';
+import SpecificVersionPill from './SpecificVersionPill';
 
 interface IFileVersionItem {
   fileName: string;
@@ -52,39 +44,39 @@ interface IFileVersionItem {
 
 const FileVersionStyled = styled.div(({ theme }) => {
   return {
-    "&:before": {
+    '&:before': {
       content: "' '",
-      display: "block",
-      position: "absolute",
-      width: "2px",
-      height: "calc(100% + 2px)",
-      backgroundColor: get(theme, "borderColor", "#F8F8F8"),
-      left: "24px",
+      display: 'block',
+      position: 'absolute',
+      width: '2px',
+      height: 'calc(100% + 2px)',
+      backgroundColor: get(theme, 'borderColor', '#F8F8F8'),
+      left: '24px',
     },
-    "& .mainFileVersionItem": {
-      borderBottom: `${get(theme, "borderColor", "#F8F8F8")} 1px solid`,
-      padding: "1rem 0",
-      margin: "0 0.5rem 0 2.5rem",
-      cursor: "pointer",
-      "&.deleted": {
-        color: "#868686",
+    '& .mainFileVersionItem': {
+      borderBottom: `${get(theme, 'borderColor', '#F8F8F8')} 1px solid`,
+      padding: '1rem 0',
+      margin: '0 0.5rem 0 2.5rem',
+      cursor: 'pointer',
+      '&.deleted': {
+        color: '#868686',
       },
     },
-    "& .intermediateLayer": {
-      margin: "0 1.5rem 0 1.5rem",
-      "&:hover, &.selected": {
-        backgroundColor: get(theme, "boxBackground", "#F8F8F8"),
-        "& > div": {
-          borderBottomColor: get(theme, "boxBackground", "#F8F8F8"),
+    '& .intermediateLayer': {
+      margin: '0 1.5rem 0 1.5rem',
+      '&:hover, &.selected': {
+        backgroundColor: get(theme, 'boxBackground', '#F8F8F8'),
+        '& > div': {
+          borderBottomColor: get(theme, 'boxBackground', '#F8F8F8'),
         },
       },
     },
-    "& .versionContainer": {
+    '& .versionContainer': {
       fontSize: 16,
-      fontWeight: "bold",
-      display: "flex",
-      alignItems: "center",
-      "& svg.min-icon": {
+      fontWeight: 'bold',
+      display: 'flex',
+      alignItems: 'center',
+      '& svg.min-icon': {
         width: 18,
         height: 18,
         minWidth: 18,
@@ -92,87 +84,87 @@ const FileVersionStyled = styled.div(({ theme }) => {
         marginRight: 10,
       },
     },
-    "& .buttonContainer": {
-      textAlign: "right",
-      "& button": {
-        marginLeft: "1.5rem",
+    '& .buttonContainer': {
+      textAlign: 'right',
+      '& button': {
+        marginLeft: '1.5rem',
       },
     },
-    "& .versionID": {
-      fontSize: "12px",
-      margin: "2px 0",
-      whiteSpace: "nowrap",
-      textOverflow: "ellipsis",
-      maxWidth: "95%",
-      overflow: "hidden",
+    '& .versionID': {
+      fontSize: '12px',
+      margin: '2px 0',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      maxWidth: '95%',
+      overflow: 'hidden',
     },
-    "& .versionData": {
-      marginRight: "10px",
+    '& .versionData': {
+      marginRight: '10px',
       fontSize: 12,
-      color: "#868686",
+      color: '#868686',
     },
-    "@media (max-width: 600px)": {
-      "& .buttonContainer": {
-        "& button": {
-          marginLeft: "5px",
+    '@media (max-width: 600px)': {
+      '& .buttonContainer': {
+        '& button': {
+          marginLeft: '5px',
         },
       },
     },
-    "@media (max-width: 799px)": {
-      "&:before": {
-        display: "none",
+    '@media (max-width: 799px)': {
+      '&:before': {
+        display: 'none',
       },
-      "& .mainFileVersionItem": {
-        padding: "5px 0px",
+      '& .mainFileVersionItem': {
+        padding: '5px 0px',
         margin: 0,
       },
-      "& .intermediateLayer": {
+      '& .intermediateLayer': {
         margin: 0,
-        "&:hover, &.selected": {
-          backgroundColor: "transparent",
-          "& > div": {
-            borderBottomColor: get(theme, "boxBackground", "#F8F8F8"),
+        '&:hover, &.selected': {
+          backgroundColor: 'transparent',
+          '& > div': {
+            borderBottomColor: get(theme, 'boxBackground', '#F8F8F8'),
           },
         },
       },
-      "& .versionContainer": {
+      '& .versionContainer': {
         fontSize: 14,
-        "& svg.min-icon": {
-          display: "none",
+        '& svg.min-icon': {
+          display: 'none',
         },
       },
-      "& .versionData": {
-        textOverflow: "ellipsis",
-        maxWidth: "95%",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
+      '& .versionData': {
+        textOverflow: 'ellipsis',
+        maxWidth: '95%',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
       },
-      "& .collapsableInfo": {
-        display: "flex",
-        flexDirection: "column",
+      '& .collapsableInfo': {
+        display: 'flex',
+        flexDirection: 'column',
       },
-      "& .versionItem": {
-        display: "none",
+      '& .versionItem': {
+        display: 'none',
       },
     },
   };
 });
 
 const FileVersionItem = ({
-  fileName,
-  versionInfo,
-  isSelected,
   checkable,
-  isChecked,
-  onCheck,
-  onShare,
-  onDownload,
-  onRestore,
-  onPreview,
+  fileName,
   globalClick,
   index,
+  isChecked,
+  isSelected,
   key,
+  onCheck,
+  onDownload,
+  onPreview,
+  onRestore,
+  onShare,
   style,
+  versionInfo,
 }: IFileVersionItem) => {
   const disableButtons = versionInfo.is_delete_marker;
 
@@ -180,69 +172,57 @@ const FileVersionItem = ({
     {
       icon: <PreviewIcon />,
       action: onPreview,
-      tooltip: "Preview",
+      tooltip: 'Preview',
     },
     {
       icon: <DownloadIcon />,
       action: onDownload,
-      tooltip: "Download this version",
+      tooltip: 'Download this version',
     },
     {
       icon: <ShareIcon />,
       action: onShare,
-      tooltip: "Share this version",
+      tooltip: 'Share this version',
     },
     {
       icon: <RecoverIcon />,
       action: onRestore,
-      tooltip: "Restore this version",
+      tooltip: 'Restore this version',
     },
   ];
 
-  let pill: "deleted" | "current" | "null" | null = null;
+  let pill: 'deleted' | 'current' | 'null' | null = null;
 
   if (versionInfo.is_delete_marker) {
-    pill = "deleted";
+    pill = 'deleted';
   } else if (versionInfo.is_latest) {
-    pill = "current";
-  } else if (versionInfo.version_id === "null") {
-    pill = "null";
+    pill = 'current';
+  } else if (versionInfo.version_id === 'null') {
+    pill = 'null';
   }
 
   let lastModified = DateTime.now();
 
   if (versionInfo.last_modified) {
-    lastModified = DateTime.fromISO(
-      versionInfo.last_modified,
-    ) as DateTime<true>;
+    lastModified = DateTime.fromISO(versionInfo.last_modified) as DateTime<true>;
   }
 
   return (
     <FileVersionStyled>
       <Grid
         container
-        className={"ctrItem"}
+        className={'ctrItem'}
         onClick={() => {
           globalClick(versionInfo);
         }}
         key={key}
         style={style}
       >
-        <Grid
-          item
-          xs={12}
-          className={`${"intermediateLayer"} ${isSelected ? "selected" : ""}`}
-        >
-          <Grid
-            item
-            xs
-            className={`mainFileVersionItem ${
-              versionInfo.is_delete_marker ? "deleted" : ""
-            }`}
-          >
+        <Grid item xs={12} className={`${'intermediateLayer'} ${isSelected ? 'selected' : ''}`}>
+          <Grid item xs className={`mainFileVersionItem ${versionInfo.is_delete_marker ? 'deleted' : ''}`}>
             <Grid item xs={12}>
               <Grid container>
-                <Grid item xs md={4} className={"versionContainer"}>
+                <Grid item xs md={4} className={'versionContainer'}>
                   {checkable && (
                     <Checkbox
                       checked={isChecked}
@@ -250,37 +230,26 @@ const FileVersionItem = ({
                       name={`select-${versionInfo.version_id}`}
                       onChange={(e) => {
                         e.stopPropagation();
-                        onCheck(versionInfo.version_id || "");
+                        onCheck(versionInfo.version_id || '');
                       }}
-                      value={versionInfo.version_id || ""}
+                      value={versionInfo.version_id || ''}
                       disabled={versionInfo.is_delete_marker}
                       sx={{
-                        width: "initial",
+                        width: 'initial',
                       }}
                     />
                   )}
                   {displayFileIconName(fileName, true)} v{index.toString()}
-                  <span className={"versionItem"}>
-                    {pill && <SpecificVersionPill type={pill} />}
-                  </span>
+                  <span className={'versionItem'}>{pill && <SpecificVersionPill type={pill} />}</span>
                 </Grid>
-                <Grid item xs={10} md={8} className={"buttonContainer"}>
+                <Grid item xs={10} md={8} className={'buttonContainer'}>
                   {versionItemButtons.map((button, index) => {
                     return (
-                      <Tooltip
-                        tooltip={button.tooltip}
-                        key={`version-action-${
-                          button.tooltip
-                        }-${index.toString()}`}
-                      >
+                      <Tooltip tooltip={button.tooltip} key={`version-action-${button.tooltip}-${index.toString()}`}>
                         <IconButton
-                          size={"small"}
-                          id={`version-action-${
-                            button.tooltip
-                          }-${index.toString()}`}
-                          className={`${"spacing"} ${
-                            disableButtons ? "buttonDisabled" : ""
-                          }`}
+                          size={'small'}
+                          id={`version-action-${button.tooltip}-${index.toString()}`}
+                          className={`${'spacing'} ${disableButtons ? 'buttonDisabled' : ''}`}
                           disabled={disableButtons}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -291,14 +260,14 @@ const FileVersionItem = ({
                             }
                           }}
                           sx={{
-                            backgroundColor: "#F8F8F8",
-                            borderRadius: "100%",
-                            width: "28px",
-                            height: "28px",
-                            padding: "5px",
-                            "& .min-icon": {
-                              width: "14px",
-                              height: "14px",
+                            backgroundColor: '#F8F8F8',
+                            borderRadius: '100%',
+                            width: '28px',
+                            height: '28px',
+                            padding: '5px',
+                            '& .min-icon': {
+                              width: '14px',
+                              height: '14px',
                             },
                           }}
                         >
@@ -310,16 +279,15 @@ const FileVersionItem = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} className={"versionID"}>
-              {versionInfo.version_id !== "null" ? versionInfo.version_id : "-"}
+            <Grid item xs={12} className={'versionID'}>
+              {versionInfo.version_id !== 'null' ? versionInfo.version_id : '-'}
             </Grid>
-            <Grid item xs={12} className={"collapsableInfo"}>
-              <span className={"versionData"}>
-                <strong>Last modified:</strong>{" "}
-                {lastModified.toFormat("ccc, LLL dd yyyy HH:mm:ss (ZZZZ)")}
+            <Grid item xs={12} className={'collapsableInfo'}>
+              <span className={'versionData'}>
+                <strong>Last modified:</strong> {lastModified.toFormat('ccc, LLL dd yyyy HH:mm:ss (ZZZZ)')}
               </span>
-              <span className={"versionData"}>
-                <strong>Size:</strong> {niceBytes(`${versionInfo.size || "0"}`)}
+              <span className={'versionData'}>
+                <strong>Size:</strong> {niceBytes(`${versionInfo.size || '0'}`)}
               </span>
             </Grid>
           </Grid>

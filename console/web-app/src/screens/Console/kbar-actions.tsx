@@ -14,14 +14,12 @@
 //  You should have received a copy of the GNU Affero General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from "kbar/lib/types";
-import { BucketsIcon } from "mds";
-import { Bucket } from "../../api/consoleApi";
+import { Action } from 'kbar/lib/types';
+import { BucketsIcon } from 'mds';
 
-export const routesAsKbarActions = (
-  buckets: Bucket[],
-  navigate: (url: string) => void,
-) => {
+import { Bucket } from '../../api/consoleApi';
+
+export const routesAsKbarActions = (buckets: Bucket[], navigate: (url: string) => void) => {
   const initialActions: Action[] = [];
 
   if (buckets) {
@@ -29,7 +27,7 @@ export const routesAsKbarActions = (
       initialActions.push({
         id: buck.name,
         name: buck.name,
-        section: "List of Buckets",
+        section: 'List of Buckets',
         perform: () => {
           navigate(`/browser/${buck.name}`);
         },

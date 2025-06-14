@@ -14,33 +14,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
+import { Box, Button, FormLayout, Grid, ProgressBar } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { useNavigate } from "react-router-dom";
-import { Box, Button, FormLayout, Grid, ProgressBar } from "mds";
-import { AppState, useAppDispatch } from "../../../../../store";
-import { useSelector } from "react-redux";
-import { setErrorSnackMessage, setHelpName } from "../../../../../systemSlice";
-import TooltipWrapper from "../../../Common/TooltipWrapper/TooltipWrapper";
-import {
-  resetForm,
-  setAddBucketOpen,
-  setIsDirty,
-  setName,
-} from "./addBucketsSlice";
-import { addBucketAsync } from "./addBucketThunks";
-import AddBucketName from "./AddBucketName";
-import { api } from "../../../../../api";
-import { errorToHandler } from "../../../../../api/errors";
-import ModalWrapper from "../../../Common/ModalWrapper/ModalWrapper";
+import { api } from '../../../../../api';
+import { errorToHandler } from '../../../../../api/errors';
+import { AppState, useAppDispatch } from '../../../../../store';
+import { setErrorSnackMessage, setHelpName } from '../../../../../systemSlice';
+import ModalWrapper from '../../../Common/ModalWrapper/ModalWrapper';
+import TooltipWrapper from '../../../Common/TooltipWrapper/TooltipWrapper';
+import AddBucketName from './AddBucketName';
+import { resetForm, setAddBucketOpen, setIsDirty, setName } from './addBucketsSlice';
+import { addBucketAsync } from './addBucketThunks';
 
 const AddBucketModal = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const validBucketCharacters = new RegExp(
-    `^[a-z0-9][a-z0-9\\.\\-]{1,61}[a-z0-9]$`,
-  );
+  const validBucketCharacters = new RegExp(`^[a-z0-9][a-z0-9\\.\\-]{1,61}[a-z0-9]$`);
   const ipAddressFormat = new RegExp(`^(\\d+\\.){3}\\d+$`);
   const bucketName = useSelector((state: AppState) => state.addBucket.name);
   const isDirty = useSelector((state: AppState) => state.addBucket.isDirty);
@@ -51,15 +44,9 @@ const AddBucketModal = () => {
   const [records, setRecords] = useState<string[]>([]);
   const addLoading = useSelector((state: AppState) => state.addBucket.loading);
   const addError = useSelector((state: AppState) => state.addBucket.error);
-  const modalOpen = useSelector(
-    (state: AppState) => state.addBucket.addBucketOpen,
-  );
-  const invalidFields = useSelector(
-    (state: AppState) => state.addBucket.invalidFields,
-  );
-  const navigateTo = useSelector(
-    (state: AppState) => state.addBucket.navigateTo,
-  );
+  const modalOpen = useSelector((state: AppState) => state.addBucket.addBucketOpen);
+  const invalidFields = useSelector((state: AppState) => state.addBucket.invalidFields);
+  const navigateTo = useSelector((state: AppState) => state.addBucket.navigateTo);
 
   useEffect(() => {
     if (addError) {
@@ -71,14 +58,10 @@ const AddBucketModal = () => {
     const bucketNameErrors = [
       !(isDirty && (bucketName.length < 3 || bucketName.length > 63)),
       validBucketCharacters.test(bucketName),
-      !(
-        bucketName.includes(".-") ||
-        bucketName.includes("-.") ||
-        bucketName.includes("..")
-      ),
+      !(bucketName.includes('.-') || bucketName.includes('-.') || bucketName.includes('..')),
       !ipAddressFormat.test(bucketName),
-      !bucketName.startsWith("xn--"),
-      !bucketName.endsWith("-s3alias"),
+      !bucketName.startsWith('xn--'),
+      !bucketName.endsWith('-s3alias'),
       !records.includes(bucketName),
     ];
     setValidationResult(bucketNameErrors);
@@ -86,14 +69,14 @@ const AddBucketModal = () => {
   }, [bucketName, isDirty]);
 
   useEffect(() => {
-    dispatch(setName(""));
+    dispatch(setName(''));
     dispatch(setIsDirty(false));
     const fetchRecords = () => {
       api.buckets
         .listBuckets()
         .then((res) => {
           if (res.data) {
-            var bucketList: string[] = [];
+            const bucketList: string[] = [];
             if (res.data.buckets != null && res.data.buckets.length > 0) {
               res.data.buckets.forEach((bucket) => {
                 bucketList.push(bucket.name);
@@ -116,7 +99,7 @@ const AddBucketModal = () => {
   };
 
   useEffect(() => {
-    if (navigateTo !== "") {
+    if (navigateTo !== '') {
       const goTo = `${navigateTo}`;
       dispatch(setAddBucketOpen(false));
       dispatch(resetForm());
@@ -125,7 +108,7 @@ const AddBucketModal = () => {
   }, [navigateTo, navigate, dispatch]);
 
   useEffect(() => {
-    dispatch(setHelpName("add_bucket"));
+    dispatch(setHelpName('add_bucket'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -136,7 +119,7 @@ const AddBucketModal = () => {
           dispatch(setAddBucketOpen(false));
         }}
         modalOpen={modalOpen}
-        title={"Create Bucket"}
+        title={'Create Bucket'}
       >
         <FormLayout withBorders={false}>
           <form
@@ -152,40 +135,33 @@ const AddBucketModal = () => {
             </Box>
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
                 gap: 10,
                 marginTop: 15,
               }}
             >
               <Button
-                id={"clear"}
+                id={'clear'}
                 type="button"
-                variant={"regular"}
-                className={"clearButton"}
+                variant={'regular'}
+                className={'clearButton'}
                 onClick={resForm}
-                label={"Clear"}
+                label={'Clear'}
               />
               <TooltipWrapper
                 tooltip={
-                  invalidFields.length > 0 || !isDirty || hasErrors
-                    ? "You must apply a valid name to the bucket"
-                    : ""
+                  invalidFields.length > 0 || !isDirty || hasErrors ? 'You must apply a valid name to the bucket' : ''
                 }
               >
                 <Button
-                  id={"create-bucket"}
+                  id={'create-bucket'}
                   type="submit"
                   variant="callAction"
                   color="primary"
-                  disabled={
-                    addLoading ||
-                    invalidFields.length > 0 ||
-                    !isDirty ||
-                    hasErrors
-                  }
-                  label={"Create Bucket"}
+                  disabled={addLoading || invalidFields.length > 0 || !isDirty || hasErrors}
+                  label={'Create Bucket'}
                 />
               </TooltipWrapper>
             </Box>

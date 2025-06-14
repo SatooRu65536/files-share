@@ -14,18 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
-import { Box } from "mds";
-import { safeDecodeURIComponent } from "../../../../../../common/utils";
+import { Box } from 'mds';
+import React, { Fragment } from 'react';
+
+import { safeDecodeURIComponent } from '../../../../../../common/utils';
 
 interface IObjectMetadata {
   metaData: any;
 }
 
 const itemRendererFn = (element: any) => {
-  return Array.isArray(element)
-    ? element.map(safeDecodeURIComponent).join(", ")
-    : safeDecodeURIComponent(element);
+  return Array.isArray(element) ? element.map(safeDecodeURIComponent).join(', ') : safeDecodeURIComponent(element);
 };
 
 const ObjectMetaData = ({ metaData }: IObjectMetadata) => {
@@ -41,7 +40,7 @@ const ObjectMetaData = ({ metaData }: IObjectMetadata) => {
               marginBottom: 15,
               fontSize: 14,
               maxHeight: 180,
-              overflowY: "auto",
+              overflowY: 'auto',
             }}
             key={`box-meta-${element}-${index.toString()}`}
           >

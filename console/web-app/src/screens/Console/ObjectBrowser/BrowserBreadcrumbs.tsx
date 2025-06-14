@@ -14,50 +14,38 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import CopyToClipboard from "react-copy-to-clipboard";
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { safeDecodeURIComponent } from "../../../common/utils";
-import {
-  Button,
-  CopyIcon,
-  NewPathIcon,
-  Tooltip,
-  Breadcrumbs,
-  breakPoints,
-  Box,
-} from "mds";
-import { hasPermission } from "../../../common/SecureComponent";
-import {
-  IAM_SCOPES,
-  permissionTooltipHelper,
-} from "../../../common/SecureComponent/permissions";
-import withSuspense from "../Common/Components/withSuspense";
-import { setSnackBarMessage } from "../../../systemSlice";
-import { AppState, useAppDispatch } from "../../../store";
-import { setVersionsModeEnabled } from "./objectBrowserSlice";
-import { getSessionGrantsWildCard } from "../Buckets/ListBuckets/UploadPermissionUtils";
+import { Box,Breadcrumbs, breakPoints, Button, CopyIcon, NewPathIcon, Tooltip } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { hasPermission } from '../../../common/SecureComponent';
+import { IAM_SCOPES, permissionTooltipHelper } from '../../../common/SecureComponent/permissions';
+import { safeDecodeURIComponent } from '../../../common/utils';
+import { AppState, useAppDispatch } from '../../../store';
+import { setSnackBarMessage } from '../../../systemSlice';
+import { getSessionGrantsWildCard } from '../Buckets/ListBuckets/UploadPermissionUtils';
+import withSuspense from '../Common/Components/withSuspense';
+import { setVersionsModeEnabled } from './objectBrowserSlice';
 
 const CreatePathModal = withSuspense(
-  React.lazy(
-    () => import("../Buckets/ListBuckets/Objects/ListObjects/CreatePathModal"),
-  ),
+  React.lazy(() => import('../Buckets/ListBuckets/Objects/ListObjects/CreatePathModal')),
 );
 
 const BreadcrumbsMain = styled.div(() => ({
-  display: "flex",
-  "& .additionalOptions": {
-    paddingRight: "10px",
-    display: "flex",
-    alignItems: "center",
+  display: 'flex',
+  '& .additionalOptions': {
+    paddingRight: '10px',
+    display: 'flex',
+    alignItems: 'center',
     [`@media (max-width: ${breakPoints.lg}px)`]: {
-      display: "none",
+      display: 'none',
     },
   },
-  "& .slashSpacingStyle": {
-    margin: "0 5px",
+  '& .slashSpacingStyle': {
+    margin: '0 5px',
   },
 }));
 
@@ -68,35 +56,19 @@ interface IObjectBrowser {
   additionalOptions?: React.ReactNode;
 }
 
-const BrowserBreadcrumbs = ({
-  bucketName,
-  internalPaths,
-  hidePathButton,
-  additionalOptions,
-}: IObjectBrowser) => {
+const BrowserBreadcrumbs = ({ additionalOptions, bucketName, hidePathButton, internalPaths }: IObjectBrowser) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const rewindEnabled = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.rewindEnabled,
-  );
-  const versionsMode = useSelector(
-    (state: AppState) => state.objectBrowser.versionsMode,
-  );
-  const versionedFile = useSelector(
-    (state: AppState) => state.objectBrowser.versionedFile,
-  );
-  const anonymousMode = useSelector(
-    (state: AppState) => state.system.anonymousMode,
-  );
+  const rewindEnabled = useSelector((state: AppState) => state.objectBrowser.rewind.rewindEnabled);
+  const versionsMode = useSelector((state: AppState) => state.objectBrowser.versionsMode);
+  const versionedFile = useSelector((state: AppState) => state.objectBrowser.versionedFile);
+  const anonymousMode = useSelector((state: AppState) => state.system.anonymousMode);
 
   const [createFolderOpen, setCreateFolderOpen] = useState<boolean>(false);
   const [canCreateSubpath, setCanCreateSubpath] = useState<boolean>(false);
 
-  const putObjectPermScopes = [
-    IAM_SCOPES.S3_PUT_OBJECT,
-    IAM_SCOPES.S3_PUT_ACTIONS,
-  ];
+  const putObjectPermScopes = [IAM_SCOPES.S3_PUT_OBJECT, IAM_SCOPES.S3_PUT_ACTIONS];
 
   const sessionGrants = useSelector((state: AppState) =>
     state.console.session ? state.console.session.permissions || {} : {},
@@ -104,42 +76,31 @@ const BrowserBreadcrumbs = ({
 
   let paths = internalPaths;
 
-  if (internalPaths !== "") {
+  if (internalPaths !== '') {
     paths = `/${internalPaths}`;
   }
 
-  const splitPaths = paths.split("/").filter((path) => path !== "");
+  const splitPaths = paths.split('/').filter((path) => path !== '');
   const lastBreadcrumbsIndex = splitPaths.length - 1;
 
   const pathToCheckPerms = bucketName + paths || bucketName;
-  const sessionGrantWildCards = getSessionGrantsWildCard(
-    sessionGrants,
-    pathToCheckPerms,
-    putObjectPermScopes,
-  );
+  const sessionGrantWildCards = getSessionGrantsWildCard(sessionGrants, pathToCheckPerms, putObjectPermScopes);
 
   useEffect(() => {
     setCanCreateSubpath(false);
     Object.keys(sessionGrants).forEach((grant) => {
-      grant.includes(pathToCheckPerms) &&
-        grant.includes("/*") &&
-        setCanCreateSubpath(true);
+      grant.includes(pathToCheckPerms) && grant.includes('/*') && setCanCreateSubpath(true);
     });
   }, [pathToCheckPerms, internalPaths, sessionGrants]);
 
   const canCreatePath =
-    hasPermission(
-      [pathToCheckPerms, ...sessionGrantWildCards],
-      putObjectPermScopes,
-    ) ||
+    hasPermission([pathToCheckPerms, ...sessionGrantWildCards], putObjectPermScopes) ||
     anonymousMode ||
     canCreateSubpath;
 
-  let breadcrumbsMap = splitPaths.map((objectItem: string, index: number) => {
-    const subSplit = `${splitPaths.slice(0, index + 1).join("/")}/`;
-    const route = `/browser/${encodeURIComponent(bucketName)}/${
-      subSplit ? `${encodeURIComponent(subSplit)}` : ``
-    }`;
+  const breadcrumbsMap = splitPaths.map((objectItem: string, index: number) => {
+    const subSplit = `${splitPaths.slice(0, index + 1).join('/')}/`;
+    const route = `/browser/${encodeURIComponent(bucketName)}/${subSplit ? `${encodeURIComponent(subSplit)}` : ``}`;
 
     if (index === lastBreadcrumbsIndex && objectItem === versionedFile) {
       return null;
@@ -147,28 +108,22 @@ const BrowserBreadcrumbs = ({
 
     return (
       <Fragment key={`breadcrumbs-${index.toString()}`}>
-        <span className={"slashSpacingStyle"}>/</span>
+        <span className={'slashSpacingStyle'}>/</span>
         {index === lastBreadcrumbsIndex ? (
-          <span style={{ cursor: "default", whiteSpace: "pre" }}>
+          <span style={{ cursor: 'default', whiteSpace: 'pre' }}>
             {safeDecodeURIComponent(objectItem) /*Only for display*/}
           </span>
         ) : (
           <Link
             style={{
-              whiteSpace: "pre",
+              whiteSpace: 'pre',
             }}
             to={route}
             onClick={() => {
-              dispatch(
-                setVersionsModeEnabled({ status: false, objectName: "" }),
-              );
+              dispatch(setVersionsModeEnabled({ status: false, objectName: '' }));
             }}
           >
-            {
-              safeDecodeURIComponent(
-                objectItem,
-              ) /*Only for display to preserve */
-            }
+            {safeDecodeURIComponent(objectItem) /*Only for display to preserve */}
           </Link>
         )}
       </Fragment>
@@ -181,7 +136,7 @@ const BrowserBreadcrumbs = ({
     versionsItem = [
       <Fragment key={`breadcrumbs-versionedItem`}>
         <span>
-          <span className={"slashSpacingStyle"}>/</span>
+          <span className={'slashSpacingStyle'}>/</span>
           {versionedFile} - Versions
         </span>
       </Fragment>,
@@ -193,7 +148,7 @@ const BrowserBreadcrumbs = ({
       <Link
         to={`/browser/${bucketName}`}
         onClick={() => {
-          dispatch(setVersionsModeEnabled({ status: false, objectName: "" }));
+          dispatch(setVersionsModeEnabled({ status: false, objectName: '' }));
         }}
       >
         {bucketName}
@@ -209,7 +164,7 @@ const BrowserBreadcrumbs = ({
 
   const goBackFunction = () => {
     if (versionsMode) {
-      dispatch(setVersionsModeEnabled({ status: false, objectName: "" }));
+      dispatch(setVersionsModeEnabled({ status: false, objectName: '' }));
     } else {
       if (splitPaths.length === 0) {
         return;
@@ -218,11 +173,7 @@ const BrowserBreadcrumbs = ({
       const prevPath = splitPaths.slice(0, -1);
 
       navigate(
-        `/browser/${bucketName}${
-          prevPath.length > 0
-            ? `/${encodeURIComponent(`${prevPath.join("/")}/`)}`
-            : ""
-        }`,
+        `/browser/${bucketName}${prevPath.length > 0 ? `/${encodeURIComponent(`${prevPath.join('/')}/`)}` : ''}`,
       );
     }
   };
@@ -238,49 +189,44 @@ const BrowserBreadcrumbs = ({
             onClose={closeAddFolderModal}
             limitedSubPath={
               canCreateSubpath &&
-              !(
-                hasPermission(
-                  [pathToCheckPerms, ...sessionGrantWildCards],
-                  putObjectPermScopes,
-                ) || anonymousMode
-              )
+              !(hasPermission([pathToCheckPerms, ...sessionGrantWildCards], putObjectPermScopes) || anonymousMode)
             }
           />
         )}
         <Breadcrumbs
           sx={{
-            whiteSpace: "pre",
+            whiteSpace: 'pre',
           }}
           goBackFunction={goBackFunction}
           additionalOptions={
             <Fragment>
-              <CopyToClipboard text={`${bucketName}/${splitPaths.join("/")}`}>
+              <CopyToClipboard text={`${bucketName}/${splitPaths.join('/')}`}>
                 <Button
-                  id={"copy-path"}
+                  id={'copy-path'}
                   icon={
                     <CopyIcon
                       style={{
-                        width: "12px",
-                        height: "12px",
-                        fill: "#969FA8",
+                        width: '12px',
+                        height: '12px',
+                        fill: '#969FA8',
                         marginTop: -1,
                       }}
                     />
                   }
-                  variant={"regular"}
+                  variant={'regular'}
                   onClick={() => {
-                    dispatch(setSnackBarMessage("Path copied to clipboard"));
+                    dispatch(setSnackBarMessage('Path copied to clipboard'));
                   }}
                   style={{
-                    width: "28px",
-                    height: "28px",
-                    color: "#969FA8",
-                    border: "#969FA8 1px solid",
+                    width: '28px',
+                    height: '28px',
+                    color: '#969FA8',
+                    border: '#969FA8 1px solid',
                     marginRight: 5,
                   }}
                 />
               </CopyToClipboard>
-              <Box className={"additionalOptions"}>{additionalOptions}</Box>
+              <Box className={'additionalOptions'}>{additionalOptions}</Box>
             </Fragment>
           }
         >
@@ -290,43 +236,40 @@ const BrowserBreadcrumbs = ({
           <Tooltip
             tooltip={
               canCreatePath
-                ? "Choose or create a new path"
-                : permissionTooltipHelper(
-                    [IAM_SCOPES.S3_PUT_OBJECT, IAM_SCOPES.S3_PUT_ACTIONS],
-                    "create a new path",
-                  )
+                ? 'Choose or create a new path'
+                : permissionTooltipHelper([IAM_SCOPES.S3_PUT_OBJECT, IAM_SCOPES.S3_PUT_ACTIONS], 'create a new path')
             }
           >
             <Button
-              id={"new-path"}
+              id={'new-path'}
               onClick={() => {
                 setCreateFolderOpen(true);
               }}
               disabled={anonymousMode ? false : rewindEnabled || !canCreatePath}
-              icon={<NewPathIcon style={{ fill: "#969FA8" }} />}
+              icon={<NewPathIcon style={{ fill: '#969FA8' }} />}
               style={{
-                whiteSpace: "nowrap",
+                whiteSpace: 'nowrap',
               }}
-              variant={"regular"}
-              label={"Create new path"}
+              variant={'regular'}
+              label={'Create new path'}
             />
           </Tooltip>
         )}
       </BreadcrumbsMain>
       <Box
         sx={{
-          display: "none",
+          display: 'none',
           marginTop: 15,
           marginBottom: 5,
-          justifyContent: "flex-start",
-          "& > div": {
+          justifyContent: 'flex-start',
+          '& > div': {
             fontSize: 12,
-            fontWeight: "normal",
-            flexDirection: "row",
-            flexWrap: "nowrap",
+            fontWeight: 'normal',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
           },
           [`@media (max-width: ${breakPoints.lg}px)`]: {
-            display: "flex",
+            display: 'flex',
           },
         }}
       >

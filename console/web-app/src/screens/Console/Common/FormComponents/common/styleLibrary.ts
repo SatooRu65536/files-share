@@ -19,14 +19,14 @@
 export const modalStyleUtils: any = {
   modalButtonBar: {
     marginTop: 15,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     gap: 10,
   },
   modalFormScrollable: {
-    maxHeight: "calc(100vh - 300px)",
-    overflowY: "auto",
+    maxHeight: 'calc(100vh - 300px)',
+    overflowY: 'auto',
     paddingTop: 10,
   },
 };

@@ -3,11 +3,7 @@
   "Statement": [
     {
       "Sid": "AllowUserToSeeBucketListInTheConsole",
-      "Action": [
-        "s3:ListAllMyBuckets",
-        "s3:GetBucketLocation",
-        "s3:GetBucketVersioning"
-      ],
+      "Action": ["s3:ListAllMyBuckets", "s3:GetBucketLocation", "s3:GetBucketVersioning"],
       "Effect": "Allow",
       "Resource": ["arn:aws:s3:::*"]
     },

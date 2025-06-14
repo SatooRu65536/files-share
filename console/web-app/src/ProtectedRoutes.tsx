@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { AppState, useAppDispatch } from "./store";
-import LoadingComponent from "./common/LoadingComponent";
-import { fetchSession } from "./screens/LoginPage/sessionThunk";
-import { setLocationPath } from "./systemSlice";
-import { SessionCallStates } from "./screens/Console/consoleSlice.types";
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Navigate, useLocation } from 'react-router-dom';
+
+import LoadingComponent from './common/LoadingComponent';
+import { SessionCallStates } from './screens/Console/consoleSlice.types';
+import { fetchSession } from './screens/LoginPage/sessionThunk';
+import { AppState, useAppDispatch } from './store';
+import { setLocationPath } from './systemSlice';
 
 interface ProtectedRouteProps {
   Component: any;
@@ -32,13 +33,11 @@ const ProtectedRoute = ({ Component }: ProtectedRouteProps) => {
 
   const userLoggedIn = useSelector((state: AppState) => state.system.loggedIn);
   const [componentLoading, setComponentLoading] = useState<boolean>(true);
-  const sessionLoadingState = useSelector(
-    (state: AppState) => state.console.sessionLoadingState,
-  );
-  const { pathname = "" } = useLocation();
+  const sessionLoadingState = useSelector((state: AppState) => state.console.sessionLoadingState);
+  const { pathname = '' } = useLocation();
 
   const StorePathAndRedirect = () => {
-    localStorage.setItem("redirect-path", pathname);
+    localStorage.setItem('redirect-path', pathname);
     return <Navigate to={{ pathname: `login` }} />;
   };
 

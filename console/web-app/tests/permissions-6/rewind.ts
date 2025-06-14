@@ -14,45 +14,42 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import * as elements from "../utils/elements";
-import * as functions from "../utils/functions";
-import {
-  namedTestBucketBrowseButtonFor,
-  testBucketBrowseButtonFor,
-} from "../utils/functions";
-import { Selector } from "testcafe";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import * as elements from '../utils/elements';
+import * as functions from '../utils/functions';
+import { namedTestBucketBrowseButtonFor, testBucketBrowseButtonFor } from '../utils/functions';
+import { Selector } from 'testcafe';
+import { acknowledgeButton } from '../utils/elements';
 
-fixture("Rewind Testing").page("http://localhost:9090");
+fixture('Rewind Testing').page('http://localhost:9090');
 
-const bucketname = "bucketname";
+const bucketname = 'bucketname';
 const test3BucketBrowseButton = namedTestBucketBrowseButtonFor(bucketname);
 
 test
   .before(async (t) => {
     // Create a bucket
-    await functions.setUpBucket(t, "abucketrewind");
-    await functions.setVersioned(t, "abucketrewind");
+    await functions.setUpBucket(t, 'abucketrewind');
+    await functions.setVersioned(t, 'abucketrewind');
     await t
       .useRole(roles.bucketReadWrite)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "abucketrewind")
-      .click(testBucketBrowseButtonFor("abucketrewind"))
+      .typeText(elements.filterBuckets, 'abucketrewind')
+      .click(testBucketBrowseButtonFor('abucketrewind'))
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt")
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt')
       .wait(1000)
-      .navigateTo("http://localhost:9090/browser")
-      .click(testBucketBrowseButtonFor("abucketrewind"))
+      .navigateTo('http://localhost:9090/browser')
+      .click(testBucketBrowseButtonFor('abucketrewind'))
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt")
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt')
       .wait(1000);
-  })("Rewind works in bucket", async (t) => {
+  })('Rewind works in bucket', async (t) => {
     await t
       .useRole(roles.bucketReadWrite)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "abucketrewind")
-      .click(testBucketBrowseButtonFor("abucketrewind"))
+      .typeText(elements.filterBuckets, 'abucketrewind')
+      .click(testBucketBrowseButtonFor('abucketrewind'))
       .expect(elements.table.exists)
       .ok()
       .click(elements.rewindButton)
@@ -60,44 +57,35 @@ test
       .expect(elements.rewindToInput.exists)
       .ok()
       .click(elements.rewindToInput)
-      .typeText(elements.rewindToInput, "01/01/2015 00:00")
+      .typeText(elements.rewindToInput, '01/01/2015 00:00')
       .click(elements.rewindDataButton);
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpBucketAndUploads(t, "abucketrewind");
+    await functions.cleanUpBucketAndUploads(t, 'abucketrewind');
   });
 
 test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucketname);
     await functions.setVersionedBucket(t, bucketname);
+    await functions.uploadNamedObjectToBucket(t, bucketname, 'test.txt', 'web-app/tests/uploads/test.txt');
     await functions.uploadNamedObjectToBucket(
       t,
       bucketname,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
+      'firstlevel/secondlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketname,
-      "firstlevel/secondlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })("Rewind button enabled in bucket", async (t) => {
+  })('Rewind button enabled in bucket', async (t) => {
     await t
       .useRole(roles.rewindEnabled)
       .click(acknowledgeButton)
       .typeText(elements.filterBuckets, bucketname)
       .click(test3BucketBrowseButton)
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("firstlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('firstlevel'))
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("secondlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('secondlevel'))
       .wait(1500)
       .expect(elements.rewindButton.exists)
       .ok();
@@ -110,37 +98,28 @@ test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucketname);
     await functions.setVersionedBucket(t, bucketname);
+    await functions.uploadNamedObjectToBucket(t, bucketname, 'test.txt', 'web-app/tests/uploads/test.txt');
     await functions.uploadNamedObjectToBucket(
       t,
       bucketname,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
+      'firstlevel/secondlevel/test.txt',
+      'web-app/tests/uploads/test.txt',
     );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketname,
-      "firstlevel/secondlevel/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })("Rewind button disabled in bucket", async (t) => {
+  })('Rewind button disabled in bucket', async (t) => {
     await t
       .useRole(roles.rewindNotEnabled)
       .click(acknowledgeButton)
       .typeText(elements.filterBuckets, bucketname)
       .click(test3BucketBrowseButton)
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("firstlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('firstlevel'))
       .wait(1500)
-      .click(
-        Selector(".ReactVirtualized__Table__rowColumn").withText("secondlevel"),
-      )
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('secondlevel'))
       .wait(1500)
       .expect(elements.rewindButton.exists)
       .ok()
       .wait(1500)
-      .expect(elements.rewindButton.hasAttribute("disabled"))
+      .expect(elements.rewindButton.hasAttribute('disabled'))
       .ok();
   })
   .after(async (t) => {

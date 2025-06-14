@@ -14,44 +14,39 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { Box, InputBox, SearchIcon } from "mds";
-import get from "lodash/get";
-import { useTheme } from "styled-components";
-import { AppState, useAppDispatch } from "../../../../store";
-import { setFilterBucket } from "../../../../systemSlice";
-import { useSelector } from "react-redux";
+import get from 'lodash/get';
+import { Box, InputBox, SearchIcon } from 'mds';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useTheme } from 'styled-components';
+
+import { AppState, useAppDispatch } from '../../../../store';
+import { setFilterBucket } from '../../../../systemSlice';
 
 const BucketFiltering = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const bucketFilter = useSelector(
-    (state: AppState) => state.system.filterBucketList,
-  );
+  const bucketFilter = useSelector((state: AppState) => state.system.filterBucketList);
 
   return (
     <Box
       sx={{
         padding: `5px 15px`,
-        "& .startOverlayIcon svg": {
-          fill: `${get(theme, "menu.vertical.textColor", "#FFF")}!important`,
+        '& .startOverlayIcon svg': {
+          fill: `${get(theme, 'menu.vertical.textColor', '#FFF')}!important`,
         },
       }}
     >
       <InputBox
-        id={"filter-buckets"}
-        placeholder={"Filter Buckets"}
+        id={'filter-buckets'}
+        placeholder={'Filter Buckets'}
         sx={{
-          "& input": {
-            backgroundColor: "rgba(255,255,255,0.1)",
-            borderColor: get(
-              theme,
-              "menu.vertical.sectionDividerColor",
-              "#0F446C",
-            ),
-            color: get(theme, "menu.vertical.textColor", "#FFF"),
-            "&::placeholder": {
-              color: get(theme, "menu.vertical.textColor", "#FFF"),
+          '& input': {
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderColor: get(theme, 'menu.vertical.sectionDividerColor', '#0F446C'),
+            color: get(theme, 'menu.vertical.textColor', '#FFF'),
+            '&::placeholder': {
+              color: get(theme, 'menu.vertical.textColor', '#FFF'),
             },
           },
         }}

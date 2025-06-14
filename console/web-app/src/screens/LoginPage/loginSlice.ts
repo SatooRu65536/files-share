@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LoginDetails } from "api/consoleApi";
-import { doLoginAsync, getFetchConfigurationAsync } from "./loginThunks";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LoginDetails } from 'api/consoleApi';
+
+import { doLoginAsync, getFetchConfigurationAsync } from './loginThunks';
 
 interface LoginState {
   accessKey: string;
@@ -29,8 +30,8 @@ interface LoginState {
 }
 
 const initialState: LoginState = {
-  accessKey: "",
-  secretKey: "",
+  accessKey: '',
+  secretKey: '',
   loginStrategy: {
     loginStrategy: undefined,
     redirectRules: [],
@@ -38,11 +39,11 @@ const initialState: LoginState = {
   loginSending: false,
   loadingFetchConfiguration: true,
   backgroundAnimation: false,
-  navigateTo: "",
+  navigateTo: '',
 };
 
 const loginSlice = createSlice({
-  name: "login",
+  name: 'login',
   initialState,
   reducers: {
     setAccessKey: (state, action: PayloadAction<string>) => {
@@ -84,7 +85,6 @@ const loginSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setAccessKey, setSecretKey, setNavigateTo, resetForm } =
-  loginSlice.actions;
+export const { resetForm, setAccessKey, setNavigateTo, setSecretKey } = loginSlice.actions;
 
 export default loginSlice.reducer;

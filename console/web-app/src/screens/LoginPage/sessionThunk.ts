@@ -14,31 +14,23 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setErrorSnackMessage } from "../../systemSlice";
-import { api } from "api";
-import { errorToHandler } from "api/errors";
-import {
-  saveSessionResponse,
-  setSessionLoadingState,
-} from "../Console/consoleSlice";
-import { SessionCallStates } from "../Console/consoleSlice.types";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { api } from 'api';
+import { errorToHandler } from 'api/errors';
 
-import {
-  globalSetDistributedSetup,
-  setAnonymousMode,
-  setOverrideStyles,
-  userLogged,
-} from "../../../src/systemSlice";
-import { getOverrideColorVariants } from "../../utils/stylesUtils";
-import { AppState } from "../../store";
+import { globalSetDistributedSetup, setAnonymousMode, setOverrideStyles, userLogged } from '../../../src/systemSlice';
+import { AppState } from '../../store';
+import { setErrorSnackMessage } from '../../systemSlice';
+import { getOverrideColorVariants } from '../../utils/stylesUtils';
+import { saveSessionResponse, setSessionLoadingState } from '../Console/consoleSlice';
+import { SessionCallStates } from '../Console/consoleSlice.types';
 
 export const fetchSession = createAsyncThunk(
-  "session/fetchSession",
-  async (_, { getState, dispatch, rejectWithValue }) => {
+  'session/fetchSession',
+  async (_, { dispatch, getState, rejectWithValue }) => {
     const state = getState() as AppState;
-    const pathnameParts = state.system.locationPath.split("/");
-    const screen = pathnameParts.length > 2 ? pathnameParts[1] : "";
+    const pathnameParts = state.system.locationPath.split('/');
+    const screen = pathnameParts.length > 2 ? pathnameParts[1] : '';
 
     return api.session
       .sessionCheck()
@@ -47,10 +39,8 @@ export const fetchSession = createAsyncThunk(
         dispatch(saveSessionResponse(res.data));
         dispatch(globalSetDistributedSetup(res.data.distributedMode || false));
 
-        if (res.data.customStyles && res.data.customStyles !== "") {
-          const overrideColorVariants = getOverrideColorVariants(
-            res.data.customStyles,
-          );
+        if (res.data.customStyles && res.data.customStyles !== '') {
+          const overrideColorVariants = getOverrideColorVariants(res.data.customStyles);
 
           if (overrideColorVariants !== false) {
             dispatch(setOverrideStyles(overrideColorVariants));
@@ -58,19 +48,15 @@ export const fetchSession = createAsyncThunk(
         }
       })
       .catch(async (res) => {
-        if (screen === "browser") {
-          const bucket = pathnameParts.length >= 3 ? pathnameParts[2] : "";
+        if (screen === 'browser') {
+          const bucket = pathnameParts.length >= 3 ? pathnameParts[2] : '';
           // no bucket, no business
-          if (bucket === "") {
+          if (bucket === '') {
             return;
           }
           // before marking the session as done, let's check if the bucket is publicly accessible (anonymous)
           api.buckets
-            .listObjects(
-              bucket,
-              { limit: 1 },
-              { headers: { "X-Anonymous": "1" } },
-            )
+            .listObjects(bucket, { limit: 1 }, { headers: { 'X-Anonymous': '1' } })
             .then(() => {
               dispatch(setAnonymousMode());
             })

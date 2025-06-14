@@ -14,37 +14,38 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { PageLayout, Box } from "mds";
-import Copyright from "../common/Copyright";
+import { Box,PageLayout } from 'mds';
+import React from 'react';
+
+import Copyright from '../common/Copyright';
 
 const NotFound: React.FC = () => {
   return (
     <PageLayout>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          textAlign: "center",
-          margin: "auto",
-          flexFlow: "column",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          textAlign: 'center',
+          margin: 'auto',
+          flexFlow: 'column',
         }}
       >
         <Box
           sx={{
-            fontSize: "110%",
-            margin: "0 0 0.25rem",
-            color: "#909090",
+            fontSize: '110%',
+            margin: '0 0 0.25rem',
+            color: '#909090',
           }}
         >
           404 Error
         </Box>
         <Box
           sx={{
-            fontStyle: "normal",
-            fontSize: "clamp(2rem,calc(2rem + 1.2vw),3rem)",
+            fontStyle: 'normal',
+            fontSize: 'clamp(2rem,calc(2rem + 1.2vw),3rem)',
             fontWeight: 700,
           }}
         >

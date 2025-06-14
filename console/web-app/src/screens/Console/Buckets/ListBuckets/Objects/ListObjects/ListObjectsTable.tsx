@@ -14,78 +14,57 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
-import { listModeColumns, rewindModeColumns } from "./ListObjectsHelpers";
-import { useSelector } from "react-redux";
-import { AppState, useAppDispatch } from "../../../../../../store";
-import { selFeatures } from "../../../../consoleSlice";
+import { BucketObject } from 'api/consoleApi';
+import get from 'lodash/get';
+import { DataTable, ItemActions } from 'mds';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { hasPermission } from '../../../../../../common/SecureComponent';
+import { IAM_SCOPES, permissionTooltipHelper } from '../../../../../../common/SecureComponent/permissions';
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { selFeatures } from '../../../../consoleSlice';
 import {
   setLoadingVersions,
   setObjectDetailsView,
   setReloadObjectsList,
   setSelectedObjects,
   setSelectedObjectView,
-} from "../../../../ObjectBrowser/objectBrowserSlice";
-import { useNavigate, useParams } from "react-router-dom";
-import get from "lodash/get";
-import { sortListObjects } from "../utils";
-import { BucketObjectItem } from "./types";
-import {
-  IAM_SCOPES,
-  permissionTooltipHelper,
-} from "../../../../../../common/SecureComponent/permissions";
-import { hasPermission } from "../../../../../../common/SecureComponent";
-import { downloadObject } from "../../../../ObjectBrowser/utils";
-import { DataTable, ItemActions } from "mds";
-import { BucketObject } from "api/consoleApi";
+} from '../../../../ObjectBrowser/objectBrowserSlice';
+import { downloadObject } from '../../../../ObjectBrowser/utils';
+import { sortListObjects } from '../utils';
+import { listModeColumns, rewindModeColumns } from './ListObjectsHelpers';
+import { BucketObjectItem } from './types';
 
 const ListObjectsTable = () => {
   const dispatch = useAppDispatch();
   const params = useParams();
   const navigate = useNavigate();
 
-  const [sortDirection, setSortDirection] = useState<
-    "ASC" | "DESC" | undefined
-  >("ASC");
-  const [currentSortField, setCurrentSortField] = useState<string>("name");
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC' | undefined>('ASC');
+  const [currentSortField, setCurrentSortField] = useState<string>('name');
 
-  const bucketName = params.bucketName || "";
+  const bucketName = params.bucketName || '';
 
-  const detailsOpen = useSelector(
-    (state: AppState) => state.objectBrowser.objectDetailsOpen,
-  );
+  const detailsOpen = useSelector((state: AppState) => state.objectBrowser.objectDetailsOpen);
 
-  const requestInProgress = useSelector(
-    (state: AppState) => state.objectBrowser.requestInProgress,
-  );
+  const requestInProgress = useSelector((state: AppState) => state.objectBrowser.requestInProgress);
 
   const features = useSelector(selFeatures);
-  const obOnly = !!features?.includes("object-browser-only");
+  const obOnly = !!features?.includes('object-browser-only');
 
-  const rewindEnabled = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.rewindEnabled,
-  );
+  const rewindEnabled = useSelector((state: AppState) => state.objectBrowser.rewind.rewindEnabled);
   const records = useSelector((state: AppState) => state.objectBrowser.records);
-  const searchObjects = useSelector(
-    (state: AppState) => state.objectBrowser.searchObjects,
-  );
-  const selectedObjects = useSelector(
-    (state: AppState) => state.objectBrowser.selectedObjects,
-  );
-  const connectionError = useSelector(
-    (state: AppState) => state.objectBrowser.connectionError,
-  );
-  const anonymousMode = useSelector(
-    (state: AppState) => state.system.anonymousMode,
-  );
+  const searchObjects = useSelector((state: AppState) => state.objectBrowser.searchObjects);
+  const selectedObjects = useSelector((state: AppState) => state.objectBrowser.selectedObjects);
+  const connectionError = useSelector((state: AppState) => state.objectBrowser.connectionError);
+  const anonymousMode = useSelector((state: AppState) => state.system.anonymousMode);
 
-  const displayListObjects = hasPermission(bucketName, [
-    IAM_SCOPES.S3_LIST_BUCKET,
-    IAM_SCOPES.S3_ALL_LIST_BUCKET,
-  ]);
+  const displayListObjects = hasPermission(bucketName, [IAM_SCOPES.S3_LIST_BUCKET, IAM_SCOPES.S3_ALL_LIST_BUCKET]);
 
   const plSelect = records.filter((b: BucketObjectItem) => {
-    if (searchObjects === "") {
+    if (searchObjects === '') {
       return true;
     } else {
       const objectName = b.name.toLowerCase();
@@ -96,20 +75,18 @@ const ListObjectsTable = () => {
 
   let payload: BucketObjectItem[] = [];
 
-  if (sortDirection === "ASC") {
+  if (sortDirection === 'ASC') {
     payload = sortASC;
   } else {
     payload = sortASC.reverse();
   }
 
   const openPath = (object: BucketObject) => {
-    const idElement = object.name || "";
-    const newPath = `/browser/${encodeURIComponent(bucketName)}${
-      idElement ? `/${encodeURIComponent(idElement)}` : ``
-    }`;
+    const idElement = object.name || '';
+    const newPath = `/browser/${encodeURIComponent(bucketName)}${idElement ? `/${encodeURIComponent(idElement)}` : ``}`;
 
     // for anonymous start download
-    if (anonymousMode && !object.name?.endsWith("/")) {
+    if (anonymousMode && !object.name?.endsWith('/')) {
       downloadObject(dispatch, bucketName, idElement, object);
       return;
     }
@@ -125,15 +102,15 @@ const ListObjectsTable = () => {
   };
   const tableActions: ItemActions[] = [
     {
-      type: "view",
-      tooltip: "View",
+      type: 'view',
+      tooltip: 'View',
       onClick: openPath,
       sendOnlyId: false,
     },
   ];
 
   const sortChange = (sortData: any) => {
-    const newSortDirection = get(sortData, "sortDirection", "DESC");
+    const newSortDirection = get(sortData, 'sortDirection', 'DESC');
     setCurrentSortField(sortData.sortBy);
     setSortDirection(newSortDirection);
     dispatch(setReloadObjectsList(true));
@@ -175,21 +152,18 @@ const ListObjectsTable = () => {
     !displayListObjects && !anonymousMode
       ? permissionTooltipHelper(
           [IAM_SCOPES.S3_LIST_BUCKET, IAM_SCOPES.S3_ALL_LIST_BUCKET],
-          "view Objects in this bucket",
+          'view Objects in this bucket',
         )
-      : `This location is empty${
-          !rewindEnabled ? ", please try uploading a new file" : ""
-        }`;
+      : `This location is empty${!rewindEnabled ? ', please try uploading a new file' : ''}`;
 
   if (connectionError) {
-    errorMessage =
-      "Objects List unavailable. Please review your WebSockets configuration and try again";
+    errorMessage = 'Objects List unavailable. Please review your WebSockets configuration and try again';
   }
 
-  let customPaperHeight = "calc(100vh - 290px)";
+  let customPaperHeight = 'calc(100vh - 290px)';
 
   if (obOnly) {
-    customPaperHeight = "calc(100vh - 315px)";
+    customPaperHeight = 'calc(100vh - 315px)';
   }
 
   return (
@@ -212,13 +186,13 @@ const ListObjectsTable = () => {
       onSelectAll={selectAllItems}
       rowStyle={({ index }) => {
         if (payload[index]?.delete_flag) {
-          return "deleted";
+          return 'deleted';
         }
 
-        return "";
+        return '';
       }}
       sx={{
-        minHeight: detailsOpen ? "100%" : "initial",
+        minHeight: detailsOpen ? '100%' : 'initial',
       }}
       noBackground
     />

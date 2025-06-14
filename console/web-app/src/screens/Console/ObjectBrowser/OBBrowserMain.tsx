@@ -14,31 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState } from "react";
+import { ActionLink, BucketsIcon, Grid, HelpBox, PageLayout, ProgressBar } from 'mds';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useNavigate } from "react-router-dom";
-import {
-  ActionLink,
-  BucketsIcon,
-  Grid,
-  HelpBox,
-  PageLayout,
-  ProgressBar,
-} from "mds";
-import { SecureComponent } from "../../../common/SecureComponent";
-import {
-  CONSOLE_UI_RESOURCE,
-  IAM_SCOPES,
-  permissionTooltipHelper,
-} from "../../../common/SecureComponent/permissions";
-import hasPermission from "../../../common/SecureComponent/accessControl";
-import { setErrorSnackMessage, setHelpName } from "../../../systemSlice";
-import { useAppDispatch } from "../../../store";
-import PageHeaderWrapper from "../Common/PageHeaderWrapper/PageHeaderWrapper";
-import { api } from "../../../api";
-import { errorToHandler } from "../../../api/errors";
-import HelpMenu from "../HelpMenu";
-import { setAddBucketOpen } from "../Buckets/ListBuckets/AddBucket/addBucketsSlice";
+import { api } from '../../../api';
+import { errorToHandler } from '../../../api/errors';
+import { SecureComponent } from '../../../common/SecureComponent';
+import hasPermission from '../../../common/SecureComponent/accessControl';
+import { CONSOLE_UI_RESOURCE, IAM_SCOPES, permissionTooltipHelper } from '../../../common/SecureComponent/permissions';
+import { useAppDispatch } from '../../../store';
+import { setErrorSnackMessage, setHelpName } from '../../../systemSlice';
+import { setAddBucketOpen } from '../Buckets/ListBuckets/AddBucket/addBucketsSlice';
+import PageHeaderWrapper from '../Common/PageHeaderWrapper/PageHeaderWrapper';
+import HelpMenu from '../HelpMenu';
 
 const OBBrowserMain = () => {
   const dispatch = useAppDispatch();
@@ -72,18 +61,15 @@ const OBBrowserMain = () => {
     }
   }, [loading, dispatch, navigate]);
 
-  const canListBuckets = hasPermission("*", [
-    IAM_SCOPES.S3_LIST_BUCKET,
-    IAM_SCOPES.S3_ALL_LIST_BUCKET,
-  ]);
+  const canListBuckets = hasPermission('*', [IAM_SCOPES.S3_LIST_BUCKET, IAM_SCOPES.S3_ALL_LIST_BUCKET]);
 
   useEffect(() => {
-    dispatch(setHelpName("object_browser"));
+    dispatch(setHelpName('object_browser'));
   }, [dispatch]);
 
   return (
     <Fragment>
-      <PageHeaderWrapper label={"Object Browser"} actions={<HelpMenu />} />
+      <PageHeaderWrapper label={'Object Browser'} actions={<HelpMenu />} />
       <PageLayout>
         {loading && <ProgressBar />}
         {!loading && (
@@ -92,49 +78,42 @@ const OBBrowserMain = () => {
             xs={12}
             sx={{
               marginTop: 25,
-              height: "calc(100vh - 211px)",
-              "&.isEmbedded": {
-                height: "calc(100vh - 128px)",
+              height: 'calc(100vh - 211px)',
+              '&.isEmbedded': {
+                height: 'calc(100vh - 128px)',
               },
             }}
           >
             <Grid
               container
               sx={{
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
               }}
             >
               <Grid item xs={8}>
                 <HelpBox
                   iconComponent={<BucketsIcon />}
-                  title={"Buckets"}
+                  title={'Buckets'}
                   help={
                     <Fragment>
-                      MinIO uses buckets to organize objects. A bucket is
-                      similar to a folder or directory in a filesystem, where
-                      each bucket can hold an arbitrary number of objects.
+                      MinIO uses buckets to organize objects. A bucket is similar to a folder or directory in a
+                      filesystem, where each bucket can hold an arbitrary number of objects.
                       <br />
                       {canListBuckets ? (
-                        ""
+                        ''
                       ) : (
                         <Fragment>
                           <br />
                           {permissionTooltipHelper(
-                            [
-                              IAM_SCOPES.S3_LIST_BUCKET,
-                              IAM_SCOPES.S3_ALL_LIST_BUCKET,
-                            ],
-                            "view the buckets on this server",
+                            [IAM_SCOPES.S3_LIST_BUCKET, IAM_SCOPES.S3_ALL_LIST_BUCKET],
+                            'view the buckets on this server',
                           )}
                           <br />
                         </Fragment>
                       )}
-                      <SecureComponent
-                        scopes={[IAM_SCOPES.S3_CREATE_BUCKET]}
-                        resource={CONSOLE_UI_RESOURCE}
-                      >
+                      <SecureComponent scopes={[IAM_SCOPES.S3_CREATE_BUCKET]} resource={CONSOLE_UI_RESOURCE}>
                         <br />
                         To get started,&nbsp;
                         <ActionLink

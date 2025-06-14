@@ -14,19 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../../../../../store";
-import { api } from "../../../../../api";
-import { MakeBucketRequest } from "../../../../../api/consoleApi";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
+import { api } from '../../../../../api';
+import { MakeBucketRequest } from '../../../../../api/consoleApi';
+import { AppState } from '../../../../../store';
 
 export const addBucketAsync = createAsyncThunk(
-  "buckets/addBucketAsync",
-  async (_, { getState, rejectWithValue, dispatch }) => {
+  'buckets/addBucketAsync',
+  async (_, { dispatch, getState, rejectWithValue }) => {
     const state = getState() as AppState;
 
     const bucketName = state.addBucket.name;
 
-    let request: MakeBucketRequest = {
+    const request: MakeBucketRequest = {
       name: bucketName,
     };
 

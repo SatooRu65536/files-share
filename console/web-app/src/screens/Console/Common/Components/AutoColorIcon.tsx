@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { Grid, ThemedLogo } from "mds";
-import { useSelector } from "react-redux";
-import { AppState } from "../../../../store";
+import { Grid, ThemedLogo } from 'mds';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState } from '../../../../store';
 
 interface IAutoColorIcon {
   marginRight: number;
@@ -25,23 +26,20 @@ interface IAutoColorIcon {
 }
 
 const AutoColorIcon = ({ marginRight, marginTop }: IAutoColorIcon) => {
-  let tinycolor = require("tinycolor2");
+  const tinycolor = require('tinycolor2');
 
-  const colorVariants = useSelector(
-    (state: AppState) => state.system.overrideStyles,
-  );
+  const colorVariants = useSelector((state: AppState) => state.system.overrideStyles);
 
-  const isDark =
-    tinycolor(colorVariants?.backgroundColor || "#fff").getBrightness() <= 128;
+  const isDark = tinycolor(colorVariants?.backgroundColor || '#fff').getBrightness() <= 128;
 
   return (
     <Grid
       sx={{
-        "& svg": {
+        '& svg': {
           width: 105,
           marginRight,
           marginTop,
-          fill: isDark ? "#fff" : "#081C42",
+          fill: isDark ? '#fff' : '#081C42',
         },
       }}
     >

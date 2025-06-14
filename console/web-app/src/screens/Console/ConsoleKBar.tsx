@@ -13,26 +13,25 @@
 //
 //  You should have received a copy of the GNU Affero General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import * as React from "react";
-import { Fragment } from "react";
-import { KBarProvider } from "kbar";
-import Console from "./Console";
-import { useSelector } from "react-redux";
-import CommandBar from "./CommandBar";
-import { selFeatures } from "./consoleSlice";
-import TrafficMonitor from "./Common/ObjectManager/TrafficMonitor";
-import { AppState } from "../../store";
-import AnonymousAccess from "../AnonymousAccess/AnonymousAccess";
-import LicenseConsentModal from "./License/LicenseConsentModal";
+import { KBarProvider } from 'kbar';
+import * as React from 'react';
+import { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState } from '../../store';
+import AnonymousAccess from '../AnonymousAccess/AnonymousAccess';
+import CommandBar from './CommandBar';
+import TrafficMonitor from './Common/ObjectManager/TrafficMonitor';
+import Console from './Console';
+import { selFeatures } from './consoleSlice';
+import LicenseConsentModal from './License/LicenseConsentModal';
 
 const ConsoleKBar = () => {
   const features = useSelector(selFeatures);
-  const anonymousMode = useSelector(
-    (state: AppState) => state.system.anonymousMode,
-  );
+  const anonymousMode = useSelector((state: AppState) => state.system.anonymousMode);
 
   // if we are hiding the menu also disable the k-bar so just return console
-  if (features?.includes("hide-menu")) {
+  if (features?.includes('hide-menu')) {
     return (
       <Fragment>
         <TrafficMonitor />

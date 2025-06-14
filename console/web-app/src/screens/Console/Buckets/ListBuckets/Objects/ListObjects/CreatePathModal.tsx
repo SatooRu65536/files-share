@@ -14,22 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
-import {
-  Button,
-  CreateNewPathIcon,
-  InputBox,
-  Grid,
-  FormLayout,
-  Box,
-} from "mds";
-import ModalWrapper from "../../../../Common/ModalWrapper/ModalWrapper";
-import { modalStyleUtils } from "../../../../Common/FormComponents/common/styleLibrary";
-import { BucketObjectItem } from "./types";
-import { AppState, useAppDispatch } from "../../../../../../store";
-import { setModalErrorSnackMessage } from "../../../../../../systemSlice";
+import { Box,Button, CreateNewPathIcon, FormLayout, Grid, InputBox } from 'mds';
+import React, { useEffect, useState } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { AppState, useAppDispatch } from '../../../../../../store';
+import { setModalErrorSnackMessage } from '../../../../../../systemSlice';
+import { modalStyleUtils } from '../../../../Common/FormComponents/common/styleLibrary';
+import ModalWrapper from '../../../../Common/ModalWrapper/ModalWrapper';
+import { BucketObjectItem } from './types';
 
 interface ICreatePath {
   modalOpen: boolean;
@@ -40,18 +34,11 @@ interface ICreatePath {
   limitedSubPath?: boolean;
 }
 
-const CreatePathModal = ({
-  modalOpen,
-  folderName,
-  bucketName,
-  onClose,
-  simplePath,
-  limitedSubPath,
-}: ICreatePath) => {
+const CreatePathModal = ({ bucketName, folderName, limitedSubPath, modalOpen, onClose, simplePath }: ICreatePath) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [pathUrl, setPathUrl] = useState("");
+  const [pathUrl, setPathUrl] = useState('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [currentPath, setCurrentPath] = useState(bucketName);
 
@@ -60,7 +47,7 @@ const CreatePathModal = ({
   useEffect(() => {
     if (simplePath) {
       const newPath = `${bucketName}${
-        !bucketName.endsWith("/") && !simplePath.startsWith("/") ? "/" : ""
+        !bucketName.endsWith('/') && !simplePath.startsWith('/') ? '/' : ''
       }${simplePath}`;
 
       setCurrentPath(newPath);
@@ -68,41 +55,38 @@ const CreatePathModal = ({
   }, [simplePath, bucketName]);
 
   const resetForm = () => {
-    setPathUrl("");
+    setPathUrl('');
   };
 
   const createProcess = () => {
-    let folderPath = "/";
+    let folderPath = '/';
 
     if (simplePath) {
-      folderPath = simplePath.endsWith("/") ? simplePath : `${simplePath}/`;
+      folderPath = simplePath.endsWith('/') ? simplePath : `${simplePath}/`;
     }
 
-    const sharesName = (record: BucketObjectItem) =>
-      record.name === folderPath + pathUrl;
+    const sharesName = (record: BucketObjectItem) => record.name === folderPath + pathUrl;
 
     if (records.findIndex(sharesName) !== -1) {
       dispatch(
         setModalErrorSnackMessage({
-          errorMessage: "Folder cannot have the same name as an existing file",
-          detailedError: "",
+          errorMessage: 'Folder cannot have the same name as an existing file',
+          detailedError: '',
         }),
       );
       return;
     }
 
     const cleanPathURL = pathUrl
-      .split("/")
-      .filter((splitItem) => splitItem.trim() !== "")
-      .join("/");
+      .split('/')
+      .filter((splitItem) => splitItem.trim() !== '')
+      .join('/');
 
-    if (folderPath.slice(0, 1) === "/") {
+    if (folderPath.slice(0, 1) === '/') {
       folderPath = folderPath.slice(1); //trim '/'
     }
 
-    const newPath = `/browser/${encodeURIComponent(bucketName)}/${encodeURIComponent(
-      `${folderPath}${cleanPathURL}/`,
-    )}`;
+    const newPath = `/browser/${encodeURIComponent(bucketName)}/${encodeURIComponent(`${folderPath}${cleanPathURL}/`)}`;
 
     navigate(newPath);
     onClose();
@@ -121,7 +105,7 @@ const CreatePathModal = ({
   };
 
   const keyPressed = (e: any) => {
-    if (e.code === "Enter" && pathUrl !== "") {
+    if (e.code === 'Enter' && pathUrl !== '') {
       createProcess();
     }
   };
@@ -135,52 +119,45 @@ const CreatePathModal = ({
         titleIcon={<CreateNewPathIcon />}
       >
         <FormLayout withBorders={false} containerPadding={false}>
-          <Box className={"inputItem"} sx={{ display: "flex", gap: 8 }}>
+          <Box className={'inputItem'} sx={{ display: 'flex', gap: 8 }}>
             <strong>Current Path:</strong> <br />
             <Box
               sx={{
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
                 fontSize: 14,
-                textAlign: "left",
+                textAlign: 'left',
               }}
-              dir={"rtl"}
+              dir={'rtl'}
             >
               {currentPath}
             </Box>
           </Box>
           <InputBox
             value={pathUrl}
-            label={"New Folder Path"}
-            id={"folderPath"}
-            name={"folderPath"}
-            placeholder={"Enter the new Folder Path"}
+            label={'New Folder Path'}
+            id={'folderPath'}
+            name={'folderPath'}
+            placeholder={'Enter the new Folder Path'}
             onChange={inputChange}
             onKeyPress={keyPressed}
             required
             tooltip={
               (limitedSubPath &&
-                "You may only have write access on a limited set of subpaths within this path. Please carefully review your User permissions to understand the paths to which you may write.") ||
-              ""
+                'You may only have write access on a limited set of subpaths within this path. Please carefully review your User permissions to understand the paths to which you may write.') ||
+              ''
             }
           />
           <Grid item xs={12} sx={modalStyleUtils.modalButtonBar}>
+            <Button id={'clear'} type="button" color="primary" variant="regular" onClick={resetForm} label={'Clear'} />
             <Button
-              id={"clear"}
-              type="button"
-              color="primary"
-              variant="regular"
-              onClick={resetForm}
-              label={"Clear"}
-            />
-            <Button
-              id={"create"}
+              id={'create'}
               type="submit"
               variant="callAction"
               disabled={!isFormValid}
               onClick={createProcess}
-              label={"Create"}
+              label={'Create'}
             />
           </Grid>
         </FormLayout>

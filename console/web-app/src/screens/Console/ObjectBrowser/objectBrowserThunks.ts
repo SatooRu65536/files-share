@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../../../store";
-import { getClientOS } from "../../../common/utils";
-import { BucketObjectItem } from "../Buckets/ListBuckets/Objects/ListObjects/types";
-import { makeid, storeCallForObjectWithID } from "./transferManager";
-import {
-  download,
-  downloadSelectedAsZip,
-} from "../Buckets/ListBuckets/Objects/utils";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { api } from 'api';
+import { DateTime } from 'luxon';
+
+import { getClientOS } from '../../../common/utils';
+import { AppState } from '../../../store';
+import { setSnackBarMessage } from '../../../systemSlice';
+import { BucketObjectItem } from '../Buckets/ListBuckets/Objects/ListObjects/types';
+import { download, downloadSelectedAsZip } from '../Buckets/ListBuckets/Objects/utils';
 import {
   cancelObjectInList,
   completeObject,
@@ -35,14 +35,12 @@ import {
   setSelectedPreview,
   setShareFileModalOpen,
   updateProgress,
-} from "./objectBrowserSlice";
-import { setSnackBarMessage } from "../../../systemSlice";
-import { DateTime } from "luxon";
-import { api } from "api";
+} from './objectBrowserSlice';
+import { makeid, storeCallForObjectWithID } from './transferManager';
 
 export const downloadSelected = createAsyncThunk(
-  "objectBrowser/downloadSelected",
-  async (bucketName: string, { getState, rejectWithValue, dispatch }) => {
+  'objectBrowser/downloadSelected',
+  async (bucketName: string, { dispatch, getState, rejectWithValue }) => {
     const state = getState() as AppState;
 
     const downloadObject = (object: BucketObjectItem) => {
@@ -77,11 +75,7 @@ export const downloadSelected = createAsyncThunk(
           dispatch(cancelObjectInList(identityDownload));
         },
         () => {
-          dispatch(
-            setSnackBarMessage(
-              "File download will be handled directly by the browser.",
-            ),
-          );
+          dispatch(setSnackBarMessage('File download will be handled directly by the browser.'));
         },
       );
       storeCallForObjectWithID(ID, downloadCall);
@@ -93,11 +87,11 @@ export const downloadSelected = createAsyncThunk(
           instanceID: identityDownload,
           percentage: 0,
           prefix: object.name,
-          type: "download",
+          type: 'download',
           waitingForFile: true,
           failed: false,
           cancelled: false,
-          errorMessage: "",
+          errorMessage: '',
         }),
       );
     };
@@ -112,10 +106,7 @@ export const downloadSelected = createAsyncThunk(
 
       // In case just one element is selected, then we trigger download modal validation.
       if (itemsToDownload.length === 1) {
-        if (
-          itemsToDownload[0].name.length > 200 &&
-          getClientOS().toLowerCase().includes("win")
-        ) {
+        if (itemsToDownload[0].name.length > 200 && getClientOS().toLowerCase().includes('win')) {
           dispatch(setDownloadRenameModal(itemsToDownload[0]));
           return;
         } else {
@@ -125,9 +116,7 @@ export const downloadSelected = createAsyncThunk(
         if (itemsToDownload.length === 1) {
           downloadObject(itemsToDownload[0]);
         } else if (itemsToDownload.length > 1) {
-          const fileName = `${DateTime.now().toFormat(
-            "LL-dd-yyyy-HH-mm-ss",
-          )}_files_list.zip`;
+          const fileName = `${DateTime.now().toFormat('LL-dd-yyyy-HH-mm-ss')}_files_list.zip`;
 
           // We are enforcing zip download when multiple files are selected for better user experience
           const multiObjList = itemsToDownload.reduce((dwList: any[], bi) => {
@@ -151,8 +140,8 @@ export const downloadSelected = createAsyncThunk(
 );
 
 export const openPreview = createAsyncThunk(
-  "objectBrowser/openPreview",
-  async (_, { getState, rejectWithValue, dispatch }) => {
+  'objectBrowser/openPreview',
+  async (_, { dispatch, getState, rejectWithValue }) => {
     const state = getState() as AppState;
 
     if (state.objectBrowser.selectedObjects.length === 1) {
@@ -172,8 +161,8 @@ export const openPreview = createAsyncThunk(
 );
 
 export const openShare = createAsyncThunk(
-  "objectBrowser/openShare",
-  async (_, { getState, rejectWithValue, dispatch }) => {
+  'objectBrowser/openShare',
+  async (_, { dispatch, getState, rejectWithValue }) => {
     const state = getState() as AppState;
 
     if (state.objectBrowser.selectedObjects.length === 1) {
@@ -193,22 +182,19 @@ export const openShare = createAsyncThunk(
 );
 
 export const openAnonymousAccess = createAsyncThunk(
-  "objectBrowser/openAnonymousAccess",
-  async (_, { getState, dispatch }) => {
+  'objectBrowser/openAnonymousAccess',
+  async (_, { dispatch, getState }) => {
     const state = getState() as AppState;
 
-    if (
-      state.objectBrowser.selectedObjects.length === 1 &&
-      state.objectBrowser.selectedObjects[0].endsWith("/")
-    ) {
+    if (state.objectBrowser.selectedObjects.length === 1 && state.objectBrowser.selectedObjects[0].endsWith('/')) {
       dispatch(setAnonymousAccessOpen(true));
     }
   },
 );
 
 export const getMaxShareLinkExpTime = createAsyncThunk(
-  "objectBrowser/maxShareLinkExpTime",
-  async (_, { rejectWithValue, dispatch }) => {
+  'objectBrowser/maxShareLinkExpTime',
+  async (_, { dispatch, rejectWithValue }) => {
     return api.buckets
       .getMaxShareLinkExp()
       .then((res) => {

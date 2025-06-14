@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, ReactElement } from "react";
-import { FixedSizeList as List } from "react-window";
-import InfiniteLoader from "react-window-infinite-loader";
-import { AutoSizer } from "react-virtualized";
+import React, { Fragment, ReactElement } from 'react';
+import { AutoSizer } from 'react-virtualized';
+import { FixedSizeList as List } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 
 interface IVirtualizedList {
   rowRenderFunction: (index: number) => ReactElement | null;
@@ -25,15 +25,11 @@ interface IVirtualizedList {
   defaultHeight?: number;
 }
 
-let itemStatusMap: any = {};
+const itemStatusMap: any = {};
 const LOADING = 1;
 const LOADED = 2;
 
-const VirtualizedList = ({
-  rowRenderFunction,
-  totalItems,
-  defaultHeight,
-}: IVirtualizedList) => {
+const VirtualizedList = ({ defaultHeight, rowRenderFunction, totalItems }: IVirtualizedList) => {
   const isItemLoaded = (index: any) => !!itemStatusMap[index];
 
   const loadMoreItems = (startIndex: number, stopIndex: number) => {
@@ -52,15 +48,11 @@ const VirtualizedList = ({
 
   return (
     <Fragment>
-      <InfiniteLoader
-        isItemLoaded={isItemLoaded}
-        loadMoreItems={loadMoreItems}
-        itemCount={totalItems}
-      >
+      <InfiniteLoader isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} itemCount={totalItems}>
         {({ onItemsRendered, ref }) => (
           // @ts-ignore
           <AutoSizer>
-            {({ width, height }) => {
+            {({ height, width }) => {
               return (
                 <List
                   itemSize={defaultHeight || 220}
@@ -69,7 +61,7 @@ const VirtualizedList = ({
                   width={width}
                   ref={ref}
                   onItemsRendered={onItemsRendered}
-                  className={"bucketsListing"}
+                  className={'bucketsListing'}
                 >
                   {RenderItemLine}
                 </List>

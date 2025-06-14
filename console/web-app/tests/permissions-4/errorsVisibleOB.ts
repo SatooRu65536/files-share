@@ -14,64 +14,39 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import { Selector } from "testcafe";
-import * as functions from "../utils/functions";
-import { namedTestBucketBrowseButtonFor } from "../utils/functions";
-import * as elements from "../utils/elements";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import { Selector } from 'testcafe';
+import * as functions from '../utils/functions';
+import { namedTestBucketBrowseButtonFor } from '../utils/functions';
+import * as elements from '../utils/elements';
+import { acknowledgeButton } from '../utils/elements';
 
-fixture("Test error visibility in Object Browser Navigation").page(
-  "http://localhost:9090/",
-);
+fixture('Test error visibility in Object Browser Navigation').page('http://localhost:9090/');
 
-const bucketName = "my-company";
-const bucketName2 = "my-company2";
+const bucketName = 'my-company';
+const bucketName2 = 'my-company2';
 const bucketBrowseButton = namedTestBucketBrowseButtonFor(bucketName);
 const bucketBrowseButton2 = namedTestBucketBrowseButtonFor(bucketName2);
-export const file = Selector(".ReactVirtualized__Table__rowColumn").withText(
-  "test.txt",
-);
-export const deniedError =
-  Selector(".messageTruncation").withText("Access Denied.");
+export const file = Selector('.ReactVirtualized__Table__rowColumn').withText('test.txt');
+export const deniedError = Selector('.messageTruncation').withText('Access Denied.');
 
 test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucketName);
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketName,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketName,
-      "home/UserY/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketName,
-      "home/UserX/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })(
-    "Error Notification is shown in Object Browser when no privileges are set",
-    async (t) => {
-      await t
-        .useRole(roles.conditions3)
-        .click(acknowledgeButton)
-        .typeText(elements.filterBuckets, bucketName)
-        .click(bucketBrowseButton)
-        .click(Selector(".ReactVirtualized__Table__rowColumn").withText("home"))
-        .click(
-          Selector(".ReactVirtualized__Table__rowColumn").withText("UserX"),
-        )
-        .expect(deniedError.exists)
-        .ok();
-    },
-  )
+    await functions.uploadNamedObjectToBucket(t, bucketName, 'test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucketName, 'home/UserY/test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucketName, 'home/UserX/test.txt', 'web-app/tests/uploads/test.txt');
+  })('Error Notification is shown in Object Browser when no privileges are set', async (t) => {
+    await t
+      .useRole(roles.conditions3)
+      .click(acknowledgeButton)
+      .typeText(elements.filterBuckets, bucketName)
+      .click(bucketBrowseButton)
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('home'))
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('UserX'))
+      .expect(deniedError.exists)
+      .ok();
+  })
   .after(async (t) => {
     await functions.cleanUpNamedBucketAndUploads(t, bucketName);
   });
@@ -80,42 +55,22 @@ test
   .before(async (t) => {
     await functions.setUpNamedBucket(t, bucketName2);
     await functions.setVersionedBucket(t, bucketName2);
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketName2,
-      "test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketName2,
-      "home/UserY/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-    await functions.uploadNamedObjectToBucket(
-      t,
-      bucketName2,
-      "home/UserX/test.txt",
-      "web-app/tests/uploads/test.txt",
-    );
-  })(
-    "Error Notification is shown in Object Browser with Rewind request set",
-    async (t) => {
-      await t
-        .useRole(roles.conditions4)
-        .click(acknowledgeButton)
-        .typeText(elements.filterBuckets, bucketName2)
-        .click(bucketBrowseButton2)
-        .click(Selector("label").withText("Show deleted objects"))
-        .wait(1500)
-        .click(Selector(".ReactVirtualized__Table__rowColumn").withText("home"))
-        .click(
-          Selector(".ReactVirtualized__Table__rowColumn").withText("UserX"),
-        )
-        .expect(deniedError.exists)
-        .ok();
-    },
-  )
+    await functions.uploadNamedObjectToBucket(t, bucketName2, 'test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucketName2, 'home/UserY/test.txt', 'web-app/tests/uploads/test.txt');
+    await functions.uploadNamedObjectToBucket(t, bucketName2, 'home/UserX/test.txt', 'web-app/tests/uploads/test.txt');
+  })('Error Notification is shown in Object Browser with Rewind request set', async (t) => {
+    await t
+      .useRole(roles.conditions4)
+      .click(acknowledgeButton)
+      .typeText(elements.filterBuckets, bucketName2)
+      .click(bucketBrowseButton2)
+      .click(Selector('label').withText('Show deleted objects'))
+      .wait(1500)
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('home'))
+      .click(Selector('.ReactVirtualized__Table__rowColumn').withText('UserX'))
+      .expect(deniedError.exists)
+      .ok();
+  })
   .after(async (t) => {
     await functions.cleanUpNamedBucketAndUploads(t, bucketName2);
   });

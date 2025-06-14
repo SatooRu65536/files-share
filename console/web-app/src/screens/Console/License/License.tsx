@@ -14,17 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect } from "react";
-import { PageLayout } from "mds";
-import LicensePlans from "./LicensePlans";
-import PageHeaderWrapper from "../Common/PageHeaderWrapper/PageHeaderWrapper";
-import { setHelpName } from "../../../systemSlice";
-import { useAppDispatch } from "../../../store";
+import { PageLayout } from 'mds';
+import React, { Fragment, useEffect } from 'react';
+
+import { useAppDispatch } from '../../../store';
+import { setHelpName } from '../../../systemSlice';
+import PageHeaderWrapper from '../Common/PageHeaderWrapper/PageHeaderWrapper';
+import LicensePlans from './LicensePlans';
 
 const License = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(setHelpName("license"));
+    dispatch(setHelpName('license'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

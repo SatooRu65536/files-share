@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import get from "lodash/get";
-import { Middleware } from "@reduxjs/toolkit";
-import { AppState } from "../store";
-import { wsProtocol } from "../utils/wsUtils";
+import { Middleware } from '@reduxjs/toolkit';
+import get from 'lodash/get';
+
+import { WebsocketRequest, WebsocketResponse } from '../screens/Console/Buckets/ListBuckets/Objects/ListObjects/types';
+import { permissionItems } from '../screens/Console/Buckets/ListBuckets/Objects/utils';
 import {
   errorInConnection,
   newMessage,
@@ -29,35 +30,26 @@ import {
   setSelectedBucket,
   setSelectedObjects,
   setSimplePathHandler,
-} from "../screens/Console/ObjectBrowser/objectBrowserSlice";
-import {
-  WebsocketRequest,
-  WebsocketResponse,
-} from "../screens/Console/Buckets/ListBuckets/Objects/ListObjects/types";
-import { permissionItems } from "../screens/Console/Buckets/ListBuckets/Objects/utils";
-import { setErrorSnackMessage } from "../systemSlice";
+} from '../screens/Console/ObjectBrowser/objectBrowserSlice';
+import { AppState } from '../store';
+import { setErrorSnackMessage } from '../systemSlice';
+import { wsProtocol } from '../utils/wsUtils';
 
 let wsInFlight: boolean = false;
 let currentRequestID: number = 0;
 
-export const objectBrowserWSMiddleware = (
-  objectsWS: WebSocket,
-): Middleware<{}, AppState> => {
+export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, AppState> => {
   return (storeApi) => (next) => (action) => {
     const dispatch = storeApi.dispatch;
     const storeState = storeApi.getState();
 
-    const allowResources = get(
-      storeState,
-      "console.session.allowResources",
-      null,
-    );
-    const bucketName = get(storeState, "objectBrowser.selectedBucket", "");
+    const allowResources = get(storeState, 'console.session.allowResources', null);
+    const bucketName = get(storeState, 'objectBrowser.selectedBucket', '');
 
     const { type } = action;
     switch (type) {
-      case "socket/OBConnect":
-        const sessionInitialized = get(storeState, "system.loggedIn", false);
+      case 'socket/OBConnect':
+        const sessionInitialized = get(storeState, 'system.loggedIn', false);
 
         if (wsInFlight || !sessionInitialized) {
           return;
@@ -66,8 +58,8 @@ export const objectBrowserWSMiddleware = (
         wsInFlight = true;
 
         const url = new URL(window.location.toString());
-        const isDev = process.env.NODE_ENV === "development";
-        const port = isDev ? "9090" : url.port;
+        const isDev = process.env.NODE_ENV === 'development';
+        const port = isDev ? '9090' : url.port;
 
         // check if we are using base path, if not this always is `/`
         const baseLocation = new URL(document.baseURI);
@@ -75,9 +67,7 @@ export const objectBrowserWSMiddleware = (
 
         const wsProt = wsProtocol(url.protocol);
 
-        objectsWS = new WebSocket(
-          `${wsProt}://${url.hostname}:${port}${baseUrl}ws/objectManager`,
-        );
+        objectsWS = new WebSocket(`${wsProt}://${url.hostname}:${port}${baseUrl}ws/objectManager`);
 
         objectsWS.onopen = () => {
           wsInFlight = false;
@@ -85,14 +75,11 @@ export const objectBrowserWSMiddleware = (
 
         objectsWS.onmessage = (message) => {
           const basicErrorMessage = {
-            errorMessage: "An error occurred",
-            detailedMessage:
-              "An unknown error occurred. Please refer to Console logs to get more information.",
+            errorMessage: 'An error occurred',
+            detailedMessage: 'An unknown error occurred. Please refer to Console logs to get more information.',
           };
 
-          const response: WebsocketResponse = JSON.parse(
-            message.data.toString(),
-          );
+          const response: WebsocketResponse = JSON.parse(message.data.toString());
           if (currentRequestID === response.request_id) {
             // If response is not from current request, we can omit
             if (response.request_id !== currentRequestID) {
@@ -104,30 +91,21 @@ export const objectBrowserWSMiddleware = (
               window.location.reload();
             } else if (response.error?.Code === 403) {
               const internalPathsPrefix = response.prefix;
-              let pathPrefix = "";
+              let pathPrefix = '';
 
               if (internalPathsPrefix) {
-                pathPrefix = internalPathsPrefix.endsWith("/")
-                  ? internalPathsPrefix
-                  : internalPathsPrefix + "/";
+                pathPrefix = internalPathsPrefix.endsWith('/') ? internalPathsPrefix : internalPathsPrefix + '/';
               }
 
-              const permitItems = permissionItems(
-                response.bucketName || bucketName,
-                pathPrefix,
-                allowResources || [],
-              );
+              const permitItems = permissionItems(response.bucketName || bucketName, pathPrefix, allowResources || []);
 
               if (!permitItems || permitItems.length === 0) {
                 const errorMsg = response.error.APIError;
 
                 dispatch(
                   setErrorSnackMessage({
-                    errorMessage:
-                      errorMsg.message || basicErrorMessage.errorMessage,
-                    detailedError:
-                      errorMsg.detailedMessage ||
-                      basicErrorMessage.detailedMessage,
+                    errorMessage: errorMsg.message || basicErrorMessage.errorMessage,
+                    detailedError: errorMsg.detailedMessage || basicErrorMessage.detailedMessage,
                   }),
                 );
               } else {
@@ -142,11 +120,8 @@ export const objectBrowserWSMiddleware = (
               dispatch(setRequestInProgress(false));
               dispatch(
                 setErrorSnackMessage({
-                  errorMessage:
-                    errorMsg.message || basicErrorMessage.errorMessage,
-                  detailedError:
-                    errorMsg.detailedMessage ||
-                    basicErrorMessage.detailedMessage,
+                  errorMessage: errorMsg.message || basicErrorMessage.errorMessage,
+                  detailedError: errorMsg.detailedMessage || basicErrorMessage.detailedMessage,
                 }),
               );
             }
@@ -166,23 +141,21 @@ export const objectBrowserWSMiddleware = (
 
         objectsWS.onclose = () => {
           wsInFlight = false;
-          console.warn("Websocket Disconnected. Attempting Reconnection...");
+          console.warn('Websocket Disconnected. Attempting Reconnection...');
 
           // We reconnect after 3 seconds
-          setTimeout(() => dispatch({ type: "socket/OBConnect" }), 3000);
+          setTimeout(() => dispatch({ type: 'socket/OBConnect' }), 3000);
         };
 
         objectsWS.onerror = () => {
           wsInFlight = false;
-          console.error(
-            "Error in websocket connection. Attempting reconnection...",
-          );
+          console.error('Error in websocket connection. Attempting reconnection...');
           // Onclose will be triggered by specification, reconnect function will be executed there to avoid duplicated requests
         };
 
         break;
 
-      case "socket/OBRequest":
+      case 'socket/OBRequest':
         if (objectsWS && objectsWS.readyState === 1) {
           try {
             const newRequestID = currentRequestID + 1;
@@ -194,13 +167,13 @@ export const objectBrowserWSMiddleware = (
             dispatch(setSelectedBucket(dataPayload.bucketName));
             dispatch(setRequestInProgress(true));
             dispatch(setReloadObjectsList(false));
-            dispatch(setSearchObjects(""));
+            dispatch(setSearchObjects(''));
             dispatch(setSelectedObjects([]));
 
             const request: WebsocketRequest = {
               bucket_name: dataPayload.bucketName,
               prefix: dataPayload.path,
-              mode: dataPayload.rewindMode ? "rewind" : "objects",
+              mode: dataPayload.rewindMode ? 'rewind' : 'objects',
               date: dataPayload.date,
               request_id: newRequestID,
             };
@@ -216,20 +189,16 @@ export const objectBrowserWSMiddleware = (
           dispatch(setReloadObjectsList(false));
 
           if (!wsInFlight) {
-            dispatch({ type: "socket/OBConnect" });
+            dispatch({ type: 'socket/OBConnect' });
           }
           // Retry request after 1 second
-          setTimeout(
-            () =>
-              dispatch({ type: "socket/OBRequest", payload: action.payload }),
-            1000,
-          );
+          setTimeout(() => dispatch({ type: 'socket/OBRequest', payload: action.payload }), 1000);
         }
 
         break;
-      case "socket/OBCancelLast":
+      case 'socket/OBCancelLast':
         const request: WebsocketRequest = {
-          mode: "cancel",
+          mode: 'cancel',
           request_id: currentRequestID,
         };
 
@@ -237,7 +206,7 @@ export const objectBrowserWSMiddleware = (
           objectsWS.send(JSON.stringify(request));
         }
         break;
-      case "socket/OBDisconnect":
+      case 'socket/OBDisconnect':
         if (objectsWS) {
           objectsWS.close();
         }

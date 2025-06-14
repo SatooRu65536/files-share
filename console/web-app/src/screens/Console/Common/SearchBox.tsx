@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { InputBox, SearchIcon } from "mds";
-import { CSSObject } from "styled-components";
+import { InputBox, SearchIcon } from 'mds';
+import React from 'react';
+import { CSSObject } from 'styled-components';
 
 type SearchBoxProps = {
   placeholder?: string;
@@ -29,18 +29,18 @@ type SearchBoxProps = {
 };
 
 const SearchBox = ({
-  placeholder = "",
+  id = 'search-resource',
+  label = '',
   onChange,
   overrideClass,
-  value,
-  id = "search-resource",
-  label = "",
+  placeholder = '',
   sx,
+  value,
 }: SearchBoxProps) => {
   return (
     <InputBox
       placeholder={placeholder}
-      className={overrideClass ? overrideClass : ""}
+      className={overrideClass ? overrideClass : ''}
       id={id}
       label={label}
       onChange={(e) => {

@@ -14,28 +14,25 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../../store";
-import {
-  setDarkMode,
-  setErrorSnackMessage,
-  userLogged,
-} from "../../systemSlice";
-import { setNavigateTo } from "./loginSlice";
-import { getTargetPath } from "./Login";
-import { api } from "api";
-import { ApiError, LoginRequest } from "api/consoleApi";
-import { errorToHandler } from "api/errors";
-import { isDarkModeOn } from "../../utils/stylesUtils";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { api } from 'api';
+import { ApiError, LoginRequest } from 'api/consoleApi';
+import { errorToHandler } from 'api/errors';
+
+import { AppState } from '../../store';
+import { setDarkMode, setErrorSnackMessage, userLogged } from '../../systemSlice';
+import { isDarkModeOn } from '../../utils/stylesUtils';
+import { getTargetPath } from './Login';
+import { setNavigateTo } from './loginSlice';
 
 export const doLoginAsync = createAsyncThunk(
-  "login/doLoginAsync",
-  async (_, { getState, rejectWithValue, dispatch }) => {
+  'login/doLoginAsync',
+  async (_, { dispatch, getState, rejectWithValue }) => {
     const state = getState() as AppState;
     const accessKey = state.login.accessKey;
     const secretKey = state.login.secretKey;
 
-    let payload: LoginRequest = {
+    const payload: LoginRequest = {
       accessKey,
       secretKey,
     };
@@ -47,7 +44,7 @@ export const doLoginAsync = createAsyncThunk(
 
         // We set the state in redux
         dispatch(userLogged(true));
-        localStorage.setItem("userLoggedIn", accessKey);
+        localStorage.setItem('userLoggedIn', accessKey);
         dispatch(setNavigateTo(getTargetPath()));
         dispatch(setDarkMode(!!darkModeEnabled));
       })
@@ -59,7 +56,7 @@ export const doLoginAsync = createAsyncThunk(
   },
 );
 export const getFetchConfigurationAsync = createAsyncThunk(
-  "login/getFetchConfigurationAsync",
+  'login/getFetchConfigurationAsync',
   async (_, { dispatch, rejectWithValue }) => {
     return api.login
       .loginDetail()

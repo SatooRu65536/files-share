@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { Role, Selector } from "testcafe";
-import { readFileSync } from "fs";
-import { getMenuElement } from "../utils/elements-menu";
+import { Role, Selector } from 'testcafe';
+import { readFileSync } from 'fs';
+import { getMenuElement } from '../utils/elements-menu';
 
-const data = readFileSync(__dirname + "/../constants/timestamp.txt", "utf-8");
+const data = readFileSync(__dirname + '/../constants/timestamp.txt', 'utf-8');
 const $TIMESTAMP = data.trim();
 
-let testDomainUrl = "http://localhost:9090";
+let testDomainUrl = 'http://localhost:9090';
 
 let insAllowedAccKey = `prefix-policy-ui-crash-${$TIMESTAMP}`;
-let insAllowedSeckey = "poluicrashfix1234";
+let insAllowedSeckey = 'poluicrashfix1234';
 
 /* Begin Local Testing config block */
 
@@ -38,28 +38,25 @@ insAllowedSeckey = "poluicrashfix1234";*/
 const loginUrl = `${testDomainUrl}/login`;
 const bucketsScreenUrl = `${testDomainUrl}/buckets`;
 
-const loginSubmitBtn = Selector("button").withAttribute("id", "do-login");
+const loginSubmitBtn = Selector('button').withAttribute('id', 'do-login');
 
-export const bucketsSidebarEl = getMenuElement("buckets");
+export const bucketsSidebarEl = getMenuElement('buckets');
 
 export const inspectAllowedRole = Role(
   loginUrl,
   async (t) => {
-    await t
-      .typeText("#accessKey", insAllowedAccKey)
-      .typeText("#secretKey", insAllowedSeckey)
-      .click(loginSubmitBtn);
+    await t.typeText('#accessKey', insAllowedAccKey).typeText('#secretKey', insAllowedSeckey).click(loginSubmitBtn);
   },
   { preserveUrl: true },
 );
 
-fixture("For user with Bucket Prefix permissions")
+fixture('For user with Bucket Prefix permissions')
   .page(testDomainUrl)
   .beforeEach(async (t) => {
     await t.useRole(inspectAllowedRole);
   });
 
-test("Bucket page can be opened", async (t) => {
+test('Bucket page can be opened', async (t) => {
   await t.navigateTo(bucketsScreenUrl);
 });
 

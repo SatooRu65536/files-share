@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { IEmbeddedCustomStyles } from "../common/types";
-import get from "lodash/get";
+import get from 'lodash/get';
 
-export const getOverrideColorVariants: (
-  customStyles: string,
-) => false | IEmbeddedCustomStyles = (customStyles) => {
+import { IEmbeddedCustomStyles } from '../common/types';
+
+export const getOverrideColorVariants: (customStyles: string) => false | IEmbeddedCustomStyles = (customStyles) => {
   try {
     return JSON.parse(atob(customStyles)) as IEmbeddedCustomStyles;
   } catch (e) {
-    console.error("Error processing override styles, skipping.", e);
+    console.error('Error processing override styles, skipping.', e);
     return false;
   }
 };
@@ -37,39 +36,39 @@ export const generateOverrideTheme = (overrideVars: IEmbeddedCustomStyles) => {
       fontColor: overrideVars.fontColor,
       borderColor: overrideVars.borderColor,
       bulletColor: overrideVars.fontColor,
-      logoColor: "#C51B3F",
+      logoColor: '#C51B3F',
       logoLabelColor: overrideVars.fontColor,
-      logoLabelInverse: "#FFF",
-      logoContrast: "#000",
+      logoLabelInverse: '#FFF',
+      logoContrast: '#000',
       logoContrastInverse: overrideVars.fontColor,
       loaderColor: overrideVars.loaderColor,
       boxBackground: overrideVars.boxBackground,
-      mutedText: "#9c9c9c",
-      secondaryText: "#9c9c9c",
+      mutedText: '#9c9c9c',
+      secondaryText: '#9c9c9c',
       buttons: {
         regular: {
           enabled: {
             border: overrideVars.regularButtonStyles.textColor,
             text: overrideVars.regularButtonStyles.textColor,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.regularButtonStyles.textColor,
           },
           disabled: {
             border: overrideVars.regularButtonStyles.disabledText,
             text: overrideVars.regularButtonStyles.disabledText,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.regularButtonStyles.disabledText,
           },
           hover: {
             border: overrideVars.regularButtonStyles.hoverText,
             text: overrideVars.regularButtonStyles.hoverText,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.regularButtonStyles.hoverText,
           },
           pressed: {
             border: overrideVars.regularButtonStyles.activeText,
             text: overrideVars.regularButtonStyles.activeText,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.regularButtonStyles.activeText,
           },
         },
@@ -103,63 +102,63 @@ export const generateOverrideTheme = (overrideVars: IEmbeddedCustomStyles) => {
           enabled: {
             border: overrideVars.secondaryButtonStyles.textColor,
             text: overrideVars.secondaryButtonStyles.textColor,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.secondaryButtonStyles.textColor,
           },
           disabled: {
             border: overrideVars.secondaryButtonStyles.disabledText,
             text: overrideVars.secondaryButtonStyles.disabledText,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.secondaryButtonStyles.disabledText,
           },
           hover: {
             border: overrideVars.secondaryButtonStyles.hoverText,
             text: overrideVars.secondaryButtonStyles.hoverText,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.secondaryButtonStyles.hoverText,
           },
           pressed: {
             border: overrideVars.secondaryButtonStyles.activeText,
             text: overrideVars.secondaryButtonStyles.activeText,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.secondaryButtonStyles.activeText,
           },
         },
         text: {
           enabled: {
-            border: "transparent",
+            border: 'transparent',
             text: overrideVars.fontColor,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.fontColor,
           },
           disabled: {
-            border: "transparent",
+            border: 'transparent',
             text: overrideVars.fontColor,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.fontColor,
           },
           hover: {
-            border: "transparent",
+            border: 'transparent',
             text: overrideVars.fontColor,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.fontColor,
           },
           pressed: {
-            border: "transparent",
+            border: 'transparent',
             text: overrideVars.fontColor,
-            background: "transparent",
+            background: 'transparent',
             iconColor: overrideVars.fontColor,
           },
         },
       },
       login: {
-        formBG: "#fff",
-        bgFilter: "none",
-        promoBG: "#000110",
-        promoHeader: "#fff",
-        promoText: "#A6DFEF",
-        footerElements: "#2781B0",
-        footerDivider: "#F2F2F2",
+        formBG: '#fff',
+        bgFilter: 'none',
+        promoBG: '#000110',
+        promoHeader: '#fff',
+        promoText: '#A6DFEF',
+        footerElements: '#2781B0',
+        footerDivider: '#F2F2F2',
       },
       pageHeader: {
         background: overrideVars.boxBackground,
@@ -240,7 +239,7 @@ export const generateOverrideTheme = (overrideVars: IEmbeddedCustomStyles) => {
         closeHoverBG: overrideVars.regularButtonStyles.hoverColor,
         closeHoverColor: overrideVars.regularButtonStyles.hoverText,
         containerColor: overrideVars.backgroundColor,
-        overlayColor: "#00000050",
+        overlayColor: '#00000050',
         titleColor: overrideVars.fontColor,
         iconColor: {
           default: overrideVars.fontColor,
@@ -252,8 +251,7 @@ export const generateOverrideTheme = (overrideVars: IEmbeddedCustomStyles) => {
         bulletBGColor: overrideVars.switch.bulletBGColor,
         bulletBorderColor: overrideVars.switch.bulletBorderColor,
         disabledBulletBGColor: overrideVars.switch.disabledBulletBGColor,
-        disabledBulletBorderColor:
-          overrideVars.switch.disabledBulletBorderColor,
+        disabledBulletBorderColor: overrideVars.switch.disabledBulletBorderColor,
         offLabelColor: overrideVars.secondaryFontColor,
         onLabelColor: overrideVars.fontColor,
         onBackgroundColor: overrideVars.okColor,
@@ -277,23 +275,23 @@ export const generateOverrideTheme = (overrideVars: IEmbeddedCustomStyles) => {
       },
     };
   } catch (e) {
-    console.warn("Invalid theme provided. Fallback to original theme.");
+    console.warn('Invalid theme provided. Fallback to original theme.');
   }
 
   return retVal;
 };
 
 export const isDarkModeOn = () => {
-  const darkMode = localStorage.getItem("dark-mode");
+  const darkMode = localStorage.getItem('dark-mode');
 
   if (!darkMode) {
-    const systemDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
-    return get(systemDarkMode, "matches", false);
+    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+    return get(systemDarkMode, 'matches', false);
   }
 
-  return darkMode === "on";
+  return darkMode === 'on';
 };
 
-export const storeDarkMode = (mode: "on" | "off") => {
-  localStorage.setItem("dark-mode", mode);
+export const storeDarkMode = (mode: 'on' | 'off') => {
+  localStorage.setItem('dark-mode', mode);
 };

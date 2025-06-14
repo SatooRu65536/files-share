@@ -14,22 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import * as elements from "../utils/elements";
-import * as functions from "../utils/functions";
-import {
-  namedManageButtonFor,
-  namedTestBucketBrowseButtonFor,
-} from "../utils/functions";
-import { bucketsElement, logoutItem } from "../utils/elements-menu";
-import { Selector } from "testcafe";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import * as elements from '../utils/elements';
+import * as functions from '../utils/functions';
+import { namedManageButtonFor, namedTestBucketBrowseButtonFor } from '../utils/functions';
+import { bucketsElement, logoutItem } from '../utils/elements-menu';
+import { Selector } from 'testcafe';
+import { acknowledgeButton } from '../utils/elements';
 
-const TEST_BUCKET_NAME_SPECIFIC = "specific-bucket";
+const TEST_BUCKET_NAME_SPECIFIC = 'specific-bucket';
 
-fixture("For user with permissions that only allow specific Buckets").page(
-  "http://localhost:9090",
-);
+fixture('For user with permissions that only allow specific Buckets').page('http://localhost:9090');
 
 // Bucket read tests
 
@@ -43,9 +38,9 @@ test
       .typeText(elements.filterBuckets, `${TEST_BUCKET_NAME_SPECIFIC}-6`)
       .click(namedTestBucketBrowseButtonFor(`${TEST_BUCKET_NAME_SPECIFIC}-6`))
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt")
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt')
       .click(logoutItem);
-  })("Object list table is enabled", async (t) => {
+  })('Object list table is enabled', async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     await t
       .useRole(roles.bucketRead)
@@ -57,10 +52,7 @@ test
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpNamedBucketAndUploads(
-      t,
-      `${TEST_BUCKET_NAME_SPECIFIC}-6`,
-    );
+    await functions.cleanUpNamedBucketAndUploads(t, `${TEST_BUCKET_NAME_SPECIFIC}-6`);
   });
 
 // Bucket write tests
@@ -69,10 +61,8 @@ test
   .before(async (t) => {
     // Create a bucket
     await functions.setUpNamedBucket(t, `${TEST_BUCKET_NAME_SPECIFIC}-7`);
-  })("Browse button exists", async (t) => {
-    const testBucketBrowseButton = namedTestBucketBrowseButtonFor(
-      `${TEST_BUCKET_NAME_SPECIFIC}-7`,
-    );
+  })('Browse button exists', async (t) => {
+    const testBucketBrowseButton = namedTestBucketBrowseButtonFor(`${TEST_BUCKET_NAME_SPECIFIC}-7`);
     await t
       .useRole(roles.bucketSpecific)
       .click(acknowledgeButton)
@@ -82,21 +72,16 @@ test
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpNamedBucketAndUploads(
-      t,
-      `${TEST_BUCKET_NAME_SPECIFIC}-7`,
-    );
+    await functions.cleanUpNamedBucketAndUploads(t, `${TEST_BUCKET_NAME_SPECIFIC}-7`);
   });
 
 test
   .before(async (t) => {
     // Create a bucket
     await functions.setUpNamedBucket(t, `${TEST_BUCKET_NAME_SPECIFIC}-9`);
-  })("Upload button exists", async (t) => {
+  })('Upload button exists', async (t) => {
     const uploadExists = elements.uploadButton.exists;
-    const testBucketBrowseButton = namedTestBucketBrowseButtonFor(
-      `${TEST_BUCKET_NAME_SPECIFIC}-9`,
-    );
+    const testBucketBrowseButton = namedTestBucketBrowseButtonFor(`${TEST_BUCKET_NAME_SPECIFIC}-9`);
     await t
       .useRole(roles.bucketSpecific)
       .click(acknowledgeButton)
@@ -107,41 +92,33 @@ test
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpNamedBucketAndUploads(
-      t,
-      `${TEST_BUCKET_NAME_SPECIFIC}-9`,
-    );
+    await functions.cleanUpNamedBucketAndUploads(t, `${TEST_BUCKET_NAME_SPECIFIC}-9`);
   });
 
 test
   .before(async (t) => {
     // Create a bucket
     await functions.setUpNamedBucket(t, `${TEST_BUCKET_NAME_SPECIFIC}-10`);
-  })("Object can be uploaded to a bucket", async (t) => {
-    const testBucketBrowseButton = namedTestBucketBrowseButtonFor(
-      `${TEST_BUCKET_NAME_SPECIFIC}-10`,
-    );
+  })('Object can be uploaded to a bucket', async (t) => {
+    const testBucketBrowseButton = namedTestBucketBrowseButtonFor(`${TEST_BUCKET_NAME_SPECIFIC}-10`);
     await t
       .useRole(roles.bucketSpecific)
       .click(acknowledgeButton)
       .typeText(elements.filterBuckets, `${TEST_BUCKET_NAME_SPECIFIC}-10`)
       .click(testBucketBrowseButton)
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt");
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt');
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpNamedBucketAndUploads(
-      t,
-      `${TEST_BUCKET_NAME_SPECIFIC}-10`,
-    );
+    await functions.cleanUpNamedBucketAndUploads(t, `${TEST_BUCKET_NAME_SPECIFIC}-10`);
   });
 
 test
   .before(async (t) => {
     // Create a bucket
     await functions.setUpNamedBucket(t, `${TEST_BUCKET_NAME_SPECIFIC}-11`);
-  })("Object list table is disabled", async (t) => {
+  })('Object list table is disabled', async (t) => {
     await t
       .useRole(roles.bucketSpecific)
       .click(acknowledgeButton)
@@ -152,8 +129,5 @@ test
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpNamedBucketAndUploads(
-      t,
-      `${TEST_BUCKET_NAME_SPECIFIC}-11`,
-    );
+    await functions.cleanUpNamedBucketAndUploads(t, `${TEST_BUCKET_NAME_SPECIFIC}-11`);
   });

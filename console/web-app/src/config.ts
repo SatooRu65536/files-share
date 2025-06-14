@@ -14,54 +14,48 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { ApplicationLogoProps } from "mds";
+import { ApplicationLogoProps } from 'mds';
 
-const MinIOPlan =
-  (
-    document.head.querySelector(
-      "[name~=minio-license][content]",
-    ) as HTMLMetaElement
-  )?.content || "AGPL";
+const MinIOPlan = (document.head.querySelector('[name~=minio-license][content]') as HTMLMetaElement)?.content || 'AGPL';
 
 type LogoVar =
-  | "AGPL"
-  | "simple"
-  | "standard"
-  | "enterprise"
-  | "new"
-  | "enterpriseos"
-  | "enterpriseosvertical"
+  | 'AGPL'
+  | 'simple'
+  | 'standard'
+  | 'enterprise'
+  | 'new'
+  | 'enterpriseos'
+  | 'enterpriseosvertical'
   | undefined;
 
 export const getLogoVar = (): LogoVar => {
-  let logoVar: LogoVar = "AGPL";
+  let logoVar: LogoVar = 'AGPL';
   switch (MinIOPlan.toLowerCase()) {
-    case "enterprise-lite":
-      logoVar = "enterpriseos";
+    case 'enterprise-lite':
+      logoVar = 'enterpriseos';
       break;
-    case "enterprise-plus":
-      logoVar = "enterpriseos";
+    case 'enterprise-plus':
+      logoVar = 'enterpriseos';
       break;
-    case "enterprise":
-      logoVar = "enterprise";
+    case 'enterprise':
+      logoVar = 'enterprise';
       break;
-    case "standard":
-      logoVar = "standard";
+    case 'standard':
+      logoVar = 'standard';
       break;
     default:
-      logoVar = "AGPL";
+      logoVar = 'AGPL';
       break;
   }
   return logoVar;
 };
 
-export const getLogoApplicationVariant =
-  (): ApplicationLogoProps["applicationName"] => {
-    switch (MinIOPlan.toLowerCase()) {
-      case "enterprise-lite":
-      case "enterprise-plus":
-        return "minio";
-      default:
-        return "console";
-    }
-  };
+export const getLogoApplicationVariant = (): ApplicationLogoProps['applicationName'] => {
+  switch (MinIOPlan.toLowerCase()) {
+    case 'enterprise-lite':
+    case 'enterprise-plus':
+      return 'minio';
+    default:
+      return 'console';
+  }
+};

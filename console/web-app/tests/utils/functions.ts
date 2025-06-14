@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "./roles";
-import * as elements from "./elements";
-import * as constants from "./constants";
-import { Selector } from "testcafe";
+import * as roles from './roles';
+import * as elements from './elements';
+import * as constants from './constants';
+import { Selector } from 'testcafe';
 
-import * as Minio from "minio";
+import * as Minio from 'minio';
 
 export const setUpBucket = (t, modifier) => {
   return setUpNamedBucket(t, `${constants.TEST_BUCKET_NAME}-${modifier}`);
@@ -27,13 +27,13 @@ export const setUpBucket = (t, modifier) => {
 
 export const setUpNamedBucket = (t, name) => {
   const minioClient = new Minio.Client({
-    endPoint: "localhost",
+    endPoint: 'localhost',
     port: 9000,
     useSSL: false,
-    accessKey: "minioadmin",
-    secretKey: "minioadmin",
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin',
   });
-  return minioClient.makeBucket(name, "us-east-1").catch((err) => {
+  return minioClient.makeBucket(name, 'us-east-1').catch((err) => {
     console.log(err);
   });
 };
@@ -43,25 +43,18 @@ export const uploadObjectToBucket = (t, modifier, objectName, objectPath) => {
   return uploadNamedObjectToBucket(t, bucketName, objectName, objectPath);
 };
 
-export const uploadNamedObjectToBucket = async (
-  t,
-  modifier,
-  objectName,
-  objectPath,
-) => {
+export const uploadNamedObjectToBucket = async (t, modifier, objectName, objectPath) => {
   const bucketName = modifier;
   const minioClient = new Minio.Client({
-    endPoint: "localhost",
+    endPoint: 'localhost',
     port: 9000,
     useSSL: false,
-    accessKey: "minioadmin",
-    secretKey: "minioadmin",
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin',
   });
-  return minioClient
-    .fPutObject(bucketName, objectName, objectPath, {})
-    .catch((err) => {
-      console.log(err);
-    });
+  return minioClient.fPutObject(bucketName, objectName, objectPath, {}).catch((err) => {
+    console.log(err);
+  });
 };
 
 export const setVersioned = (t, modifier) => {
@@ -70,23 +63,20 @@ export const setVersioned = (t, modifier) => {
 
 export const setVersionedBucket = (t, name) => {
   const minioClient = new Minio.Client({
-    endPoint: "localhost",
+    endPoint: 'localhost',
     port: 9000,
     useSSL: false,
-    accessKey: "minioadmin",
-    secretKey: "minioadmin",
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin',
   });
 
   return new Promise((resolve, reject) => {
-    minioClient
-      .setBucketVersioning(name, { Status: "Enabled" })
-      .then(resolve)
-      .catch(resolve);
+    minioClient.setBucketVersioning(name, { Status: 'Enabled' }).then(resolve).catch(resolve);
   });
 };
 
 export const namedManageButtonFor = (name) => {
-  return Selector("div").withAttribute("id", `manageBucket-${name}`);
+  return Selector('div').withAttribute('id', `manageBucket-${name}`);
 };
 
 export const manageButtonFor = (modifier) => {
@@ -95,11 +85,11 @@ export const manageButtonFor = (modifier) => {
 
 export const cleanUpNamedBucket = (t, name) => {
   const minioClient = new Minio.Client({
-    endPoint: "localhost",
+    endPoint: 'localhost',
     port: 9000,
     useSSL: false,
-    accessKey: "minioadmin",
-    secretKey: "minioadmin",
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin',
   });
 
   return minioClient.removeBucket(name);
@@ -110,35 +100,33 @@ export const cleanUpBucket = (t, modifier) => {
 };
 
 export const namedTestBucketBrowseButtonFor = (name) => {
-  return Selector("button").withAttribute("id", `manageBucket-${name}`);
+  return Selector('button').withAttribute('id', `manageBucket-${name}`);
 };
 
 export const testBucketBrowseButtonFor = (modifier) => {
-  return namedTestBucketBrowseButtonFor(
-    `${constants.TEST_BUCKET_NAME}-${modifier}`,
-  );
+  return namedTestBucketBrowseButtonFor(`${constants.TEST_BUCKET_NAME}-${modifier}`);
 };
 
 export const cleanUpNamedBucketAndUploads = (t, bucket) => {
   return new Promise((resolve, reject) => {
     const minioClient = new Minio.Client({
-      endPoint: "localhost",
+      endPoint: 'localhost',
       port: 9000,
       useSSL: false,
-      accessKey: "minioadmin",
-      secretKey: "minioadmin",
+      accessKey: 'minioadmin',
+      secretKey: 'minioadmin',
     });
 
-    var stream = minioClient.listObjects(bucket, "", true);
+    var stream = minioClient.listObjects(bucket, '', true);
 
     let proms: any[] = [];
-    stream.on("data", function (obj) {
+    stream.on('data', function (obj) {
       if (obj.name) {
         proms.push(minioClient.removeObject(bucket, obj.name));
       }
     });
 
-    stream.on("end", () => {
+    stream.on('end', () => {
       Promise.all(proms).then(() => {
         minioClient.removeBucket(bucket).then(resolve).catch(resolve);
       });
@@ -161,18 +149,13 @@ export const createUser = (t) => {
 };
 
 export const cleanUpUser = (t) => {
-  const userListItem = Selector(".ReactVirtualized__Table__rowColumn").withText(
-    constants.TEST_USER_NAME,
-  );
+  const userListItem = Selector('.ReactVirtualized__Table__rowColumn').withText(constants.TEST_USER_NAME);
 
-  const userDeleteIconButton = userListItem
-    .nextSibling()
-    .child("button")
-    .withAttribute("aria-label", "delete");
+  const userDeleteIconButton = userListItem.nextSibling().child('button').withAttribute('aria-label', 'delete');
 
   return t
     .useRole(roles.admin)
-    .navigateTo("http://localhost:9090/identity/users")
+    .navigateTo('http://localhost:9090/identity/users')
     .click(userDeleteIconButton)
     .click(elements.deleteButton);
 };

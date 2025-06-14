@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { BucketObjectItem } from "../Buckets/ListBuckets/Objects/ListObjects/types";
-import {
-  BucketVersioningResponse,
-  GetBucketRetentionConfig,
-} from "api/consoleApi";
+import { BucketVersioningResponse, GetBucketRetentionConfig } from 'api/consoleApi';
+
+import { BucketObjectItem } from '../Buckets/ListBuckets/Objects/ListObjects/types';
 
 interface RewindItem {
   rewindEnabled: boolean;
@@ -70,7 +68,7 @@ interface ObjectManager {
 }
 
 export interface IFileItem {
-  type: "download" | "upload";
+  type: 'download' | 'upload';
   ID: string;
   instanceID: string;
   bucketName: string;

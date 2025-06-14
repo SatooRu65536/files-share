@@ -23,26 +23,19 @@ export const getPolicyAllowedFileExtensions = (
   uploadPath: string,
   scopes: string[] = [],
 ) => {
-  const sessionGrantWildCards = getSessionGrantsWildCard(
-    sessionGrants,
-    uploadPath,
-    scopes,
-  );
+  const sessionGrantWildCards = getSessionGrantsWildCard(sessionGrants, uploadPath, scopes);
 
   //get acceptable files if any in the policy.
-  const allowedFileExtensions = sessionGrantWildCards.reduce(
-    (acc: string[], cv: string) => {
-      const extension: string = extractFileExtn(cv);
-      if (extension) {
-        acc.push(`.${extension}`); //strict extension matching.
-      }
-      return acc;
-    },
-    [],
-  );
+  const allowedFileExtensions = sessionGrantWildCards.reduce((acc: string[], cv: string) => {
+    const extension: string = extractFileExtn(cv);
+    if (extension) {
+      acc.push(`.${extension}`); //strict extension matching.
+    }
+    return acc;
+  }, []);
 
   const uniqueExtensions = [...new Set(allowedFileExtensions)];
-  return uniqueExtensions.join(",");
+  return uniqueExtensions.join(',');
 };
 
 // The resource should not have the extensions (*.ext) for the hasPermission to work.
@@ -53,22 +46,19 @@ export const getSessionGrantsWildCard = (
   scopes: string[] = [],
 ) => {
   //get only the path matching grants to reduce processing.
-  const grantsWithExtension = Object.keys(sessionGrants).reduce(
-    (acc: Record<string, string[]>, grantKey: string) => {
-      if (extractFileExtn(grantKey) && grantKey.includes(uploadPath)) {
-        acc[grantKey] = sessionGrants[grantKey];
-      }
-      return acc;
-    },
-    {},
-  );
+  const grantsWithExtension = Object.keys(sessionGrants).reduce((acc: Record<string, string[]>, grantKey: string) => {
+    if (extractFileExtn(grantKey) && grantKey.includes(uploadPath)) {
+      acc[grantKey] = sessionGrants[grantKey];
+    }
+    return acc;
+  }, {});
 
   const checkPathsForPermission = (sessionGrantKey: string) => {
     const grantActions = grantsWithExtension[sessionGrantKey];
     const hasScope = grantActions.some((actionKey) =>
       scopes.find((scopeKey) => {
         let wildCardMatch = false;
-        const hasWildCard = scopeKey.indexOf("*") !== -1;
+        const hasWildCard = scopeKey.indexOf('*') !== -1;
         if (hasWildCard) {
           const scopeActionKey = scopeKey.substring(0, scopeKey.length - 1);
 
@@ -81,13 +71,11 @@ export const getSessionGrantsWildCard = (
 
     const sessionGrantKeyPath = sessionGrantKey.substring(
       0,
-      sessionGrantKey.indexOf("/*."), //start of extension part.
+      sessionGrantKey.indexOf('/*.'), //start of extension part.
     );
-    const isUploadPathMatching =
-      sessionGrantKeyPath === `arn:aws:s3:::${uploadPath}`;
+    const isUploadPathMatching = sessionGrantKeyPath === `arn:aws:s3:::${uploadPath}`;
 
-    const hasGrant =
-      isUploadPathMatching && sessionGrantKey !== "arn:aws:s3:::*";
+    const hasGrant = isUploadPathMatching && sessionGrantKey !== 'arn:aws:s3:::*';
 
     return hasScope && hasGrant;
   };

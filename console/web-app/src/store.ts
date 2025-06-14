@@ -14,19 +14,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { useDispatch } from "react-redux";
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
-import systemReducer from "./systemSlice";
-import loginReducer from "./screens/LoginPage/loginSlice";
-import consoleReducer from "./screens/Console/consoleSlice";
-import addBucketsReducer from "./screens/Console/Buckets/ListBuckets/AddBucket/addBucketsSlice";
-import bucketDetailsReducer from "./screens/Console/Buckets/BucketDetails/bucketDetailsSlice";
-import objectBrowserReducer from "./screens/Console/ObjectBrowser/objectBrowserSlice";
-import licenseReducer from "./screens/Console/License/licenseSlice";
-import { objectBrowserWSMiddleware } from "./websockets/objectBrowserWSMiddleware";
+import bucketDetailsReducer from './screens/Console/Buckets/BucketDetails/bucketDetailsSlice';
+import addBucketsReducer from './screens/Console/Buckets/ListBuckets/AddBucket/addBucketsSlice';
+import consoleReducer from './screens/Console/consoleSlice';
+import licenseReducer from './screens/Console/License/licenseSlice';
+import objectBrowserReducer from './screens/Console/ObjectBrowser/objectBrowserSlice';
+import loginReducer from './screens/LoginPage/loginSlice';
+import systemReducer from './systemSlice';
+import { objectBrowserWSMiddleware } from './websockets/objectBrowserWSMiddleware';
 
-var objectsWS: WebSocket;
+let objectsWS: WebSocket;
 
 const rootReducer = combineReducers({
   system: systemReducer,
@@ -40,12 +40,11 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(objectBrowserWSMiddleware(objectsWS)),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(objectBrowserWSMiddleware(objectsWS)),
 });
 
-if (process.env.NODE_ENV !== "production" && module.hot) {
-  module.hot.accept(() => {
+if (import.meta.hot) {
+  import.meta.hot.accept(() => {
     store.replaceReducer(rootReducer);
   });
 }

@@ -14,9 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { getClientOS } from "../../../common/utils";
-import { makeid, storeCallForObjectWithID } from "./transferManager";
-import { download } from "../Buckets/ListBuckets/Objects/utils";
+import { BucketObject } from 'api/consoleApi';
+
+import { getClientOS } from '../../../common/utils';
+import { AppDispatch } from '../../../store';
+import { setSnackBarMessage } from '../../../systemSlice';
+import { download } from '../Buckets/ListBuckets/Objects/utils';
 import {
   cancelObjectInList,
   completeObject,
@@ -24,10 +27,8 @@ import {
   setLongFileOpen,
   setNewObject,
   updateProgress,
-} from "./objectBrowserSlice";
-import { AppDispatch } from "../../../store";
-import { setSnackBarMessage } from "../../../systemSlice";
-import { BucketObject } from "api/consoleApi";
+} from './objectBrowserSlice';
+import { makeid, storeCallForObjectWithID } from './transferManager';
 
 export const downloadObject = (
   dispatch: AppDispatch,
@@ -35,11 +36,9 @@ export const downloadObject = (
   internalPaths: string,
   object: BucketObject,
 ) => {
-  const identityDownload = encodeURIComponent(
-    `${bucketName}-${object.name}-${new Date().getTime()}-${Math.random()}`,
-  );
+  const identityDownload = encodeURIComponent(`${bucketName}-${object.name}-${new Date().getTime()}-${Math.random()}`);
 
-  const isWinOs = getClientOS().toLowerCase().includes("win");
+  const isWinOs = getClientOS().toLowerCase().includes('win');
 
   if ((object.name?.length || 0) > 200 && isWinOs) {
     dispatch(setLongFileOpen(true));
@@ -73,11 +72,7 @@ export const downloadObject = (
       dispatch(cancelObjectInList(identityDownload));
     },
     () => {
-      dispatch(
-        setSnackBarMessage(
-          "File download will be handled directly by the browser.",
-        ),
-      );
+      dispatch(setSnackBarMessage('File download will be handled directly by the browser.'));
     },
   );
 
@@ -89,12 +84,12 @@ export const downloadObject = (
       done: false,
       instanceID: identityDownload,
       percentage: 0,
-      prefix: object.name || "",
-      type: "download",
+      prefix: object.name || '',
+      type: 'download',
       waitingForFile: true,
       failed: false,
       cancelled: false,
-      errorMessage: "",
+      errorMessage: '',
     }),
   );
 };

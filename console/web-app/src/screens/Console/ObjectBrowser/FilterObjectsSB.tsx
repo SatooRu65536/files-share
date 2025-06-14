@@ -14,21 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React from "react";
-import { setSearchObjects } from "./objectBrowserSlice";
-import SearchBox from "../Common/SearchBox";
-import { AppState, useAppDispatch } from "../../../store";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState, useAppDispatch } from '../../../store';
+import SearchBox from '../Common/SearchBox';
+import { setSearchObjects } from './objectBrowserSlice';
 
 const FilterObjectsSB = () => {
   const dispatch = useAppDispatch();
 
-  const searchObjects = useSelector(
-    (state: AppState) => state.objectBrowser.searchObjects,
-  );
+  const searchObjects = useSelector((state: AppState) => state.objectBrowser.searchObjects);
   return (
     <SearchBox
-      placeholder={"Start typing to filter objects in the bucket"}
+      placeholder={'Start typing to filter objects in the bucket'}
       onChange={(value) => {
         dispatch(setSearchObjects(value));
       }}

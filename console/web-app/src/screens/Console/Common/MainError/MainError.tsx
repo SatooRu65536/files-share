@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useCallback, useEffect, useState } from "react";
-import { Snackbar } from "mds";
-import { useSelector } from "react-redux";
-import get from "lodash/get";
-import { AppState, useAppDispatch } from "../../../../store";
-import {
-  setErrorSnackMessage,
-  setModalSnackMessage,
-} from "../../../../systemSlice";
+import get from 'lodash/get';
+import { Snackbar } from 'mds';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { AppState, useAppDispatch } from '../../../../store';
+import { setErrorSnackMessage, setModalSnackMessage } from '../../../../systemSlice';
 
 interface IMainErrorProps {
   isModal?: boolean;
@@ -41,22 +39,22 @@ const MainError = ({ isModal = false }: IMainErrorProps) => {
 
   useEffect(() => {
     if (!displayErrorMsg) {
-      dispatch(setErrorSnackMessage({ detailedError: "", errorMessage: "" }));
-      dispatch(setModalSnackMessage(""));
+      dispatch(setErrorSnackMessage({ detailedError: '', errorMessage: '' }));
+      dispatch(setModalSnackMessage(''));
     }
   }, [dispatch, displayErrorMsg]);
 
   useEffect(() => {
-    if (snackBar.message !== "" && snackBar.type === "error") {
+    if (snackBar.message !== '' && snackBar.type === 'error') {
       //Error message received, we trigger the animation
       setDisplayErrorMsg(true);
     }
   }, [closeErrorMessage, snackBar.message, snackBar.type]);
 
-  const message = get(snackBar, "message", "");
-  const messageDetails = get(snackBar, "detailedErrorMsg", "");
+  const message = get(snackBar, 'message', '');
+  const messageDetails = get(snackBar, 'detailedErrorMsg', '');
 
-  if (snackBar.type !== "error" || message === "") {
+  if (snackBar.type !== 'error' || message === '') {
     return null;
   }
 
@@ -64,7 +62,7 @@ const MainError = ({ isModal = false }: IMainErrorProps) => {
     <Snackbar
       onClose={closeErrorMessage}
       open={displayErrorMsg}
-      variant={"error"}
+      variant={'error'}
       message={messageDetails ? messageDetails : `${message}.`}
       autoHideDuration={10}
       closeButton

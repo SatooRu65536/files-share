@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { RedirectRule } from "api/consoleApi";
+import { RedirectRule } from 'api/consoleApi';
 
 export const redirectRules = (a: RedirectRule, b: RedirectRule) => {
   if (a.displayName && b.displayName) {

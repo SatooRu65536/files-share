@@ -14,88 +14,82 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from "../utils/roles";
-import * as elements from "../utils/elements";
-import * as functions from "../utils/functions";
-import { testBucketBrowseButtonFor } from "../utils/functions";
-import { Selector } from "testcafe";
-import { acknowledgeButton } from "../utils/elements";
+import * as roles from '../utils/roles';
+import * as elements from '../utils/elements';
+import * as functions from '../utils/functions';
+import { testBucketBrowseButtonFor } from '../utils/functions';
+import { Selector } from 'testcafe';
+import { acknowledgeButton } from '../utils/elements';
 
-fixture("For user with Bucket Read & Write permissions").page(
-  "http://localhost:9090",
-);
+fixture('For user with Bucket Read & Write permissions').page('http://localhost:9090');
 
 test
   .before(async (t) => {
     // Create a bucket
-    await functions.setUpBucket(t, "bucketobjecttags");
-    await functions.setVersioned(t, "bucketobjecttags");
+    await functions.setUpBucket(t, 'bucketobjecttags');
+    await functions.setVersioned(t, 'bucketobjecttags');
     await t
       .useRole(roles.bucketObjectTags)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "bucketobjecttags")
-      .click(testBucketBrowseButtonFor("bucketobjecttags"))
+      .typeText(elements.filterBuckets, 'bucketobjecttags')
+      .click(testBucketBrowseButtonFor('bucketobjecttags'))
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt")
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt')
       .wait(1000);
-  })("Tags can be created and deleted", async (t) => {
+  })('Tags can be created and deleted', async (t) => {
     await t
       .useRole(roles.bucketObjectTags)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "bucketobjecttags")
-      .click(testBucketBrowseButtonFor("bucketobjecttags"))
-      .click(
-        "div.ReactVirtualized__Grid.ReactVirtualized__Table__Grid > div > div:nth-child(1)",
-      )
-      .click(Selector("button").withText("Tags"))
-      .typeText("#newTagKey", "tag1")
-      .typeText("#newTagLabel", "test")
-      .click(Selector("#saveTag:enabled"))
-      .click(Selector("button").withText("Tags"), { offsetX: -1, offsetY: -1 })
-      .expect(Selector("span").withText("tag1 : test").exists)
+      .typeText(elements.filterBuckets, 'bucketobjecttags')
+      .click(testBucketBrowseButtonFor('bucketobjecttags'))
+      .click('div.ReactVirtualized__Grid.ReactVirtualized__Table__Grid > div > div:nth-child(1)')
+      .click(Selector('button').withText('Tags'))
+      .typeText('#newTagKey', 'tag1')
+      .typeText('#newTagLabel', 'test')
+      .click(Selector('#saveTag:enabled'))
+      .click(Selector('button').withText('Tags'), { offsetX: -1, offsetY: -1 })
+      .expect(Selector('span').withText('tag1 : test').exists)
       .ok()
-      .click(Selector(".deleteTagButton"))
-      .click(Selector("#deleteTag"))
-      .click(Selector("button").withText("Tags"))
-      .expect(Selector("span").withText("tag1 : test").exists)
+      .click(Selector('.deleteTagButton'))
+      .click(Selector('#deleteTag'))
+      .click(Selector('button').withText('Tags'))
+      .expect(Selector('span').withText('tag1 : test').exists)
       .notOk();
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpBucketAndUploads(t, "bucketobjecttags");
+    await functions.cleanUpBucketAndUploads(t, 'bucketobjecttags');
   });
 
 test
   .before(async (t) => {
     // Create a bucket
-    await functions.setUpBucket(t, "bucketcannottag");
-    await functions.setVersioned(t, "bucketcannottag");
+    await functions.setUpBucket(t, 'bucketcannottag');
+    await functions.setVersioned(t, 'bucketcannottag');
     await t
       .useRole(roles.bucketCannotTag)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "bucketcannottag")
-      .click(testBucketBrowseButtonFor("bucketcannottag"))
+      .typeText(elements.filterBuckets, 'bucketcannottag')
+      .click(testBucketBrowseButtonFor('bucketcannottag'))
       // Upload object to bucket
-      .setFilesToUpload(elements.uploadInput, "../uploads/test.txt")
+      .setFilesToUpload(elements.uploadInput, '../uploads/test.txt')
       .wait(1000);
-  })("User should not be able to create tag", async (t) => {
+  })('User should not be able to create tag', async (t) => {
     await t
       .useRole(roles.bucketCannotTag)
       .click(acknowledgeButton)
-      .typeText(elements.filterBuckets, "bucketcannottag")
-      .click(testBucketBrowseButtonFor("bucketcannottag"))
-      .click(
-        "div.ReactVirtualized__Grid.ReactVirtualized__Table__Grid > div > div:nth-child(1)",
-      )
-      .click(Selector("button").withText("Tags"))
-      .typeText("#newTagKey", "tag1")
-      .typeText("#newTagLabel", "test")
-      .click(Selector("#saveTag:enabled"))
-      .click(Selector("button").withText("Tags"))
-      .expect(Selector(".MuiChip-label").withText("tag1 : test").exists)
+      .typeText(elements.filterBuckets, 'bucketcannottag')
+      .click(testBucketBrowseButtonFor('bucketcannottag'))
+      .click('div.ReactVirtualized__Grid.ReactVirtualized__Table__Grid > div > div:nth-child(1)')
+      .click(Selector('button').withText('Tags'))
+      .typeText('#newTagKey', 'tag1')
+      .typeText('#newTagLabel', 'test')
+      .click(Selector('#saveTag:enabled'))
+      .click(Selector('button').withText('Tags'))
+      .expect(Selector('.MuiChip-label').withText('tag1 : test').exists)
       .notOk();
   })
   .after(async (t) => {
     // Cleanup created bucket and corresponding uploads
-    await functions.cleanUpBucketAndUploads(t, "bucketcannottag");
+    await functions.cleanUpBucketAndUploads(t, 'bucketcannottag');
   });

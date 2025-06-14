@@ -14,9 +14,7 @@
     {
       "Effect": "Allow",
       "Action": ["s3:*"],
-      "Resource": [
-        "arn:aws:s3:::testbucket-*-test-1/digitalinsights/xref_cust_guid_actd*"
-      ]
+      "Resource": ["arn:aws:s3:::testbucket-*-test-1/digitalinsights/xref_cust_guid_actd*"]
     },
 
     {
@@ -32,9 +30,7 @@
     {
       "Effect": "Allow",
       "Action": ["s3:*"],
-      "Resource": [
-        "arn:aws:s3:::testbucket-*-test-2/digitalinsights/xref_cust_guid_actd*"
-      ]
+      "Resource": ["arn:aws:s3:::testbucket-*-test-2/digitalinsights/xref_cust_guid_actd*"]
     },
 
     {
@@ -50,9 +46,7 @@
     {
       "Effect": "Allow",
       "Action": ["s3:*"],
-      "Resource": [
-        "arn:aws:s3:::testbucket-*-test-3/digitalinsights/xref_cust_guid_actd*"
-      ]
+      "Resource": ["arn:aws:s3:::testbucket-*-test-3/digitalinsights/xref_cust_guid_actd*"]
     }
   ]
 }
