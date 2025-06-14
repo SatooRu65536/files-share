@@ -167,12 +167,10 @@ const ResultItem = ({
   action,
   active,
   currentRootActionId,
-  ref,
 }: {
   action: ActionImpl;
   active: boolean;
   currentRootActionId: ActionId;
-  ref?: React.Ref<HTMLDivElement>;
 }) => {
   const ancestors = React.useMemo(() => {
     if (!currentRootActionId) {
@@ -188,7 +186,6 @@ const ResultItem = ({
 
   return (
     <div
-      ref={ref}
       style={{
         padding: '12px 12px 12px 36px',
         marginTop: '2px',

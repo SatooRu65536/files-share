@@ -21,15 +21,18 @@ import { Provider } from 'react-redux';
 import MainRouter from './MainRouter';
 import { store } from './store';
 import StyleHandler from './StyleHandler';
+import { ThemeProvider } from 'styled-components';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <StyleHandler>
-        <MainRouter />
-      </StyleHandler>
-    </Provider>
+    <ThemeProvider theme={{}}>
+      <Provider store={store}>
+        <StyleHandler>
+          <MainRouter />
+        </StyleHandler>
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
 );
