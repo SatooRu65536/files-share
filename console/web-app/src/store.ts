@@ -20,7 +20,6 @@ import { useDispatch } from 'react-redux';
 import bucketDetailsReducer from './screens/Console/Buckets/BucketDetails/bucketDetailsSlice';
 import addBucketsReducer from './screens/Console/Buckets/ListBuckets/AddBucket/addBucketsSlice';
 import consoleReducer from './screens/Console/consoleSlice';
-import licenseReducer from './screens/Console/License/licenseSlice';
 import objectBrowserReducer from './screens/Console/ObjectBrowser/objectBrowserSlice';
 import loginReducer from './screens/LoginPage/loginSlice';
 import systemReducer from './systemSlice';
@@ -35,7 +34,6 @@ const rootReducer = combineReducers({
   addBucket: addBucketsReducer,
   bucketDetails: bucketDetailsReducer,
   objectBrowser: objectBrowserReducer,
-  license: licenseReducer,
 });
 
 export const store = configureStore({

@@ -14,17 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { AddIcon, DocumentationIcon, LicenseIcon, Menu, MenuItem } from 'mds';
+import { AddIcon, DocumentationIcon, Menu, MenuItem } from 'mds';
 import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { To, useLocation, useNavigate } from 'react-router';
 
-import { IAM_PAGES } from '../../../common/SecureComponent/permissions';
 import { getLogoApplicationVariant, getLogoVar } from '../../../config';
 import { AppState, useAppDispatch } from '../../../store';
 import { menuOpen } from '../../../systemSlice';
 import { setAddBucketOpen } from '../Buckets/ListBuckets/AddBucket/addBucketsSlice';
-import { getLicenseConsent } from '../License/utils';
 import BucketsListing from './Listing/BucketsListing';
 
 const MenuWrapper = () => {
@@ -59,13 +57,6 @@ const MenuWrapper = () => {
             name={'Documentation'}
             icon={<DocumentationIcon />}
             path={'https://min.io/docs/minio/linux/index.html?ref=con'}
-          />
-          <MenuItem
-            name={'License'}
-            icon={<LicenseIcon />}
-            path={IAM_PAGES.LICENSE}
-            onClick={() => void navigate(IAM_PAGES.LICENSE)}
-            badge={!getLicenseConsent()}
           />
         </Fragment>
       }
