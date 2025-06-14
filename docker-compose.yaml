@@ -1,0 +1,47 @@
+services:
+  dev-minio:
+    image: minio/minio:latest
+    container_name: dev-minio
+    ports:
+      - "9000:${MINIO_PORT}"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BROWSER: off
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+    restart: unless-stopped
+
+  console:
+    container_name: console
+    build:
+      context: ./console
+      dockerfile: Dockerfile
+    environment:
+      - CONSOLE_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - CONSOLE_SECRET_KEY=${MINIO_SECRET_KEY}
+      - CONSOLE_MINIO_SERVER=${MINIO_ENDPOINT}
+    ports:
+      - "9090:9090"
+
+  minio-init:
+    image: minio/mc
+    depends_on:
+      dev-minio:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/minio/init.sh"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      BUCKET_NAME: ${BUCKET_NAME}
+    volumes:
+      - ./minio/init.sh:/minio/init.sh
+      - ./minio/policies:/minio/policies
+
+volumes:
+  minio-data:

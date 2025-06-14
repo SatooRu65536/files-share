@@ -36,6 +36,7 @@ export const fetchSession = createAsyncThunk(
     return api.session
       .sessionCheck()
       .then((res) => {
+        console.log(res);
         dispatch(userLogged(true));
         dispatch(saveSessionResponse(res.data));
         dispatch(globalSetDistributedSetup(res.data.distributedMode || false));
