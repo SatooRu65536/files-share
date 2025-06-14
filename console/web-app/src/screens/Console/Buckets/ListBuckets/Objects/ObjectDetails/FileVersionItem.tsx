@@ -18,7 +18,6 @@ import { BucketObject } from 'api/consoleApi';
 import get from 'lodash/get';
 import { DateTime } from 'luxon';
 import { Checkbox, DownloadIcon, Grid, IconButton, PreviewIcon, RecoverIcon, ShareIcon, Tooltip } from 'mds';
-import React from 'react';
 import styled from 'styled-components';
 
 import { niceBytes } from '../../../../../../common/utils';

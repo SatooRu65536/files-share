@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Button, DarkModeIcon, LightModeIcon } from 'mds';
-import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { AppState, useAppDispatch } from '../../../../store';

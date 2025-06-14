@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ApplicationLogo, Button } from 'mds';
-import React, { Fragment, Suspense } from 'react';
+import { Fragment, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
 import LoadingComponent from '../../common/LoadingComponent';

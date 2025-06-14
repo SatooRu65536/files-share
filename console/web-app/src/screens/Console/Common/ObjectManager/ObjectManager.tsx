@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Box, IconButton, RemoveAllIcon, Tooltip } from 'mds';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 
 import { AppState, useAppDispatch } from '../../../../store';

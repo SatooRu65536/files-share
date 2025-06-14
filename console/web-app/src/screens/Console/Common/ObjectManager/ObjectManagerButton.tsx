@@ -16,7 +16,7 @@
 
 import get from 'lodash/get';
 import { Button, CircleIcon, ObjectManagerIcon } from 'mds';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 

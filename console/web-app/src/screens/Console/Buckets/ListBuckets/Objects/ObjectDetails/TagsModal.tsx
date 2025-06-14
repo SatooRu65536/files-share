@@ -30,7 +30,7 @@ import {
   SectionTitle,
   Tag,
 } from 'mds';
-import React, { ChangeEvent, Fragment, useState } from 'react';
+import { ChangeEvent, Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -208,10 +208,6 @@ const AddTagModal = ({ actualInfo, bucketName, modalOpen, onCloseAndUpdate }: IT
                             key={`chip-${index}`}
                             scopes={[IAM_SCOPES.S3_DELETE_OBJECT_TAGGING, IAM_SCOPES.S3_DELETE_ACTIONS]}
                             resource={bucketName}
-                            errorProps={{
-                              deleteIcon: null,
-                              onDelete: null,
-                            }}
                           >
                             <Tag
                               id={`${tagKey} : ${tag}`}

@@ -15,8 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { RedirectRule } from 'api/consoleApi';
-import { Box, Button, Loader, LoginWrapper, RefreshIcon } from 'mds';
-import React, { Fragment, useEffect } from 'react';
+import LoginWrapper from 'components/LoginWrapper/LoginWrapper';
+import { Box, Button, Loader, RefreshIcon } from 'mds';
+import { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 

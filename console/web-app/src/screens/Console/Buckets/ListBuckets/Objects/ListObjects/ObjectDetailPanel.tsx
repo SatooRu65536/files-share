@@ -33,7 +33,7 @@ import {
   TagsIcon,
   VersionsIcon,
 } from 'mds';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { hasPermission, SecureComponent } from '../../../../../../common/SecureComponent';

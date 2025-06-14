@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Grid } from 'mds';
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { SecureComponent } from '../../../common/SecureComponent';

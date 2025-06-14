@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AddIcon, DocumentationIcon, LicenseIcon, Menu, MenuItem } from 'mds';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { To, useLocation, useNavigate } from 'react-router';
 

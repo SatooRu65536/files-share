@@ -16,7 +16,7 @@
 
 import get from 'lodash/get';
 import { Snackbar } from 'mds';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { AppState, useAppDispatch } from '../../../../store';

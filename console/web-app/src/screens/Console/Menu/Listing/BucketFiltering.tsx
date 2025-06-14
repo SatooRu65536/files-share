@@ -16,7 +16,7 @@
 
 import get from 'lodash/get';
 import { Box, InputBox, SearchIcon } from 'mds';
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 

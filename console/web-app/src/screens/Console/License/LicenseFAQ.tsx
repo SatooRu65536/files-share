@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import get from 'lodash/get';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 
 const LinkElement = styled.a(({ theme }) => ({

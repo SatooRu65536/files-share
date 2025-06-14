@@ -16,7 +16,7 @@
 
 import { BucketVersioningResponse, ObjectRetentionMode } from 'api/consoleApi';
 import { ConfirmDeleteIcon, Switch } from 'mds';
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { hasPermission } from '../../../../../../common/SecureComponent';

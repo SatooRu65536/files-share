@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { BucketsIcon, MenuItem } from 'mds';
-import React from 'react';
 import { useNavigate } from 'react-router';
 
 import { Bucket } from '../../../../api/consoleApi';

@@ -14,7 +14,6 @@
 //  You should have received a copy of the GNU Affero General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { KBarProvider } from 'kbar';
-import * as React from 'react';
 import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -24,7 +23,6 @@ import CommandBar from './CommandBar';
 import TrafficMonitor from './Common/ObjectManager/TrafficMonitor';
 import Console from './Console';
 import { selFeatures } from './consoleSlice';
-import LicenseConsentModal from './License/LicenseConsentModal';
 
 const ConsoleKBar = () => {
   const features = useSelector(selFeatures);
@@ -57,7 +55,6 @@ const ConsoleKBar = () => {
     >
       <TrafficMonitor />
       <CommandBar />
-      <LicenseConsentModal />
       <Console />
     </KBarProvider>
   );

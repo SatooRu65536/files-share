@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Box, Button, InformativeMessage } from 'mds';
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = './scripts/pdf.worker.min.mjs';

@@ -16,7 +16,7 @@
 
 import { DateTime } from 'luxon';
 import { Box, InputBox, InputLabel, LinkIcon } from 'mds';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 const DAY_SECONDS = 86400;
 const HOUR_SECONDS = 3600;

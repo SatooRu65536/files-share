@@ -33,7 +33,6 @@ import {
   FileZipIcon,
   FolderBrowserIcon,
 } from 'mds';
-import React from 'react';
 
 import IconWithLabel from './IconWithLabel';
 

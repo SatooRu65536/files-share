@@ -16,7 +16,7 @@
 
 import get from 'lodash/get';
 import { AGPLV3DarkLogo, Box, Button, InformativeMessage } from 'mds';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 

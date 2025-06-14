@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Box } from 'mds';
-import React from 'react';
 
 export default function Copyright() {
   return (

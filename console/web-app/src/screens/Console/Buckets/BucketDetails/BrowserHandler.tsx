@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
-import React, { Fragment, useCallback, useEffect } from 'react';
+import { Fragment, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 

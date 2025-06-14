@@ -18,7 +18,7 @@ import { api } from 'api';
 import { ApiError, BucketObject } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 import { Box, RecoverIcon } from 'mds';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { useAppDispatch } from '../../../../../../store';
 import { setErrorSnackMessage } from '../../../../../../systemSlice';

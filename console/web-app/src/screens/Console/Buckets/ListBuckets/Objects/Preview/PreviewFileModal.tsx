@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ObjectPreviewIcon } from 'mds';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 
 import { BucketObject } from '../../../../../../api/consoleApi';
 import ModalWrapper from '../../../../Common/ModalWrapper/ModalWrapper';

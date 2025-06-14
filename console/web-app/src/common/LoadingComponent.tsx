@@ -15,7 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Grid, Loader } from 'mds';
-import React from 'react';
 
 const LoadingComponent = () => {
   return (

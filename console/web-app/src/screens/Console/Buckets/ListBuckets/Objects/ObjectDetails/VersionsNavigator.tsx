@@ -30,7 +30,7 @@ import {
   SelectMultipleIcon,
   VersionsIcon,
 } from 'mds';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListRowProps } from 'react-virtualized';
 

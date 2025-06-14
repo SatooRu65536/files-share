@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ProgressBar, ProgressBarProps } from 'mds';
-import React from 'react';
 
 interface IProgressBarWrapper {
   value: number;

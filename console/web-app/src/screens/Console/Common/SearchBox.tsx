@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { InputBox, SearchIcon } from 'mds';
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 import { CSSObject } from 'styled-components';
 
 type SearchBoxProps = {

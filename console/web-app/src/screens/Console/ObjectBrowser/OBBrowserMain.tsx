@@ -16,7 +16,7 @@
 
 import { ApiError } from 'api/consoleApi';
 import { ActionLink, BucketsIcon, Grid, HelpBox, PageLayout, ProgressBar } from 'mds';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { api } from '../../../api';
@@ -116,7 +116,7 @@ const OBBrowserMain = () => {
                       )}
                       <SecureComponent scopes={[IAM_SCOPES.S3_CREATE_BUCKET]} resource={CONSOLE_UI_RESOURCE}>
                         <br />
-                        To get started,&nbsp;
+                        <span>To get started,&nbsp;</span>
                         <ActionLink
                           onClick={() => {
                             dispatch(setAddBucketOpen(true));

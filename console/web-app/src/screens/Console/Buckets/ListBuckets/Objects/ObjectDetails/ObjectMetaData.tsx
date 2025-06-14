@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Box } from 'mds';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 
 import { safeDecodeURIComponent } from '../../../../../../common/utils';
 

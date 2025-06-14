@@ -1,5 +1,5 @@
-// This file is part of MinIO Console Server
-// Copyright (c) 2021 MinIO, Inc.
+// This file is part of MinIO Design System
+// Copyright (c) 2022 MinIO, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -14,26 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router';
+import { ReactNode } from 'react';
 
-import LoadingComponent from '../../../common/LoadingComponent';
-import NotFoundPage from '../../NotFoundPage';
+import { ApplicationLogoProps } from '../ApplicationLogo/ApplicationLogo.types';
 
-const Buckets = () => {
-  return (
-    <Routes>
-      <Route element={<Navigate to={`/buckets`} />} path="*" />
-
-      <Route
-        element={
-          <Suspense fallback={<LoadingComponent />}>
-            <NotFoundPage />
-          </Suspense>
-        }
-      />
-    </Routes>
-  );
-};
-
-export default Buckets;
+export interface LoginWrapperProps {
+  logoProps: ApplicationLogoProps;
+  form: ReactNode;
+  formFooter?: ReactNode;
+  promoHeader?: ReactNode;
+  promoInfo?: ReactNode;
+  backgroundAnimation?: boolean;
+}

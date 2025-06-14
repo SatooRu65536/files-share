@@ -16,7 +16,7 @@
 
 import get from 'lodash/get';
 import { Box, Button } from 'mds';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 
 import CheckIcon from './CheckIcon';
