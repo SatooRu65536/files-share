@@ -6,6 +6,12 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   server: {
     port: 5005,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9090',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'build',

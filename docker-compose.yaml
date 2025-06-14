@@ -23,9 +23,10 @@ services:
       context: ./console
       dockerfile: Dockerfile
     environment:
-      - CONSOLE_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - CONSOLE_SECRET_KEY=${MINIO_SECRET_KEY}
-      - CONSOLE_MINIO_SERVER=${MINIO_ENDPOINT}
+      - CONSOLE_ACCESS_KEY=${CONSOLE_ACCESS_KEY}
+      - CONSOLE_SECRET_KEY=${CONSOLE_SECRET_KEY}
+      - CONSOLE_MINIO_SERVER=${CONSOLE_MINIO_SERVER}
+      - CONSOLE_DEV_MODE=${CONSOLE_DEV_MODE}
     ports:
       - "9090:9090"
 
