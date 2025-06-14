@@ -51,3 +51,5 @@ public.crt
 
 # Ignore Bin files
 bin/
+
+web-app/build/

@@ -6,7 +6,7 @@ BUILD_TIME:=$(shell date 2>/dev/null)
 TAG ?= "minio/console:$(BUILD_VERSION)-dev"
 MINIO_VERSION ?= "quay.io/minio/minio:latest"
 TARGET_BUCKET ?= "target"
-NODE_VERSION := $(shell cat .nvmrc)
+NODE_VERSION := 22
 
 default: console
 
