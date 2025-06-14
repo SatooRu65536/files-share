@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { Box,Breadcrumbs, breakPoints, Button, CopyIcon, NewPathIcon, Tooltip } from 'mds';
+import { Box, Breadcrumbs, breakPoints, Button, CopyIcon, NewPathIcon, Tooltip } from 'mds';
 import React, { Fragment, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import { hasPermission } from '../../../common/SecureComponent';
@@ -89,7 +89,9 @@ const BrowserBreadcrumbs = ({ additionalOptions, bucketName, hidePathButton, int
   useEffect(() => {
     setCanCreateSubpath(false);
     Object.keys(sessionGrants).forEach((grant) => {
-      grant.includes(pathToCheckPerms) && grant.includes('/*') && setCanCreateSubpath(true);
+      if (grant.includes(pathToCheckPerms) && grant.includes('/*')) {
+        setCanCreateSubpath(true);
+      }
     });
   }, [pathToCheckPerms, internalPaths, sessionGrants]);
 
@@ -172,7 +174,7 @@ const BrowserBreadcrumbs = ({ additionalOptions, bucketName, hidePathButton, int
 
       const prevPath = splitPaths.slice(0, -1);
 
-      navigate(
+      void navigate(
         `/browser/${bucketName}${prevPath.length > 0 ? `/${encodeURIComponent(`${prevPath.join('/')}/`)}` : ''}`,
       );
     }

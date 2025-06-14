@@ -20,10 +20,10 @@ import React, { Fragment } from 'react';
 import { safeDecodeURIComponent } from '../../../../../../common/utils';
 
 interface IObjectMetadata {
-  metaData: any;
+  metaData: Record<string, string>;
 }
 
-const itemRendererFn = (element: any) => {
+const itemRendererFn = (element: string) => {
   return Array.isArray(element) ? element.map(safeDecodeURIComponent).join(', ') : safeDecodeURIComponent(element);
 };
 

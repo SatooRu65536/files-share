@@ -47,10 +47,10 @@ const consoleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSession.pending, (state, action) => {
+      .addCase(fetchSession.pending, (state) => {
         state.sessionLoadingState = SessionCallStates.Loading;
       })
-      .addCase(fetchSession.fulfilled, (state, action) => {
+      .addCase(fetchSession.fulfilled, (state) => {
         state.sessionLoadingState = SessionCallStates.Done;
       });
   },

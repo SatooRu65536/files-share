@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from '../utils/roles';
 import * as elements from '../utils/elements';
-import * as functions from '../utils/functions';
-import { namedManageButtonFor, namedTestBucketBrowseButtonFor } from '../utils/functions';
-import { bucketsElement, logoutItem } from '../utils/elements-menu';
-import { Selector } from 'testcafe';
 import { acknowledgeButton } from '../utils/elements';
+import { logoutItem } from '../utils/elements-menu';
+import * as functions from '../utils/functions';
+import { namedTestBucketBrowseButtonFor } from '../utils/functions';
+import * as roles from '../utils/roles';
 
 const TEST_BUCKET_NAME_SPECIFIC = 'specific-bucket';
 

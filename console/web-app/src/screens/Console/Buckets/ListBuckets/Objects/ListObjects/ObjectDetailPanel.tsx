@@ -95,7 +95,7 @@ const ObjectDetailPanel = ({ bucketName, internalPaths, onClosePanel, versioning
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [totalVersionsSize, setTotalVersionsSize] = useState<number>(0);
   const [longFileOpen, setLongFileOpen] = useState<boolean>(false);
-  const [metaData, setMetaData] = useState<any | null>(null);
+  const [metaData, setMetaData] = useState<Record<any, any> | null>(null);
   const [loadMetadata, setLoadingMetadata] = useState<boolean>(false);
 
   const internalPathsDecoded = internalPaths || '';
@@ -254,7 +254,7 @@ const ObjectDetailPanel = ({ bucketName, internalPaths, onClosePanel, versioning
     [IAM_SCOPES.S3_DELETE_OBJECT, IAM_SCOPES.S3_DELETE_ACTIONS],
   );
 
-  const objectType: AllowedPreviews = previewObjectType(metaData, currentItem);
+  const objectType: AllowedPreviews = previewObjectType(metaData ?? {}, currentItem);
 
   const multiActionButtons = [
     {

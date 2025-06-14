@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Grid, ThemedLogo } from 'mds';
-import React from 'react';
 import { useSelector } from 'react-redux';
+import tinycolor from 'tinycolor2';
 
 import { AppState } from '../../../../store';
 
@@ -26,8 +26,6 @@ interface IAutoColorIcon {
 }
 
 const AutoColorIcon = ({ marginRight, marginTop }: IAutoColorIcon) => {
-  const tinycolor = require('tinycolor2');
-
   const colorVariants = useSelector((state: AppState) => state.system.overrideStyles);
 
   const isDark = tinycolor(colorVariants?.backgroundColor || '#fff').getBrightness() <= 128;

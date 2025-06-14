@@ -40,7 +40,7 @@ import { makeid, storeCallForObjectWithID } from './transferManager';
 
 export const downloadSelected = createAsyncThunk(
   'objectBrowser/downloadSelected',
-  async (bucketName: string, { dispatch, getState, rejectWithValue }) => {
+  async (bucketName: string, { dispatch, getState }) => {
     const state = getState() as AppState;
 
     const downloadObject = (object: BucketObjectItem) => {
@@ -119,7 +119,7 @@ export const downloadSelected = createAsyncThunk(
           const fileName = `${DateTime.now().toFormat('LL-dd-yyyy-HH-mm-ss')}_files_list.zip`;
 
           // We are enforcing zip download when multiple files are selected for better user experience
-          const multiObjList = itemsToDownload.reduce((dwList: any[], bi) => {
+          const multiObjList: string[] = itemsToDownload.reduce((dwList: string[], bi) => {
             // Download objects/prefixes(recursively) as zip
             // Skip any deleted files selected via "Show deleted objects" in selection and log for debugging
             const isDeleted = bi?.delete_flag;
@@ -139,51 +139,39 @@ export const downloadSelected = createAsyncThunk(
   },
 );
 
-export const openPreview = createAsyncThunk(
-  'objectBrowser/openPreview',
-  async (_, { dispatch, getState, rejectWithValue }) => {
-    const state = getState() as AppState;
+export const openPreview = createAsyncThunk('objectBrowser/openPreview', (_, { dispatch, getState }) => {
+  const state = getState() as AppState;
 
-    if (state.objectBrowser.selectedObjects.length === 1) {
-      let fileObject: BucketObjectItem | undefined;
+  if (state.objectBrowser.selectedObjects.length === 1) {
+    const findFunction = (currValue: BucketObjectItem) => state.objectBrowser.selectedObjects.includes(currValue.name);
 
-      const findFunction = (currValue: BucketObjectItem) =>
-        state.objectBrowser.selectedObjects.includes(currValue.name);
+    const fileObject: BucketObjectItem | undefined = state.objectBrowser.records.find(findFunction);
 
-      fileObject = state.objectBrowser.records.find(findFunction);
-
-      if (fileObject) {
-        dispatch(setSelectedPreview(fileObject));
-        dispatch(setPreviewOpen(true));
-      }
+    if (fileObject) {
+      dispatch(setSelectedPreview(fileObject));
+      dispatch(setPreviewOpen(true));
     }
-  },
-);
+  }
+});
 
-export const openShare = createAsyncThunk(
-  'objectBrowser/openShare',
-  async (_, { dispatch, getState, rejectWithValue }) => {
-    const state = getState() as AppState;
+export const openShare = createAsyncThunk('objectBrowser/openShare', (_, { dispatch, getState }) => {
+  const state = getState() as AppState;
 
-    if (state.objectBrowser.selectedObjects.length === 1) {
-      let fileObject: BucketObjectItem | undefined;
+  if (state.objectBrowser.selectedObjects.length === 1) {
+    const findFunction = (currValue: BucketObjectItem) => state.objectBrowser.selectedObjects.includes(currValue.name);
 
-      const findFunction = (currValue: BucketObjectItem) =>
-        state.objectBrowser.selectedObjects.includes(currValue.name);
+    const fileObject: BucketObjectItem | undefined = state.objectBrowser.records.find(findFunction);
 
-      fileObject = state.objectBrowser.records.find(findFunction);
-
-      if (fileObject) {
-        dispatch(setSelectedPreview(fileObject));
-        dispatch(setShareFileModalOpen(true));
-      }
+    if (fileObject) {
+      dispatch(setSelectedPreview(fileObject));
+      dispatch(setShareFileModalOpen(true));
     }
-  },
-);
+  }
+});
 
 export const openAnonymousAccess = createAsyncThunk(
   'objectBrowser/openAnonymousAccess',
-  async (_, { dispatch, getState }) => {
+  (_, { dispatch, getState }) => {
     const state = getState() as AppState;
 
     if (state.objectBrowser.selectedObjects.length === 1 && state.objectBrowser.selectedObjects[0].endsWith('/')) {
@@ -200,7 +188,7 @@ export const getMaxShareLinkExpTime = createAsyncThunk(
       .then((res) => {
         dispatch(setMaxShareLinkExpTime(res.data.exp));
       })
-      .catch(async (res) => {
+      .catch((res) => {
         return rejectWithValue(res.error);
       });
   },

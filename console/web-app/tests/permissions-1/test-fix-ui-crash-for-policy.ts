@@ -14,17 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { Role, Selector } from 'testcafe';
 import { readFileSync } from 'fs';
+import { Role, Selector } from 'testcafe';
+
 import { getMenuElement } from '../utils/elements-menu';
 
 const data = readFileSync(__dirname + '/../constants/timestamp.txt', 'utf-8');
 const $TIMESTAMP = data.trim();
 
-let testDomainUrl = 'http://localhost:9090';
+const testDomainUrl = 'http://localhost:9090';
 
-let insAllowedAccKey = `prefix-policy-ui-crash-${$TIMESTAMP}`;
-let insAllowedSeckey = 'poluicrashfix1234';
+const insAllowedAccKey = `prefix-policy-ui-crash-${$TIMESTAMP}`;
+const insAllowedSeckey = 'poluicrashfix1234';
 
 /* Begin Local Testing config block */
 

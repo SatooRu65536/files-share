@@ -42,7 +42,7 @@ const ListBuckets = () => {
     if (loadingBuckets) {
       const fetchRecords = () => {
         dispatch(setBucketLoadListing(true));
-        api.buckets.listBuckets().then((res) => {
+        void api.buckets.listBuckets().then((res) => {
           if (res.data) {
             dispatch(setBucketLoadListing(false));
             setRecords(res.data.buckets || []);

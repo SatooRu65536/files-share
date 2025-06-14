@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { test as setup } from '@playwright/test';
+
 import { adminAccessKey, adminSecretKey, minioadminFile } from './consts';
 import { BUCKET_LIST_PAGE } from './consts';
 

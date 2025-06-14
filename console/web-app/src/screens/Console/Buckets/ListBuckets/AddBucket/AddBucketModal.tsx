@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { ApiError } from 'api/consoleApi';
 import { Box, Button, FormLayout, Grid, ProgressBar } from 'mds';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { api } from '../../../../../api';
 import { errorToHandler } from '../../../../../api/errors';
@@ -87,7 +88,7 @@ const AddBucketModal = () => {
             dispatch(setErrorSnackMessage(errorToHandler(res.error)));
           }
         })
-        .catch((err) => {
+        .catch((err: ApiError) => {
           dispatch(setErrorSnackMessage(errorToHandler(err)));
         });
     };
@@ -103,7 +104,7 @@ const AddBucketModal = () => {
       const goTo = `${navigateTo}`;
       dispatch(setAddBucketOpen(false));
       dispatch(resetForm());
-      navigate(goTo);
+      void navigate(goTo);
     }
   }, [navigateTo, navigate, dispatch]);
 
@@ -127,7 +128,7 @@ const AddBucketModal = () => {
             autoComplete="off"
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              dispatch(addBucketAsync());
+              void dispatch(addBucketAsync());
             }}
           >
             <Box>

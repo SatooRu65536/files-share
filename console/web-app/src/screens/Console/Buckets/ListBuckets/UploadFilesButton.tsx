@@ -122,7 +122,7 @@ const UploadFilesButton = ({
           },
         ]}
         selectedOption={''}
-        onSelect={(nValue) => uploadFolderAction(nValue)}
+        onSelect={(nValue: string) => uploadFolderAction(nValue)}
         hideTriggerAction={() => {
           uploadOptionsSetOpen(false);
         }}

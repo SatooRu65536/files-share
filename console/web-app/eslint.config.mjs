@@ -14,7 +14,12 @@ export default tseslint.config(
     ...reacteslint.configs.flat.recommended,
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        project: './tsconfig.json',
+      },
+    },
+    settings: {
+      react: {
+        version: 'detect',
       },
     },
   },
@@ -25,11 +30,6 @@ export default tseslint.config(
       'sort-destructure-keys': sortDestructureKeys,
       'react-refresh': reactRefresh,
       '@typescript-eslint': tseslint.plugin,
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
     },
     rules: {
       curly: 'error',
@@ -46,15 +46,40 @@ export default tseslint.config(
         'warn',
         {
           ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   {
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        project: './tsconfig.json',
       },
+    },
+    rules: {
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/prefer-promise-reject-errors': 'off',
+      '@typescript-eslint/no-redundant-type-constituents': 'off',
+    },
+  },
+  {
+    files: ['tests/**/*.{ts,tsx}', 'e2e/**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.test.json',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
   {
@@ -62,9 +87,14 @@ export default tseslint.config(
       'build/**/*',
       'functions/**/*',
       '.wrangler/**/*',
+      'public/**/*',
       'worker-configuration.d.ts',
+      'vite.config.ts',
       'eslint.config.mjs',
       'postcss.config.js',
+      'knip.config.ts',
+      'playwright.config.ts',
+      'src/utils/matchMedia.js',
     ],
   },
 );

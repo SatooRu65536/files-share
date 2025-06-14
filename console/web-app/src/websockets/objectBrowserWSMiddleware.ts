@@ -38,7 +38,7 @@ import { wsProtocol } from '../utils/wsUtils';
 let wsInFlight: boolean = false;
 let currentRequestID: number = 0;
 
-export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, AppState> => {
+export const objectBrowserWSMiddleware = (objectsWS: WebSocket | undefined): Middleware<object, AppState> => {
   return (storeApi) => (next) => (action) => {
     const dispatch = storeApi.dispatch;
     const storeState = storeApi.getState();
@@ -46,9 +46,9 @@ export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, 
     const allowResources = get(storeState, 'console.session.allowResources', null);
     const bucketName = get(storeState, 'objectBrowser.selectedBucket', '');
 
-    const { type } = action;
+    const type = (action as { type: string }).type;
     switch (type) {
-      case 'socket/OBConnect':
+      case 'socket/OBConnect': {
         const sessionInitialized = get(storeState, 'system.loggedIn', false);
 
         if (wsInFlight || !sessionInitialized) {
@@ -79,6 +79,7 @@ export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, 
             detailedMessage: 'An unknown error occurred. Please refer to Console logs to get more information.',
           };
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const response: WebsocketResponse = JSON.parse(message.data.toString());
           if (currentRequestID === response.request_id) {
             // If response is not from current request, we can omit
@@ -154,12 +155,13 @@ export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, 
         };
 
         break;
+      }
 
-      case 'socket/OBRequest':
+      case 'socket/OBRequest': {
         if (objectsWS && objectsWS.readyState === 1) {
           try {
             const newRequestID = currentRequestID + 1;
-            const dataPayload = action.payload;
+            const dataPayload = (action as { payload: { path: string; bucketName: string; rewindMode: boolean; date: string; } }).payload;
 
             dispatch(resetMessages());
             dispatch(errorInConnection(false));
@@ -192,11 +194,15 @@ export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, 
             dispatch({ type: 'socket/OBConnect' });
           }
           // Retry request after 1 second
-          setTimeout(() => dispatch({ type: 'socket/OBRequest', payload: action.payload }), 1000);
+          setTimeout(
+            () => dispatch({ type: 'socket/OBRequest', payload: (action as { payload: WebsocketRequest }).payload }),
+            1000,
+          );
         }
 
         break;
-      case 'socket/OBCancelLast':
+      }
+      case 'socket/OBCancelLast': {
         const request: WebsocketRequest = {
           mode: 'cancel',
           request_id: currentRequestID,
@@ -206,14 +212,17 @@ export const objectBrowserWSMiddleware = (objectsWS: WebSocket): Middleware<{}, 
           objectsWS.send(JSON.stringify(request));
         }
         break;
-      case 'socket/OBDisconnect':
+      }
+      case 'socket/OBDisconnect': {
         if (objectsWS) {
           objectsWS.close();
         }
         break;
+      }
 
-      default:
+      default: {
         break;
+      }
     }
     return next(action);
   };

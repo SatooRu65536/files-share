@@ -16,7 +16,7 @@
 
 import get from 'lodash/get';
 import { Box, InputBox, SearchIcon } from 'mds';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 
@@ -51,7 +51,7 @@ const BucketFiltering = () => {
           },
         }}
         value={bucketFilter}
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
           dispatch(setFilterBucket(e.target.value));
         }}
         startIcon={<SearchIcon />}

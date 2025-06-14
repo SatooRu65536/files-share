@@ -48,7 +48,7 @@ const ConfirmDialog = ({
   cancelText = 'Cancel',
   confirmButtonProps = undefined,
   confirmText = 'Confirm',
-  confirmationButtonSimple = false,
+  // confirmationButtonSimple = false,
   confirmationContent,
   isLoading,
   isOpen = false,

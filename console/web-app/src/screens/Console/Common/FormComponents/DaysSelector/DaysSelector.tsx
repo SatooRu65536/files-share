@@ -16,7 +16,7 @@
 
 import { DateTime } from 'luxon';
 import { Box, InputBox, InputLabel, LinkIcon } from 'mds';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 const DAY_SECONDS = 86400;
 const HOUR_SECONDS = 3600;
@@ -155,7 +155,7 @@ const DaysSelector = ({ entity, id, label, maxSeconds, onChange }: IDaysSelector
             max="7"
             label="Days"
             name={id}
-            onChange={(e) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setSelectedDays(parseInt(e.target.value));
             }}
             value={selectedDays.toString()}
@@ -172,7 +172,7 @@ const DaysSelector = ({ entity, id, label, maxSeconds, onChange }: IDaysSelector
             max="23"
             label="Hours"
             name={id}
-            onChange={(e) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setSelectedHours(parseInt(e.target.value));
             }}
             value={selectedHours.toString()}
@@ -189,7 +189,7 @@ const DaysSelector = ({ entity, id, label, maxSeconds, onChange }: IDaysSelector
             max="59"
             label="Minutes"
             name={id}
-            onChange={(e) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setSelectedMinutes(parseInt(e.target.value));
             }}
             value={selectedMinutes.toString()}

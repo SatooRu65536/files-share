@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from '../utils/roles';
-import * as elements from '../utils/elements';
 import { Selector } from 'testcafe';
+
+import * as elements from '../utils/elements';
 import { acknowledgeButton } from '../utils/elements';
+import * as roles from '../utils/roles';
 
 fixture('For user with Bucket Write to specific prefix permissions').page('http://localhost:9090');
 
 test
-  .before(async (t) => {})(
+  .before(async () => {})(
     'Upload File button is disable and Upload Folder button is enabled on bucket root path',
     async (t) => {
       const uploadButton = elements.uploadButton;
@@ -38,10 +39,10 @@ test
         .notOk();
     },
   )
-  .after(async (t) => {});
+  .after(async () => {});
 
 test
-  .before(async (t) => {})('Upload File and Folder buttons are enabled on bucket prefix path', async (t) => {
+  .before(async () => {})('Upload File and Folder buttons are enabled on bucket prefix path', async (t) => {
     const uploadButton = elements.uploadButton;
 
     await t
@@ -54,4 +55,4 @@ test
       .expect(Selector('div').withAttribute('label', 'Upload Folder').hasClass('disabled'))
       .notOk();
   })
-  .after(async (t) => {});
+  .after(async () => {});

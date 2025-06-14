@@ -3092,6 +3092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tinycolor2@npm:^1.4.6":
+  version: 1.4.6
+  resolution: "@types/tinycolor2@npm:1.4.6"
+  checksum: 10c0/922020c3326460e9d8502c8a98f80db69f06fd14e07fe5a48e8ffe66175762298a9bd51263f2a0c9a40632886a74975a3ff79396defcdbeac0dc176e3e5056e8
+  languageName: node
+  linkType: hard
+
 "@types/unist@npm:*, @types/unist@npm:^3.0.0":
   version: 3.0.3
   resolution: "@types/unist@npm:3.0.3"
@@ -12895,6 +12902,7 @@ __metadata:
     "@types/react-window-infinite-loader": "npm:^1.0.9"
     "@types/recharts": "npm:^2.0.1"
     "@types/superagent": "npm:^8.1.9"
+    "@types/tinycolor2": "npm:^1.4.6"
     "@types/webpack-env": "npm:^1.18.8"
     "@vitejs/plugin-react": "npm:^4.5.2"
     babel-plugin-istanbul: "npm:^7.0.0"

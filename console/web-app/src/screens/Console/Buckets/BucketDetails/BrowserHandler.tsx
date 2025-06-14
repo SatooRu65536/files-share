@@ -17,7 +17,7 @@
 import { api } from 'api';
 import React, { Fragment, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router';
 
 import hasPermission from '../../../../common/SecureComponent/accessControl';
 import { IAM_SCOPES } from '../../../../common/SecureComponent/permissions';
@@ -54,7 +54,7 @@ const BrowserHandler = () => {
   const selectedBucket = useSelector((state: AppState) => state.objectBrowser.selectedBucket);
   const records = useSelector((state: AppState) => state.objectBrowser.records);
 
-  const bucketName = params.bucketName || '';
+  const bucketName: string = params.bucketName || '';
   const pathSegment = location.pathname.split(`/browser/${encodeURIComponent(bucketName)}/`);
   const internalPaths = pathSegment.length === 2 ? decodeURIComponent(pathSegment[1]) : '';
 

@@ -18,7 +18,7 @@ import debounce from 'lodash/debounce';
 import { MainContainer, ProgressBar, Snackbar } from 'mds';
 import React, { Fragment, Suspense, useEffect, useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 
 import LoadingComponent from '../../common/LoadingComponent';
 import { hasPermission } from '../../common/SecureComponent';

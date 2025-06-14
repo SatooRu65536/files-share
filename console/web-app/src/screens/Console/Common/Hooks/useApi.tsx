@@ -10,7 +10,7 @@ type IsApiInProgress = boolean;
 const useApi = (onSuccess: NoReturnFunction, onError: NoReturnFunction): [IsApiInProgress, ApiMethodToInvoke] => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const callApi = (method: string, url: string, data?: any, headers?: any) => {
+  const callApi = (method: string, url: string, data?: object, headers?: Record<string, string>) => {
     setIsLoading(true);
     api
       .invoke(method, url, data, headers)

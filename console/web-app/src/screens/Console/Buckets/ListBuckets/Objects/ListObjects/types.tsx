@@ -16,8 +16,6 @@
 
 import { ApiError, BucketObject } from 'api/consoleApi';
 
-import { IFileInfo } from '../ObjectDetails/types';
-
 export interface BucketObjectItem {
   name: string;
   size: number;

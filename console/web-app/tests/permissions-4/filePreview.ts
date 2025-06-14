@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from '../utils/roles';
 import { Selector } from 'testcafe';
-import * as functions from '../utils/functions';
-import { namedTestBucketBrowseButtonFor } from '../utils/functions';
+
 import * as elements from '../utils/elements';
 import { acknowledgeButton } from '../utils/elements';
+import * as functions from '../utils/functions';
+import { namedTestBucketBrowseButtonFor } from '../utils/functions';
+import * as roles from '../utils/roles';
 
 fixture('Test Preview page in Console').page('http://localhost:9090/');
 

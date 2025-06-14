@@ -46,7 +46,7 @@ const PreviewPDF = ({ downloadFile, loading, onLoad, path }: IPreviewPDFProps) =
           title={'Error'}
           message={
             <Fragment>
-              File preview couldn't be displayed, Please try Download instead.
+              File preview couldn&apos;t be displayed, Please try Download instead.
               <Box
                 sx={{
                   display: 'flex',
@@ -99,7 +99,7 @@ const PreviewPDF = ({ downloadFile, loading, onLoad, path }: IPreviewPDFProps) =
         >
           <Document
             file={path}
-            onLoadSuccess={({ _pdfInfo }) => {
+            onLoadSuccess={({ _pdfInfo }: { _pdfInfo: { numPages: number } }) => {
               setTotalPages(_pdfInfo.numPages || 0);
               setErrorState(false);
               onLoad();

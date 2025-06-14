@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
-import { BucketQuota } from 'api/consoleApi';
+import { ApiError, BucketQuota } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 import get from 'lodash/get';
 import { DateTime } from 'luxon';
@@ -37,10 +37,10 @@ import {
   ScreenTitle,
   ShareIcon,
 } from 'mds';
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { ChangeEvent, Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { hasPermission, SecureComponent } from '../../../../../../common/SecureComponent';
 import { IAM_SCOPES, permissionTooltipHelper } from '../../../../../../common/SecureComponent/permissions';
@@ -158,7 +158,7 @@ const ListObjects = () => {
   const [canShareFile, setCanShareFile] = useState<boolean>(false);
   const [canPreviewFile, setCanPreviewFile] = useState<boolean>(false);
   const [quota, setQuota] = useState<BucketQuota | null>(null);
-  const [metaData, setMetaData] = useState<any>(null);
+  const [metaData, setMetaData] = useState<Record<any, any> | null>(null);
   const [isMetaDataLoaded, setIsMetaDataLoaded] = useState(false);
 
   const isVersioningApplied = isVersionedMode(versioningConfig.status);
@@ -278,7 +278,7 @@ const ListObjects = () => {
       const objectName = selectedObjects[0];
       const isPrefix = objectName.endsWith('/');
 
-      const objectType: AllowedPreviews = previewObjectType(metaData, objectName);
+      const objectType: AllowedPreviews = previewObjectType(metaData ?? {}, objectName);
 
       if (objectType !== 'none' && canDownload) {
         setCanPreviewFile(true);
@@ -344,7 +344,7 @@ const ListObjects = () => {
           dispatch(setBucketDetailsLoad(false));
           dispatch(setBucketInfo(res.data));
         })
-        .catch((err) => {
+        .catch((err: ApiError) => {
           dispatch(setBucketDetailsLoad(false));
           dispatch(setErrorSnackMessage(errorToHandler(err)));
         });
@@ -361,7 +361,7 @@ const ListObjects = () => {
     }
   };
 
-  const handleUploadButton = (e: any) => {
+  const handleUploadButton = (e: ChangeEvent<HTMLInputElement>) => {
     if (e === null || e === undefined || e.target.files === null || e.target.files === undefined) {
       return;
     }
@@ -455,9 +455,10 @@ const ListObjects = () => {
                   errorMessage = errorMessages[xhr.status];
                 } else if (xhr.response) {
                   try {
-                    const err = JSON.parse(xhr.response);
+                    const err = JSON.parse(xhr.response as string);
                     errorMessage = err.detailedMessage;
                   } catch (e) {
+                    console.error(e);
                     errorMessage = 'something went wrong';
                   }
                 }
@@ -546,7 +547,7 @@ const ListObjects = () => {
           const file = files[i];
           uploadFilePromises.push(uploadPromise(file));
         }
-        Promise.allSettled(uploadFilePromises).then((results: Array<any>) => {
+        void Promise.allSettled(uploadFilePromises).then((results: Array<any>) => {
           const errors = results.filter((result) => result.status === 'rejected');
           if (errors.length > 0) {
             const totalFiles = uploadFilePromises.length;
@@ -568,9 +569,9 @@ const ListObjects = () => {
   );
 
   const onDrop = useCallback(
-    (acceptedFiles: any[]) => {
+    (acceptedFiles: FileWithPath[]) => {
       if (acceptedFiles && acceptedFiles.length > 0 && canUpload) {
-        const newFolderPath: string = acceptedFiles[0].path;
+        const newFolderPath: string = acceptedFiles[0].path ?? acceptedFiles[0].webkitRelativePath ?? '';
         //Should we filter by allowed file extensions if any?.
         let allowedFiles = acceptedFiles;
 
@@ -679,7 +680,7 @@ const ListObjects = () => {
         URLItem = `${splitURLS.join('/')}/`;
       }
 
-      navigate(`/browser/${encodeURIComponent(bucketName)}/${encodeURIComponent(URLItem)}`);
+      void navigate(`/browser/${encodeURIComponent(bucketName)}/${encodeURIComponent(URLItem)}`);
     }
 
     dispatch(setObjectDetailsView(false));
@@ -713,7 +714,7 @@ const ListObjects = () => {
   const multiActionButtons = [
     {
       action: () => {
-        dispatch(downloadSelected(bucketName));
+        void dispatch(downloadSelected(bucketName));
       },
       label: 'Download',
       disabled: !canDownload || isSelObjectDelMarker,
@@ -727,7 +728,7 @@ const ListObjects = () => {
     },
     {
       action: () => {
-        dispatch(openShare());
+        void dispatch(openShare());
       },
       label: 'Share',
       disabled: selectedObjects.length !== 1 || !canShareFile || isSelObjectDelMarker,
@@ -736,7 +737,7 @@ const ListObjects = () => {
     },
     {
       action: () => {
-        dispatch(openPreview());
+        void dispatch(openPreview());
       },
       label: 'Preview',
       disabled: selectedObjects.length !== 1 || !canPreviewFile || isSelObjectDelMarker,
@@ -745,7 +746,7 @@ const ListObjects = () => {
     },
     {
       action: () => {
-        dispatch(openAnonymousAccess());
+        void dispatch(openAnonymousAccess());
       },
       label: 'Anonymous Access',
       disabled: selectedObjects.length !== 1 || !selectedObjects[0].endsWith('/') || !canSetAnonymousAccess,

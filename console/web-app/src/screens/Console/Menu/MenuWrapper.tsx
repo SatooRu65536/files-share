@@ -17,7 +17,7 @@
 import { AddIcon, DocumentationIcon, LicenseIcon, Menu, MenuItem } from 'mds';
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { To, useLocation, useNavigate } from 'react-router';
 
 import { IAM_PAGES } from '../../../common/SecureComponent/permissions';
 import { getLogoApplicationVariant, getLogoVar } from '../../../config';
@@ -42,11 +42,11 @@ const MenuWrapper = () => {
         applicationName: getLogoApplicationVariant(),
         subVariant: getLogoVar(),
       }}
-      callPathAction={(path) => {
-        navigate(path);
+      callPathAction={(path: To) => {
+        void navigate(path);
       }}
       signOutAction={() => {
-        navigate('/logout');
+        void navigate('/logout');
       }}
       collapseAction={() => {
         dispatch(menuOpen(!sidebarOpen));

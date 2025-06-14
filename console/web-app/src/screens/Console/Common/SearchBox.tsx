@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { InputBox, SearchIcon } from 'mds';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { CSSObject } from 'styled-components';
 
 type SearchBoxProps = {
@@ -43,7 +43,7 @@ const SearchBox = ({
       className={overrideClass ? overrideClass : ''}
       id={id}
       label={label}
-      onChange={(e) => {
+      onChange={(e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
       }}
       value={value}

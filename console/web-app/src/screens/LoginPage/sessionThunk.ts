@@ -16,6 +16,7 @@
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from 'api';
+import { ApiError } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 
 import { globalSetDistributedSetup, setAnonymousMode, setOverrideStyles, userLogged } from '../../../src/systemSlice';
@@ -47,7 +48,7 @@ export const fetchSession = createAsyncThunk(
           }
         }
       })
-      .catch(async (res) => {
+      .catch((res: ApiError) => {
         if (screen === 'browser') {
           const bucket = pathnameParts.length >= 3 ? pathnameParts[2] : '';
           // no bucket, no business
@@ -60,8 +61,8 @@ export const fetchSession = createAsyncThunk(
             .then(() => {
               dispatch(setAnonymousMode());
             })
-            .catch((res) => {
-              dispatch(setErrorSnackMessage(errorToHandler(res.error)));
+            .catch((res: ApiError) => {
+              dispatch(setErrorSnackMessage(errorToHandler(res)));
             })
             .finally(() => {
               // TODO: we probably need a thunk for this api since setting the state here is hacky,
@@ -70,9 +71,9 @@ export const fetchSession = createAsyncThunk(
             });
         } else {
           dispatch(setSessionLoadingState(SessionCallStates.Done));
-          dispatch(setErrorSnackMessage(errorToHandler(res.error)));
+          dispatch(setErrorSnackMessage(errorToHandler(res)));
         }
-        return rejectWithValue(res.error);
+        return rejectWithValue(res);
       });
   },
 );

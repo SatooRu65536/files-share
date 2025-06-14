@@ -147,7 +147,7 @@ const LicensePlans = () => {
       <LicensesInformation>
         {[null, ...LICENSE_PLANS_INFORMATION].map((element, index) => {
           return (
-            <Box className={`first ${index === 1 ? 'openSource' : index === 2 ? 'enterprise' : ''}`}>
+            <Box className={`first ${index === 1 ? 'openSource' : index === 2 ? 'enterprise' : ''}`} key={index}>
               {element !== null && (
                 <Box>
                   <Box className={`planName  ${index === 1 ? 'openSource' : index === 2 ? 'enterprise' : ''}`}>
@@ -166,7 +166,7 @@ const LicensePlans = () => {
           const lastItem = index === FEATURE_ITEMS.length - 1 ? 'noBorderBottom' : '';
 
           return (
-            <Fragment>
+            <Fragment key={index}>
               <Box className={`feature-label ${lastItem}`}>{feature.featureLabel}</Box>
               <Box className={`feature-information  openSource ${lastItem}`}>
                 {renderFeatureInformation(feature.featurePlans.openSource || null)}
@@ -180,6 +180,7 @@ const LicensePlans = () => {
         {[null, ...LICENSE_PLANS_INFORMATION].map((element, index) => {
           return (
             <Box
+              key={index}
               className={`last ${index === 1 ? 'openSource' : index === 2 ? 'enterprise' : ''} noBorderBottom`}
               sx={{
                 display: 'flex',

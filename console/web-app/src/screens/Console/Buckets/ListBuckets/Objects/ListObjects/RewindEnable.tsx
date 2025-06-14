@@ -76,7 +76,7 @@ const RewindEnable = ({ bucketName, closeModalAndRefresh, open }: IRewindEnable)
       <FormLayout withBorders={false} containerPadding={false}>
         <DateTimeInput
           value={dateSelected}
-          onChange={(dateTime) => (dateTime ? setDateSelected(dateTime) : null)}
+          onChange={(dateTime: DateTime) => (dateTime ? setDateSelected(dateTime) : null)}
           id="rewind-selector"
           label="Rewind to"
           timeFormat={'24h'}

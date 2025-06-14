@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { ApiError } from 'api/consoleApi';
 import { ActionLink, BucketsIcon, Grid, HelpBox, PageLayout, ProgressBar } from 'mds';
 import React, { Fragment, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { api } from '../../../api';
 import { errorToHandler } from '../../../api/errors';
@@ -48,11 +49,11 @@ const OBBrowserMain = () => {
               const data = res.data.buckets || [];
 
               if (data.length >= 1) {
-                navigate(`/browser/${data[0].name}`);
+                void navigate(`/browser/${data[0].name}`);
               }
             }
           })
-          .catch((err) => {
+          .catch((err: ApiError) => {
             setLoading(false);
             dispatch(setErrorSnackMessage(errorToHandler(err)));
           });

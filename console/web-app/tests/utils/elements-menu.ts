@@ -20,11 +20,11 @@ import { Selector } from 'testcafe';
 // Functions to get elements
 //----------------------------------------------------
 
-export const getMenuElement = (item) => {
+export const getMenuElement = (item: string) => {
   return Selector('div.menuItems').find('button').withAttribute('id', item);
 };
 
-export const getSubmenuBlock = (item) => {
+export const getSubmenuBlock = (item: string) => {
   return getMenuElement(item).sibling('div.subItemsBox');
 };
 

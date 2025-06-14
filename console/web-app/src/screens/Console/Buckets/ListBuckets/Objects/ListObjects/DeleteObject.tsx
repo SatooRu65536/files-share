@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { BucketVersioningResponse } from 'api/consoleApi';
+import { BucketVersioningResponse, ObjectRetentionMode } from 'api/consoleApi';
 import { ConfirmDeleteIcon, Switch } from 'mds';
 import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -66,7 +66,7 @@ const DeleteObject = ({
 
   const canBypass =
     hasPermission([selectedBucket], [IAM_SCOPES.S3_BYPASS_GOVERNANCE_RETENTION]) &&
-    retentionConfig?.mode === 'governance';
+    retentionConfig?.mode === ObjectRetentionMode.Governance;
 
   if (!selectedObject) {
     return null;
@@ -118,9 +118,7 @@ const DeleteObject = ({
                 value={'delete_versions'}
                 id="delete-versions"
                 name="delete-versions"
-                onChange={(e) => {
-                  setDeleteVersions(!deleteVersions);
-                }}
+                onChange={() => setDeleteVersions(!deleteVersions)}
                 description=""
               />
             </Fragment>
@@ -139,9 +137,7 @@ const DeleteObject = ({
                   value={'bypass_governance'}
                   id="bypass_governance"
                   name="bypass_governance"
-                  onChange={(e) => {
-                    setBypassGovernance(!bypassGovernance);
-                  }}
+                  onChange={() => setBypassGovernance(!bypassGovernance)}
                   description=""
                 />
               </div>

@@ -19,7 +19,7 @@ import get from 'lodash/get';
 import { DataTable, ItemActions } from 'mds';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { hasPermission } from '../../../../../../common/SecureComponent';
 import { IAM_SCOPES, permissionTooltipHelper } from '../../../../../../common/SecureComponent/permissions';
@@ -92,7 +92,7 @@ const ListObjectsTable = () => {
     }
     dispatch(setSelectedObjects([]));
 
-    navigate(newPath);
+    void navigate(newPath);
 
     if (!anonymousMode) {
       dispatch(setObjectDetailsView(true));
@@ -109,7 +109,7 @@ const ListObjectsTable = () => {
     },
   ];
 
-  const sortChange = (sortData: any) => {
+  const sortChange = (sortData: { sortBy: string }) => {
     const newSortDirection = get(sortData, 'sortDirection', 'DESC');
     setCurrentSortField(sortData.sortBy);
     setSortDirection(newSortDirection);
@@ -184,13 +184,7 @@ const ListObjectsTable = () => {
         onSortClick: sortChange,
       }}
       onSelectAll={selectAllItems}
-      rowStyle={({ index }) => {
-        if (payload[index]?.delete_flag) {
-          return 'deleted';
-        }
-
-        return '';
-      }}
+      rowStyle={({ index }: { index: number }) => (payload[index]?.delete_flag ? 'deleted' : '')}
       sx={{
         minHeight: detailsOpen ? '100%' : 'initial',
       }}

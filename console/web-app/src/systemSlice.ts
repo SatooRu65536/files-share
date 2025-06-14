@@ -184,7 +184,7 @@ const systemSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(addBucketAsync.fulfilled, (state, action) => {
+    builder.addCase(addBucketAsync.fulfilled, (state) => {
       state.loadBucketsListing = true;
     });
   },

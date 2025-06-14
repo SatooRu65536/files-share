@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as roles from './roles';
-import * as elements from './elements';
-import * as constants from './constants';
+import * as Minio from 'minio';
 import { Selector } from 'testcafe';
 
-import * as Minio from 'minio';
+import * as constants from './constants';
+import * as elements from './elements';
+import * as roles from './roles';
 
 export const setUpBucket = (t, modifier) => {
   return setUpNamedBucket(t, `${constants.TEST_BUCKET_NAME}-${modifier}`);
 };
 
-export const setUpNamedBucket = (t, name) => {
+export const setUpNamedBucket = (t, name: string) => {
   const minioClient = new Minio.Client({
     endPoint: 'localhost',
     port: 9000,
@@ -38,12 +38,12 @@ export const setUpNamedBucket = (t, name) => {
   });
 };
 
-export const uploadObjectToBucket = (t, modifier, objectName, objectPath) => {
+export const uploadObjectToBucket = (t, modifier: string, objectName: string, objectPath: string) => {
   const bucketName = `${constants.TEST_BUCKET_NAME}-${modifier}`;
   return uploadNamedObjectToBucket(t, bucketName, objectName, objectPath);
 };
 
-export const uploadNamedObjectToBucket = async (t, modifier, objectName, objectPath) => {
+export const uploadNamedObjectToBucket = async (t, modifier: string, objectName: string, objectPath: string) => {
   const bucketName = modifier;
   const minioClient = new Minio.Client({
     endPoint: 'localhost',
@@ -61,7 +61,7 @@ export const setVersioned = (t, modifier) => {
   return setVersionedBucket(t, `${constants.TEST_BUCKET_NAME}-${modifier}`);
 };
 
-export const setVersionedBucket = (t, name) => {
+export const setVersionedBucket = (t, name: string) => {
   const minioClient = new Minio.Client({
     endPoint: 'localhost',
     port: 9000,
@@ -70,7 +70,7 @@ export const setVersionedBucket = (t, name) => {
     secretKey: 'minioadmin',
   });
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     minioClient.setBucketVersioning(name, { Status: 'Enabled' }).then(resolve).catch(resolve);
   });
 };
@@ -83,7 +83,7 @@ export const manageButtonFor = (modifier) => {
   return namedManageButtonFor(`${constants.TEST_BUCKET_NAME}-${modifier}`);
 };
 
-export const cleanUpNamedBucket = (t, name) => {
+export const cleanUpNamedBucket = (t, name: string) => {
   const minioClient = new Minio.Client({
     endPoint: 'localhost',
     port: 9000,
@@ -107,8 +107,8 @@ export const testBucketBrowseButtonFor = (modifier) => {
   return namedTestBucketBrowseButtonFor(`${constants.TEST_BUCKET_NAME}-${modifier}`);
 };
 
-export const cleanUpNamedBucketAndUploads = (t, bucket) => {
-  return new Promise((resolve, reject) => {
+export const cleanUpNamedBucketAndUploads = (t, bucket: string) => {
+  return new Promise((resolve) => {
     const minioClient = new Minio.Client({
       endPoint: 'localhost',
       port: 9000,
@@ -117,9 +117,9 @@ export const cleanUpNamedBucketAndUploads = (t, bucket) => {
       secretKey: 'minioadmin',
     });
 
-    var stream = minioClient.listObjects(bucket, '', true);
+    const stream = minioClient.listObjects(bucket, '', true);
 
-    let proms: any[] = [];
+    const proms: any[] = [];
     stream.on('data', function (obj) {
       if (obj.name) {
         proms.push(minioClient.removeObject(bucket, obj.name));
@@ -127,7 +127,7 @@ export const cleanUpNamedBucketAndUploads = (t, bucket) => {
     });
 
     stream.on('end', () => {
-      Promise.all(proms).then(() => {
+      void Promise.all(proms).then(() => {
         minioClient.removeBucket(bucket).then(resolve).catch(resolve);
       });
     });
@@ -140,6 +140,7 @@ export const cleanUpBucketAndUploads = (t, modifier) => {
 };
 
 export const createUser = (t) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return t
     .useRole(roles.admin)
     .navigateTo(`http://localhost:9090/identity/users/add-user`)
@@ -153,6 +154,7 @@ export const cleanUpUser = (t) => {
 
   const userDeleteIconButton = userListItem.nextSibling().child('button').withAttribute('aria-label', 'delete');
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return t
     .useRole(roles.admin)
     .navigateTo('http://localhost:9090/identity/users')

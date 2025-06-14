@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import get from 'lodash/get';
-import { Box, Grid, InformativeMessage,ProgressBar } from 'mds';
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Box, Grid, InformativeMessage, ProgressBar } from 'mds';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 
 import { api } from '../../../../../../api';
 import { BucketObject } from '../../../../../../api/consoleApi';
@@ -36,7 +36,7 @@ const PreviewFile = ({ actualInfo, bucketName, isFullscreen = false }: IPreviewF
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [metaData, setMetaData] = useState<any>(null);
+  const [metaData, setMetaData] = useState<Record<any, string> | null>(null);
   const [isMetaDataLoaded, setIsMetaDataLoaded] = useState(false);
 
   const objectName = actualInfo?.name || '';
@@ -76,7 +76,7 @@ const PreviewFile = ({ actualInfo, bucketName, isFullscreen = false }: IPreviewF
     }
   }
 
-  const objectType: AllowedPreviews = previewObjectType(metaData, objectName);
+  const objectType: AllowedPreviews = previewObjectType(metaData ?? {}, objectName);
 
   const iframeLoaded = () => {
     setLoading(false);
@@ -148,6 +148,7 @@ const PreviewFile = ({ actualInfo, bucketName, isFullscreen = false }: IPreviewF
               autoPlay={true}
               controls={true}
               muted={false}
+              // eslint-disable-next-line react/no-unknown-property
               playsInline={true}
               onPlay={iframeLoaded}
             >
@@ -196,11 +197,12 @@ const PreviewFile = ({ actualInfo, bucketName, isFullscreen = false }: IPreviewF
                 <iframe
                   src={path}
                   title="File Preview"
+                  // eslint-disable-next-line react/no-unknown-property
                   allowTransparency
                   className={`iframeContainer ${isFullscreen ? 'fullHeight' : objectType}`}
                   onLoad={iframeLoaded}
                 >
-                  File couldn't be loaded. Please try Download instead
+                  File couldn&apos;t be loaded. Please try Download instead
                 </iframe>
               </div>
             )}

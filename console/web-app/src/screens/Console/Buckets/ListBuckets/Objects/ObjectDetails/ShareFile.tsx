@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
-import { BucketObject } from 'api/consoleApi';
+import { ApiError, BucketObject } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 import debounce from 'lodash/debounce';
 import { Button, CopyIcon, Grid, ProgressBar, ReadBox, ShareIcon, Tooltip } from 'mds';
@@ -60,7 +60,7 @@ const ShareFile = ({ bucketName, closeModalAndRefresh, dataObject, open }: IShar
   }, 300);
 
   useEffect(() => {
-    dispatch(getMaxShareLinkExpTime());
+    void dispatch(getMaxShareLinkExpTime());
   }, [dispatch]);
 
   useEffect(() => {
@@ -86,8 +86,8 @@ const ShareFile = ({ bucketName, closeModalAndRefresh, dataObject, open }: IShar
             // Version couldn't be retrieved, we default
             setVersionID('null');
           })
-          .catch((err) => {
-            dispatch(setModalErrorSnackMessage(errorToHandler(err.error)));
+          .catch((err: ApiError) => {
+            dispatch(setModalErrorSnackMessage(errorToHandler(err)));
           });
 
         setIsLoadingVersion(false);
@@ -122,8 +122,8 @@ const ShareFile = ({ bucketName, closeModalAndRefresh, dataObject, open }: IShar
             setShareURL(res.data);
             setIsLoadingFile(false);
           })
-          .catch((err) => {
-            dispatch(setModalErrorSnackMessage(errorToHandler(err.error)));
+          .catch((err: ApiError) => {
+            dispatch(setModalErrorSnackMessage(errorToHandler(err)));
             setShareURL('');
             setIsLoadingFile(false);
           });

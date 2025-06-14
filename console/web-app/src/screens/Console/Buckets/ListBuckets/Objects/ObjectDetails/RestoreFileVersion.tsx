@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
-import { BucketObject } from 'api/consoleApi';
+import { ApiError, BucketObject } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 import { Box, RecoverIcon } from 'mds';
 import React, { useState } from 'react';
@@ -61,8 +61,8 @@ const RestoreFileVersion = ({
           }),
         );
       })
-      .catch((err) => {
-        dispatch(setErrorSnackMessage(errorToHandler(err.error)));
+      .catch((err: ApiError) => {
+        dispatch(setErrorSnackMessage(errorToHandler(err)));
         setRestoreLoading(false);
       });
   };

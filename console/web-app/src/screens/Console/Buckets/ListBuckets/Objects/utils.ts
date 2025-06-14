@@ -15,13 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ContentType, PermissionResource } from 'api/consoleApi';
-import { StatusCodes } from 'http-status-codes';
 
 import { api } from '../../../../../api';
 import { store } from '../../../../../store';
 import { setErrorSnackMessage } from '../../../../../systemSlice';
 import { removeTrace } from '../../../ObjectBrowser/transferManager';
 import { BucketObjectItem } from './ListObjects/types';
+
 const downloadWithLink = (href: string, downloadFileName: string) => {
   const link = document.createElement('a');
   link.href = href;
@@ -116,7 +116,7 @@ export const download = (
       // Ensure object was downloaded fully, if it's a folder we don't get the fileSize
       const completeDownload = isFolder(objectPath) || req.response.size === fileSize;
 
-      if (req.status === StatusCodes.OK && completeDownload) {
+      if (req.status === 200 && completeDownload) {
         const rspHeader = req.getResponseHeader('Content-Disposition');
 
         let filename = 'download';
@@ -131,10 +131,10 @@ export const download = (
 
         removeTrace(id);
 
-        downloadWithLink(window.URL.createObjectURL(req.response), filename);
+        downloadWithLink(window.URL.createObjectURL(req.response as Blob | MediaSource), filename);
       } else {
         if (req.getResponseHeader('Content-Type') === 'application/json') {
-          const rspBody: { detailedMessage?: string } = JSON.parse(req.response);
+          const rspBody: { detailedMessage?: string } = JSON.parse(req.response as string);
           if (rspBody.detailedMessage) {
             errorCallback(rspBody.detailedMessage);
             return;
@@ -254,8 +254,8 @@ const extensionPreview = (fileName: string): AllowedPreviews => {
   return 'none';
 };
 
-export const previewObjectType = (metaData: Record<any, any>, objectName: string) => {
-  const metaContentType = ((metaData && metaData['Content-Type']) || '').toString();
+export const previewObjectType = (metaData: Record<any, string>, objectName: string) => {
+  const metaContentType = (metaData && metaData['Content-Type']) || '';
 
   const extensionType = extensionPreview(objectName || '');
   const contentType = contentTypePreview(metaContentType);

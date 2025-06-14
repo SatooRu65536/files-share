@@ -33,7 +33,7 @@ const StrategyForm = ({ redirectRules }: { redirectRules: RedirectRule[] }) => {
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(doLoginAsync());
+    void dispatch(doLoginAsync());
   };
 
   return (

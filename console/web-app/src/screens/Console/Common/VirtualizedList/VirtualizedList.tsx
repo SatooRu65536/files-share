@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, ReactElement } from 'react';
+import React, { CSSProperties, Fragment, ReactElement } from 'react';
 import { AutoSizer } from 'react-virtualized';
 import { FixedSizeList as List } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -42,7 +42,7 @@ const VirtualizedList = ({ defaultHeight, rowRenderFunction, totalItems }: IVirt
     }
   };
 
-  const RenderItemLine = ({ index, style }: any) => {
+  const RenderItemLine = ({ index, style }: { index: number; style: CSSProperties }) => {
     return <div style={style}>{rowRenderFunction(index)}</div>;
   };
 
@@ -50,7 +50,6 @@ const VirtualizedList = ({ defaultHeight, rowRenderFunction, totalItems }: IVirt
     <Fragment>
       <InfiniteLoader isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} itemCount={totalItems}>
         {({ onItemsRendered, ref }) => (
-          // @ts-ignore
           <AutoSizer>
             {({ height, width }) => {
               return (

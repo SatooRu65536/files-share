@@ -143,10 +143,11 @@ export const replaceUnicodeChar = (inputString: string): string => {
 };
 
 // unescaped characters might throw error like '%'
-export const safeDecodeURIComponent = (value: any) => {
+export const safeDecodeURIComponent = (value: string) => {
   try {
     return decodeURIComponent(value);
   } catch (err) {
+    console.error(err);
     return value;
   }
 };

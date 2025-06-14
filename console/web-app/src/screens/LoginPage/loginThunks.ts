@@ -39,7 +39,7 @@ export const doLoginAsync = createAsyncThunk(
 
     return api.login
       .login(payload)
-      .then((res) => {
+      .then(() => {
         const darkModeEnabled = isDarkModeOn(); // If null, then we set the dark mode as disabled per requirement. If configuration al ready set, then we establish this configuration
 
         // We set the state in redux

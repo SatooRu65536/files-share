@@ -18,7 +18,7 @@ import { RedirectRule } from 'api/consoleApi';
 import { Box, Button, Loader, LoginWrapper, RefreshIcon } from 'mds';
 import React, { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { getLogoApplicationVariant, getLogoVar } from '../../config';
 import { AppState, useAppDispatch } from '../../store';
@@ -52,13 +52,13 @@ const Login = () => {
   useEffect(() => {
     if (navigateTo !== '') {
       dispatch(resetForm());
-      navigate(navigateTo);
+      void navigate(navigateTo);
     }
   }, [navigateTo, dispatch, navigate]);
 
   useEffect(() => {
     if (loadingFetchConfiguration) {
-      dispatch(getFetchConfigurationAsync());
+      void dispatch(getFetchConfigurationAsync());
     }
   }, [loadingFetchConfiguration, dispatch]);
 
@@ -105,7 +105,7 @@ const Login = () => {
               <div className={'buttonRetry'}>
                 <Button
                   onClick={() => {
-                    dispatch(getFetchConfigurationAsync());
+                    void dispatch(getFetchConfigurationAsync());
                   }}
                   icon={<RefreshIcon />}
                   iconLocation={'end'}

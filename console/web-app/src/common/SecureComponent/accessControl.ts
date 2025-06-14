@@ -99,7 +99,7 @@ const hasPermission = (
   let anyResourceGrant: string[] = [];
   const validScopes = scopes || [];
   if (resource === '*') {
-    Object.entries(sessionGrants).forEach(([key, values = []]) => {
+    Object.entries(sessionGrants).forEach(([_key, values = []]) => {
       const validValues = values || [];
       validScopes.forEach((scope) => {
         validValues.forEach((val) => {

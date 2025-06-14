@@ -18,7 +18,7 @@ import * as elements from '../utils/elements';
 
 // Using subpath defined in `MINIO_BROWSER_REDIRECT_URL`
 const appBaseUrl = 'http://localhost:8000/console/subpath';
-let rootUrl = `${appBaseUrl}/`;
+const rootUrl = `${appBaseUrl}/`;
 
 fixture('Tests using subpath').page(appBaseUrl);
 

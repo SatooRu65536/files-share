@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
-import { BucketObject } from 'api/consoleApi';
+import { ApiError, BucketObject } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 import get from 'lodash/get';
 import {
@@ -30,7 +30,7 @@ import {
   SectionTitle,
   Tag,
 } from 'mds';
-import React, { Fragment, useState } from 'react';
+import React, { ChangeEvent, Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -89,8 +89,8 @@ const AddTagModal = ({ actualInfo, bucketName, modalOpen, onCloseAndUpdate }: IT
         onCloseAndUpdate(true);
         setIsSending(false);
       })
-      .catch((err) => {
-        dispatch(setModalErrorSnackMessage(errorToHandler(err.error)));
+      .catch((err: ApiError) => {
+        dispatch(setModalErrorSnackMessage(errorToHandler(err)));
         setIsSending(false);
       });
   };
@@ -107,8 +107,8 @@ const AddTagModal = ({ actualInfo, bucketName, modalOpen, onCloseAndUpdate }: IT
         onCloseAndUpdate(true);
         setIsSending(false);
       })
-      .catch((err) => {
-        dispatch(setModalErrorSnackMessage(errorToHandler(err.error)));
+      .catch((err: ApiError) => {
+        dispatch(setModalErrorSnackMessage(errorToHandler(err)));
         setIsSending(false);
       });
   };
@@ -234,7 +234,7 @@ const AddTagModal = ({ actualInfo, bucketName, modalOpen, onCloseAndUpdate }: IT
             <SecureComponent
               scopes={[IAM_SCOPES.S3_PUT_OBJECT_TAGGING, IAM_SCOPES.S3_PUT_ACTIONS]}
               resource={bucketName}
-              errorProps={{ disabled: true, onClick: null }}
+              errorProps={{ disabled: true }}
             >
               <Box>
                 <SectionTitle icon={<AddNewTagIcon />} separator={false}>
@@ -247,7 +247,7 @@ const AddTagModal = ({ actualInfo, bucketName, modalOpen, onCloseAndUpdate }: IT
                     id={'newTagKey'}
                     name={'newTagKey'}
                     placeholder={'Enter Tag Key'}
-                    onChange={(e) => {
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewKey(e.target.value);
                     }}
                   />
@@ -257,7 +257,7 @@ const AddTagModal = ({ actualInfo, bucketName, modalOpen, onCloseAndUpdate }: IT
                     id={'newTagLabel'}
                     name={'newTagLabel'}
                     placeholder={'Enter Tag Label'}
-                    onChange={(e) => {
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewLabel(e.target.value);
                     }}
                   />

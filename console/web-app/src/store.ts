@@ -26,7 +26,7 @@ import loginReducer from './screens/LoginPage/loginSlice';
 import systemReducer from './systemSlice';
 import { objectBrowserWSMiddleware } from './websockets/objectBrowserWSMiddleware';
 
-let objectsWS: WebSocket;
+let objectsWS: WebSocket | undefined;
 
 const rootReducer = combineReducers({
   system: systemReducer,

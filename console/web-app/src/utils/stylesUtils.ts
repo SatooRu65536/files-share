@@ -274,7 +274,7 @@ export const generateOverrideTheme = (overrideVars: IEmbeddedCustomStyles) => {
         textColor: overrideVars.fontColor,
       },
     };
-  } catch (e) {
+  } catch {
     console.warn('Invalid theme provided. Fallback to original theme.');
   }
 

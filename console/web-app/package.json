@@ -54,6 +54,7 @@
     "@types/react-window-infinite-loader": "^1.0.9",
     "@types/recharts": "^2.0.1",
     "@types/superagent": "^8.1.9",
+    "@types/tinycolor2": "^1.4.6",
     "@types/webpack-env": "^1.18.8",
     "@vitejs/plugin-react": "^4.5.2",
     "babel-plugin-istanbul": "^7.0.0",

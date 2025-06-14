@@ -55,14 +55,14 @@ const loginSlice = createSlice({
     setNavigateTo: (state, action: PayloadAction<string>) => {
       state.navigateTo = action.payload;
     },
-    resetForm: (state) => initialState,
+    resetForm: () => initialState,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getFetchConfigurationAsync.pending, (state, action) => {
+      .addCase(getFetchConfigurationAsync.pending, (state) => {
         state.loadingFetchConfiguration = true;
       })
-      .addCase(getFetchConfigurationAsync.rejected, (state, action) => {
+      .addCase(getFetchConfigurationAsync.rejected, (state) => {
         state.loadingFetchConfiguration = false;
       })
       .addCase(getFetchConfigurationAsync.fulfilled, (state, action) => {
@@ -72,13 +72,13 @@ const loginSlice = createSlice({
           state.backgroundAnimation = !!action.payload.animatedLogin;
         }
       })
-      .addCase(doLoginAsync.pending, (state, action) => {
+      .addCase(doLoginAsync.pending, (state) => {
         state.loginSending = true;
       })
-      .addCase(doLoginAsync.rejected, (state, action) => {
+      .addCase(doLoginAsync.rejected, (state) => {
         state.loginSending = false;
       })
-      .addCase(doLoginAsync.fulfilled, (state, action) => {
+      .addCase(doLoginAsync.fulfilled, (state) => {
         state.loginSending = false;
       });
   },

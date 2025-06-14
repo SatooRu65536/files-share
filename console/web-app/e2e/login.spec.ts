@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+
 import { adminAccessKey, adminSecretKey, BUCKET_LIST_PAGE } from './consts';
 
-test('Basic `minioadmin` Login', async ({ page, context }) => {
+test('Basic `minioadmin` Login', async ({ context, page }) => {
   await page.goto(BUCKET_LIST_PAGE);
   await page.getByPlaceholder('Username').click();
   await page.getByPlaceholder('Username').fill(adminAccessKey);
@@ -9,5 +10,5 @@ test('Basic `minioadmin` Login', async ({ page, context }) => {
   await page.getByPlaceholder('Password').fill(adminSecretKey);
   await page.getByRole('button', { name: 'Login' }).click();
   await context.storageState({ path: 'storage/minioadmin.json' });
-  await expect(page.getByRole('main').getByText('Object Browser')).toBeTruthy();
+  expect(page.getByRole('main').getByText('Object Browser')).toBeTruthy();
 });

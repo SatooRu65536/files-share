@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 // This file is part of MinIO Console Server
 // Copyright (c) 2023 MinIO, Inc.
 //
@@ -26,7 +28,7 @@ import {
   TabItemProps,
   Tabs,
 } from 'mds';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -34,6 +36,7 @@ import styled from 'styled-components';
 import MoreLink from '../../common/MoreLink';
 import { AppState, useAppDispatch } from '../../store';
 import { setHelpTabName } from '../../systemSlice';
+import helpTopics from '../Console/helpTopics.json';
 import HelpItem from './HelpItem';
 import { DocItem } from './HelpMenu.types';
 
@@ -61,8 +64,6 @@ const HelpMenuContainer = styled.div(({ theme }) => ({
 }));
 
 const HelpMenu = () => {
-  const helpTopics = require('../Console/helpTopics.json');
-
   const [helpItems, setHelpItems] = useState<DocItem[]>([]);
   const [headerDocs, setHeaderDocs] = useState<string | null>(null);
   const [helpItemsVideo, setHelpItemsVideo] = useState<DocItem[]>([]);
@@ -159,7 +160,7 @@ const HelpMenu = () => {
       setHelpItemsBlog([]);
       setHelpItemsVideo([]);
     }
-  }, [systemHelpName, helpTabName, dispatch, helpTopics, headerBlog, headerDocs, headerVideo]);
+  }, [systemHelpName, helpTabName, dispatch, headerBlog, headerDocs, headerVideo]);
 
   const helpContent = (
     <Box className={'helpContainer'}>
@@ -172,8 +173,8 @@ const HelpMenu = () => {
         </div>
       )}
       {helpItems &&
-        helpItems.map((aHelpItem, idx) => (
-          <Box className={'helpItemBlock'} key={`help-item-${aHelpItem}`}>
+        helpItems.map((aHelpItem) => (
+          <Box className={'helpItemBlock'} key={`help-item-${aHelpItem.title}`}>
             <HelpItem item={aHelpItem} displayImage={false} />
           </Box>
         ))}
@@ -198,8 +199,8 @@ const HelpMenu = () => {
         </Fragment>
       )}
       {helpItemsVideo &&
-        helpItemsVideo.map((aHelpItem, idx) => (
-          <Box className={'helpItemBlock'} key={`help-item-${aHelpItem}`}>
+        helpItemsVideo.map((aHelpItem) => (
+          <Box className={'helpItemBlock'} key={`help-item-${aHelpItem.title}`}>
             <HelpItem item={aHelpItem} />
           </Box>
         ))}
@@ -224,8 +225,8 @@ const HelpMenu = () => {
         </Fragment>
       )}
       {helpItemsBlog &&
-        helpItemsBlog.map((aHelpItem, idx) => (
-          <Box className={'helpItemBlock'} key={`help-item-${aHelpItem}`}>
+        helpItemsBlog.map((aHelpItem) => (
+          <Box className={'helpItemBlock'} key={`help-item-${aHelpItem.title}`}>
             <HelpItem item={aHelpItem} />
           </Box>
         ))}

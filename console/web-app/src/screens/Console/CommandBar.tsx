@@ -26,11 +26,11 @@ import {
   useMatches,
   useRegisterActions,
 } from 'kbar';
-import { Action } from 'kbar/lib/types';
+import { Action, VisualState } from 'kbar/lib/types';
 import { Box, MenuExpandedIcon } from 'mds';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { api } from '../../api';
 import { Bucket } from '../../api/consoleApi';
@@ -79,12 +79,11 @@ const KBarStateChangeMonitor = ({ onHide, onShow }: { onShow?: () => void; onHid
   });
 
   useEffect(() => {
-    if (visualState === 'showing') {
+    if (visualState === VisualState.showing) {
       setIsOpen(true);
     } else {
       setIsOpen(false);
     }
-     
   }, [visualState]);
 
   useEffect(() => {
@@ -106,7 +105,7 @@ const CommandBar = () => {
   const [buckets, setBuckets] = useState<Bucket[]>([]);
 
   const invokeListBucketsApi = () => {
-    api.buckets.listBuckets().then((res) => {
+    void api.buckets.listBuckets().then((res) => {
       if (res.data !== undefined) {
         setBuckets(res.data.buckets || []);
       }
@@ -115,10 +114,9 @@ const CommandBar = () => {
 
   const fetchBuckets = useCallback(() => {
     invokeListBucketsApi();
-     
   }, []);
 
-  const initialActions: Action[] = routesAsKbarActions(buckets, navigate);
+  const initialActions: Action[] = routesAsKbarActions(buckets, (url) => void navigate(url));
 
   useRegisterActions(initialActions, [buckets]);
 
@@ -165,128 +163,126 @@ function RenderResults() {
   );
 }
 
-const ResultItem = React.forwardRef(
-  (
-    {
-      action,
-      active,
-      currentRootActionId,
-    }: {
-      action: ActionImpl;
-      active: boolean;
-      currentRootActionId: ActionId;
-    },
-    ref: React.Ref<HTMLDivElement>,
-  ) => {
-    const ancestors = React.useMemo(() => {
-      if (!currentRootActionId) {return action.ancestors;}
-      const index = action.ancestors.findIndex((ancestor) => ancestor.id === currentRootActionId);
-      // +1 removes the currentRootAction; e.g.
-      // if we are on the "Set theme" parent action,
-      // the UI should not display "Set theme… > Dark"
-      // but rather just "Dark"
-      return action.ancestors.slice(index + 1);
-    }, [action.ancestors, currentRootActionId]);
+const ResultItem = ({
+  action,
+  active,
+  currentRootActionId,
+  ref,
+}: {
+  action: ActionImpl;
+  active: boolean;
+  currentRootActionId: ActionId;
+  ref?: React.Ref<HTMLDivElement>;
+}) => {
+  const ancestors = React.useMemo(() => {
+    if (!currentRootActionId) {
+      return action.ancestors;
+    }
+    const index = action.ancestors.findIndex((ancestor) => ancestor.id === currentRootActionId);
+    // +1 removes the currentRootAction; e.g.
+    // if we are on the "Set theme" parent action,
+    // the UI should not display "Set theme… > Dark"
+    // but rather just "Dark"
+    return action.ancestors.slice(index + 1);
+  }, [action.ancestors, currentRootActionId]);
 
-    return (
-      <div
-        ref={ref}
-        style={{
-          padding: '12px 12px 12px 36px',
-          marginTop: '2px',
-          background: active ? '#dddddd' : 'transparent',
+  return (
+    <div
+      ref={ref}
+      style={{
+        padding: '12px 12px 12px 36px',
+        marginTop: '2px',
+        background: active ? '#dddddd' : 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        cursor: 'pointer',
+      }}
+    >
+      <Box
+        sx={{
           display: 'flex',
+          gap: '8px',
           alignItems: 'center',
+          fontSize: 14,
+          flex: 1,
           justifyContent: 'space-between',
-          cursor: 'pointer',
+          '& .min-icon': {
+            width: '17px',
+            height: '17px',
+          },
         }}
       >
+        <Box sx={{ height: '15px', width: '15px', marginRight: '36px' }}>{action.icon && action.icon}</Box>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 2 }}>
+          <Box>
+            {ancestors.length > 0 &&
+              ancestors.map((ancestor) => (
+                <React.Fragment key={ancestor.id}>
+                  <span
+                    style={{
+                      opacity: 0.5,
+                      marginRight: 8,
+                    }}
+                  >
+                    {ancestor.name}
+                  </span>
+                  <span
+                    style={{
+                      marginRight: 8,
+                    }}
+                  >
+                    &rsaquo;
+                  </span>
+                </React.Fragment>
+              ))}
+            <span>{action.name}</span>
+          </Box>
+          {action.subtitle && (
+            <span
+              style={{
+                fontSize: 12,
+              }}
+            >
+              {action.subtitle}
+            </span>
+          )}
+        </div>
         <Box
           sx={{
-            display: 'flex',
-            gap: '8px',
-            alignItems: 'center',
-            fontSize: 14,
-            flex: 1,
-            justifyContent: 'space-between',
             '& .min-icon': {
-              width: '17px',
-              height: '17px',
+              width: '15px',
+              height: '15px',
+              fill: '#8f8b8b',
+              transform: 'rotate(90deg)',
+
+              '& rect': {
+                fill: '#ffffff',
+              },
             },
           }}
         >
-          <Box sx={{ height: '15px', width: '15px', marginRight: '36px' }}>{action.icon && action.icon}</Box>
-          <div style={{ display: 'flex', flexDirection: 'column', flex: 2 }}>
-            <Box>
-              {ancestors.length > 0 &&
-                ancestors.map((ancestor) => (
-                  <React.Fragment key={ancestor.id}>
-                    <span
-                      style={{
-                        opacity: 0.5,
-                        marginRight: 8,
-                      }}
-                    >
-                      {ancestor.name}
-                    </span>
-                    <span
-                      style={{
-                        marginRight: 8,
-                      }}
-                    >
-                      &rsaquo;
-                    </span>
-                  </React.Fragment>
-                ))}
-              <span>{action.name}</span>
-            </Box>
-            {action.subtitle && (
-              <span
-                style={{
-                  fontSize: 12,
-                }}
-              >
-                {action.subtitle}
-              </span>
-            )}
-          </div>
-          <Box
-            sx={{
-              '& .min-icon': {
-                width: '15px',
-                height: '15px',
-                fill: '#8f8b8b',
-                transform: 'rotate(90deg)',
-
-                '& rect': {
-                  fill: '#ffffff',
-                },
-              },
-            }}
-          >
-            <MenuExpandedIcon />
-          </Box>
+          <MenuExpandedIcon />
         </Box>
-        {action.shortcut?.length ? (
-          <div aria-hidden style={{ display: 'grid', gridAutoFlow: 'column', gap: '4px' }}>
-            {action.shortcut.map((sc) => (
-              <kbd
-                key={sc}
-                style={{
-                  padding: '4px 6px',
-                  background: 'rgba(0 0 0 / .1)',
-                  borderRadius: '4px',
-                  fontSize: 14,
-                }}
-              >
-                {sc}
-              </kbd>
-            ))}
-          </div>
-        ) : null}
-      </div>
-    );
-  },
-);
-
+      </Box>
+      {action.shortcut?.length ? (
+        <div aria-hidden style={{ display: 'grid', gridAutoFlow: 'column', gap: '4px' }}>
+          {action.shortcut.map((sc) => (
+            <kbd
+              key={sc}
+              style={{
+                padding: '4px 6px',
+                background: 'rgba(0 0 0 / .1)',
+                borderRadius: '4px',
+                fontSize: 14,
+              }}
+            >
+              {sc}
+            </kbd>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+};
 export default CommandBar;

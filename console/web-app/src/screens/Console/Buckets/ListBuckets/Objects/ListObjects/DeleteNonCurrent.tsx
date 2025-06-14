@@ -15,8 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
+import { ApiError, ObjectRetentionMode } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
-import { ConfirmDeleteIcon, Grid, InputBox,Switch } from 'mds';
+import { ConfirmDeleteIcon, Grid, InputBox, Switch } from 'mds';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -48,7 +49,7 @@ const DeleteNonCurrentVersions = ({
 
   const canBypass =
     hasPermission([selectedBucket], [IAM_SCOPES.S3_BYPASS_GOVERNANCE_RETENTION]) &&
-    retentionConfig?.mode === 'governance';
+    retentionConfig?.mode === ObjectRetentionMode.Governance;
 
   useEffect(() => {
     if (deleteLoading) {
@@ -61,8 +62,8 @@ const DeleteNonCurrentVersions = ({
         .then(() => {
           closeDeleteModalAndRefresh(true);
         })
-        .catch((err) => {
-          dispatch(setErrorSnackMessage(errorToHandler(err.error)));
+        .catch((err: ApiError) => {
+          dispatch(setErrorSnackMessage(errorToHandler(err)));
           setDeleteLoading(false);
         });
     }
@@ -104,9 +105,7 @@ const DeleteNonCurrentVersions = ({
                   value={'bypass_governance'}
                   id="bypass_governance"
                   name="bypass_governance"
-                  onChange={(e) => {
-                    setBypassGovernance(!bypassGovernance);
-                  }}
+                  onChange={() => setBypassGovernance(!bypassGovernance)}
                   description=""
                 />
               </div>

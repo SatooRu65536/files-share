@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { Box,Button, CreateNewPathIcon, FormLayout, Grid, InputBox } from 'mds';
+import { Box, Button, CreateNewPathIcon, FormLayout, Grid, InputBox } from 'mds';
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { AppState, useAppDispatch } from '../../../../../../store';
 import { setModalErrorSnackMessage } from '../../../../../../systemSlice';
@@ -34,7 +34,7 @@ interface ICreatePath {
   limitedSubPath?: boolean;
 }
 
-const CreatePathModal = ({ bucketName, folderName, limitedSubPath, modalOpen, onClose, simplePath }: ICreatePath) => {
+const CreatePathModal = ({ bucketName, limitedSubPath, modalOpen, onClose, simplePath }: ICreatePath) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -88,7 +88,7 @@ const CreatePathModal = ({ bucketName, folderName, limitedSubPath, modalOpen, on
 
     const newPath = `/browser/${encodeURIComponent(bucketName)}/${encodeURIComponent(`${folderPath}${cleanPathURL}/`)}`;
 
-    navigate(newPath);
+    void navigate(newPath);
     onClose();
   };
 

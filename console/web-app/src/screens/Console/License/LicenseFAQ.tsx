@@ -36,7 +36,7 @@ const LicenseFAQ = () => {
     <Fragment>
       <h2>What is the GNU AGPL v3?</h2>
       <p>
-        The GNU AGPL v3 is short for the "GNU Affero General Public License v3". It is a{' '}
+        The GNU AGPL v3 is short for the &quot;GNU Affero General Public License v3&quot;. It is a{' '}
         {makeLink('FOSS', 'https://en.wikipedia.org/wiki/Free_and_open-source_software')} license certified by the{' '}
         {makeLink('Free Software Foundation', 'https://www.fsf.org/')} and the Open Source Initiative. You can get a
         copy of the GNU AGPL v3 license with MinIO source code or at{' '}

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { api } from 'api';
-import { BucketObject } from 'api/consoleApi';
+import { ApiError, BucketObject } from 'api/consoleApi';
 import { errorToHandler } from 'api/errors';
 import get from 'lodash/get';
 import {
@@ -125,8 +125,8 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
 
           dispatch(setLoadingVersions(false));
         })
-        .catch((err) => {
-          dispatch(setErrorSnackMessage(errorToHandler(err.error)));
+        .catch((err: ApiError) => {
+          dispatch(setErrorSnackMessage(errorToHandler(err)));
           dispatch(setLoadingVersions(false));
         });
     }
@@ -212,7 +212,7 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
 
   filteredRecords.sort((a, b) => {
     switch (sortValue) {
-      case 'size':
+      case 'size': {
         if (a.size && b.size) {
           if (a.size < b.size) {
             return -1;
@@ -223,7 +223,8 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
           return 0;
         }
         return 0;
-      default:
+      }
+      default: {
         const dateA = new Date(a.last_modified || '').getTime();
         const dateB = new Date(b.last_modified || '').getTime();
 
@@ -234,6 +235,7 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
           return -1;
         }
         return 0;
+      }
     }
   });
 
@@ -254,8 +256,8 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
 
   const rowRenderer = ({
     index, // Unique key within array of rows
-    isScrolling, // Index of row within collection
-    isVisible, // The List is currently being scrolled
+    // isScrolling, // Index of row within collection
+    // isVisible, // The List is currently being scrolled
     key, // This row is visible within the List (eg it is not an overscanned row)
     style, // Style object to be applied to row (to position it)
   }: ListRowProps) => {
@@ -448,7 +450,7 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
                       ]}
                       value={sortValue}
                       label={'Sort by'}
-                      onChange={(newValue) => {
+                      onChange={(newValue: string) => {
                         setSortValue(newValue);
                       }}
                       noLabelMinWidth
@@ -471,7 +473,6 @@ const VersionsNavigator = ({ bucketName, internalPaths }: IVersionsNavigatorProp
               }}
             >
               {actualInfo.version_id && actualInfo.version_id !== 'null' && (
-                // @ts-ignore
                 <List
                   style={{
                     width: '100%',

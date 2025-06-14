@@ -20,21 +20,18 @@ import { api } from '../../../../../api';
 import { MakeBucketRequest } from '../../../../../api/consoleApi';
 import { AppState } from '../../../../../store';
 
-export const addBucketAsync = createAsyncThunk(
-  'buckets/addBucketAsync',
-  async (_, { dispatch, getState, rejectWithValue }) => {
-    const state = getState() as AppState;
+export const addBucketAsync = createAsyncThunk('buckets/addBucketAsync', async (_, { getState, rejectWithValue }) => {
+  const state = getState() as AppState;
 
-    const bucketName = state.addBucket.name;
+  const bucketName = state.addBucket.name;
 
-    const request: MakeBucketRequest = {
-      name: bucketName,
-    };
+  const request: MakeBucketRequest = {
+    name: bucketName,
+  };
 
-    try {
-      return await api.buckets.makeBucket(request);
-    } catch (err: any) {
-      return rejectWithValue(err.error);
-    }
-  },
-);
+  try {
+    return await api.buckets.makeBucket(request);
+  } catch (err: any) {
+    return rejectWithValue(err.error);
+  }
+});

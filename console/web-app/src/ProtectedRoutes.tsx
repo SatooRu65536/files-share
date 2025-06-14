@@ -16,7 +16,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router';
 
 import LoadingComponent from './common/LoadingComponent';
 import { SessionCallStates } from './screens/Console/consoleSlice.types';
@@ -25,7 +25,7 @@ import { AppState, useAppDispatch } from './store';
 import { setLocationPath } from './systemSlice';
 
 interface ProtectedRouteProps {
-  Component: any;
+  Component: React.ComponentType;
 }
 
 const ProtectedRoute = ({ Component }: ProtectedRouteProps) => {
@@ -46,7 +46,9 @@ const ProtectedRoute = ({ Component }: ProtectedRouteProps) => {
   }, [dispatch, pathname]);
 
   useEffect(() => {
-    dispatch(fetchSession());
+    void (async () => {
+      await dispatch(fetchSession());
+    })();
   }, [dispatch]);
 
   useEffect(() => {

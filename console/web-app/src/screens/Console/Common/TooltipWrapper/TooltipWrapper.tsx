@@ -15,16 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Tooltip } from 'mds';
-import React, { cloneElement } from 'react';
+import { Attributes, cloneElement, ReactElement } from 'react';
 
 interface ITooltipWrapperProps {
   tooltip: string;
-  children: any;
-  errorProps?: any;
+  children: ReactElement;
+  errorProps?: Attributes;
   placement?: 'bottom' | 'left' | 'right' | 'top';
 }
 
-const TooltipWrapper = ({ children, errorProps = null, placement, tooltip }: ITooltipWrapperProps) => {
+const TooltipWrapper = ({ children, errorProps = {}, placement, tooltip }: ITooltipWrapperProps) => {
   return (
     <Tooltip tooltip={tooltip} placement={placement}>
       <span>{errorProps ? cloneElement(children, { ...errorProps }) : children}</span>

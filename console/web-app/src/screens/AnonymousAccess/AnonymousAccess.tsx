@@ -16,7 +16,7 @@
 
 import { ApplicationLogo, Button } from 'mds';
 import React, { Fragment, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import LoadingComponent from '../../common/LoadingComponent';
 import { IAM_PAGES } from '../../common/SecureComponent/permissions';
