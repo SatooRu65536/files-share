@@ -7,4 +7,10 @@ export default defineConfig({
   server: {
     port: 5005,
   },
+  build: {
+    outDir: 'build',
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
 });
